@@ -1,0 +1,95 @@
+.LoginPage-Body {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(45deg, #fb9277, #f4caab, #e6d9d0, #eddbce); 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.Login-Box{
+    background-color: white;
+    width: 500px;
+    height: 500px;
+    border-radius: 40px;
+    display: grid;
+    justify-content: center; 
+    align-items: center; 
+    
+}
+
+.Login-Logo {
+    width: 170px;
+    height: auto;
+    margin-left: 60px;
+}
+
+.Input-Wrapper {
+   width: 300px;
+}
+
+.Login-Input-ID {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+    margin-bottom: 20px;
+}
+.Login-Input-PW {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+}
+
+.Login-Input-ID:focus {
+    outline: none;
+    border-color: #fb9277;
+}
+.Login-Input-PW:focus {
+    outline: none;
+    border-color: #fb9277;
+}
+
+.Login-Button {
+    width: 100%;
+    padding: 12px;
+    background-color: #fb9277;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.Login-Button:hover {
+    background-color: #f29173;
+}
+
+.Join-PWFind-Box{
+    text-align: center;
+}
+
+.Join{
+    color: gray;
+}
+.Join:hover{
+    color: black;
+}
+
+.PWFind{
+    color: gray;
+}
+
+.PWFind:hover{
+    color: black;
+}

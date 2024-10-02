@@ -1,0 +1,80 @@
+
+.QuizBox {
+    position: relative; 
+    width: 280px;
+    height: 330px;
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; 
+}
+
+
+.QuizBox img {
+    width: 100%;
+    height: 250px;
+    border-radius: 30px;
+    transition: opacity 0.3s ease, transform 0.3s ease; 
+}
+
+
+.QuizBox .hover-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    opacity: 0; 
+    transition: opacity 0.3s ease; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 1; 
+}
+
+
+.QuizBox:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+
+.QuizBox:hover img {
+    opacity: 0.1; 
+}
+
+.QuizBox:hover .Quiz-title{
+    opacity: 0.1; 
+}
+
+.QuizBox:hover .hover-text {
+    opacity: 1; 
+}
+
+
+.QuizBox .Quiz-title {
+    position: absolute;
+    bottom: 30px; 
+    left: 50%;
+    transform: translateX(-50%);  
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.hover-text{
+
+    text-align: center;
+    width: 200px;
+    font-size: 18px;
+
+}
+
+.Quiz-Descript{
+    width: 80%;
+}
