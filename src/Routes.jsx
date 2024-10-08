@@ -7,6 +7,7 @@ import Join from "./Join";
 import Passwordfind from "./password-find";
 import Quiz from "./Quiz/Quiz";
 import QuizMain from "./Quiz/QuizMain";
+import TournamentMain from "./Tournament/TournamentMain";
 
 
 
@@ -43,7 +44,10 @@ const Routes = () => {
       path: "/quiz_",
       element: <QuizMain />,
     },
-   
+    {
+      path: "/tournament",
+      element: <TournamentMain/>,
+    },
     
   ]);
 
