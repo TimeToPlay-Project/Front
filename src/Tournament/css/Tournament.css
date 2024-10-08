@@ -1,0 +1,19 @@
+.tournament-main {
+    justify-content: center;
+    align-items: center;     
+    margin: auto;          
+    background-color: rgb(248, 245, 245);
+    margin-top: 80px   ;
+}
+
+.tournament-image-pair {
+    display: flex;
+}
+
+.tournament-image-box{
+    width: 50%;
+}
+
+.tournament-image-box img {
+    width: 100%;
+}
