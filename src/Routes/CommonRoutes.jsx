@@ -1,16 +1,17 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
-import StartPage from "./StartPage";
-import MainPage from "./MainPage";
-import Login from "./Login";
-import Join from "./Join";
-import Passwordfind from "./password-find";
-import Quiz from "./Quiz/Quiz";
-import QuizMain from "./Quiz/QuizMain";
+import StartPage from "../StartPage";
+import MainPage from "../MainPage";
+import Login from "../Login";
+import Join from "../Join";
+import Passwordfind from "../password-find";
+import Quiz from "../Quiz/Quiz";
+import Test from "../Test/Test";
 
 
 
-const Routes = () => {
+
+const CommonRoutes  = () => {
   let element = useRoutes([
     { path: "/", element: <StartPage /> },
 
@@ -35,14 +36,28 @@ const Routes = () => {
     },
 
     {
-      path: "/quiz",
+      path: "/To",
       element: <Quiz />,
     },
 
     {
-      path: "/quiz_",
-      element: <QuizMain />,
+      path: "/Test",
+      element: <Test />,
     },
+
+    {
+      path: "/M",
+      element: <Quiz />,
+    },
+
+    {
+      path: "/quiz",
+      element: <Quiz />,
+    },
+
+
+    
+
    
     
   ]);
@@ -51,4 +66,4 @@ const Routes = () => {
 };
 
 
-export default Routes;
+export default CommonRoutes ;

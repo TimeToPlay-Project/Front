@@ -1,4 +1,4 @@
-.Quiz-Main-Box {
+.Test-Main-Box {
     display: flex;
     justify-content: center;
     align-items: center;     
@@ -7,7 +7,7 @@
     margin-top: 80px   ;
 }
 
-.Quiz-Total-Box {
+.Test-Total-Box {
     margin-top: 50px;
     width: 82%;
     display: flex;  
@@ -16,7 +16,7 @@
     justify-content: center;
 }
 
-.Quiz-Box {
+.Test-Box {
     margin: 10px;
 
 }
