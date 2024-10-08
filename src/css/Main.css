@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .Navigate-Box{
     width: 100%;
     
@@ -6,4 +7,14 @@
 .Main-Box{
     background-color: rgb(247, 247, 247);
      
+=======
+.Navigate-Box{
+    width: 100%;
+    
+}
+
+.Main-Box{
+    background-color: rgb(247, 247, 247);
+     
+>>>>>>> 1db3dfa4f2ddfde8fee81c4d870dfc338aa90978
 }
