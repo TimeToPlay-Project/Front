@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ContentBox from "../Common/ContentBox";
 
 function Test() {
-  const [quizData, setQuizData] = useState([]); 
+  const [testData, setTestData] = useState([]); 
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ function Test() {
 
     fetch('http://localhost:4000/api/testClass/all')
       .then(response => response.json())
-      .then(data => setQuizData(data))  
+      .then(data => setTestData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
   }, []);
 
@@ -37,7 +37,7 @@ function Test() {
 
       <div className="Test-Main-Box">
         <div className="Test-Total-Box">
-          {quizData.map((item, index) => (
+          {testData.map((item, index) => (
             <div className="Test-Box" key={index} onClick={() => handleClickToTest(item.id)}>
               <ContentBox
                 title={item.title} 

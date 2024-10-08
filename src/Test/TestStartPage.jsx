@@ -44,7 +44,7 @@ function TestStartPage() {
             <img
                 src={`http://localhost:4000/${testData}`}
                 alt="Quiz"
-                style={{ width: "300px", height: "400px" }}
+                style={{ width: "400px", height: "auto" }}
             />
             <div className="descript-Box">
                 <div className="description">00000 0 000 000 00</div>

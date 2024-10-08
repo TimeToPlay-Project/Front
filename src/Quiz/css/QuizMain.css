@@ -4,20 +4,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    /*background-color: rgb(247, 247, 247);*/
     margin-top: 80px;
+    /*background-color: rgb(247, 247, 247);*/
 }
 
 .Quiz-Image {
-    margin-bottom: 20px; 
+    margin-bottom: 60px; 
     margin-top: 80px;
+}
+
+.Quiz-Answer-Button{
+    margin-top: 40px;
 }
 
 .Quiz-Input {
     display: flex;
     flex-direction: column;
     align-items: center;
+ 
 }
 
 .Quiz-Input input {
@@ -25,7 +29,8 @@
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: 250px;
+    width: 300px;
+    height: 20px;
 }
 
 .Quiz-Input button {
@@ -107,9 +112,43 @@
 }
 
 .Answer{
-    margin-top: 10px;
+    margin-top: 30px;
     margin-bottom: 50px;
-    font-size: 28px;
+    font-size: 35px;
     font-weight: 900;
     
 }
+
+.Feedback-Image{
+
+    width: 200px;
+    height: auto;
+}
+
+.Feedback-Overlay {
+    position: absolute; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    top: 10%; /* 상단에서의 위치를 조정 */
+    left: 50%; 
+    transform: translateX(-50%); /* 수평 중앙 정렬 */
+    
+
+  }
+
+.Quiz-Answer-Box {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column; 
+}
+
+.Quiz-Feedback{
+    margin-top: 20px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+

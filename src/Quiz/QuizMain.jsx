@@ -22,19 +22,12 @@ function QuizMain() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [loading, setLoading] = useState(true); 
-  const [bgColor, setBgColor] = useState("rgb(247, 247, 247)"); 
-
-  useEffect(() => {
-    console.log("현재 answerState:", answerState);
-  }, [answerState]);
 
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
         const response = await fetch(`http://localhost:4000/api/quiz/${id}/${Number}`);
         const data = await response.json();
-        console.log(id);
-        console.log(data);
         if(data.length === 0){
           setQuizzes([]);
         }
@@ -47,7 +40,7 @@ function QuizMain() {
     };
 
     fetchQuizzes();
-  }, [id,Number]);
+  }, [id, Number]);
 
   const handleInputChange = (e) => {
     setInputAnswer(e.target.value);
@@ -58,36 +51,30 @@ function QuizMain() {
       if (inputAnswer === quizzes[currentQuestion].answer) {
         submitQuizResults(answerState + 1);
         return;
-      }
-      else{
+      } else {
         submitQuizResults(answerState);
         return;
       }
-    
     }
+
     if (inputAnswer === quizzes[currentQuestion].answer) {
       setFeedback('정답');
       setAnswer(quizzes[currentQuestion].answer);
       setAnswerState(prevState => {
         const newState = prevState === 0 ? 1 : prevState + 1; 
-        console.log("정답 개수:", newState); 
         return newState;
       });
-  
-      console.log(answerState);
-      setBgColor("linear-gradient(45deg, #3967fd, #b0c8fa, #d0d0e6, #4b4dec)"); 
     } else {
       setFeedback('오답');
       setAnswer(quizzes[currentQuestion].answer);
-      setBgColor("linear-gradient(45deg, #fa5252, #fab4b4, #e6d9d0, #fa5e53)"); 
     }
+    
     setShowFeedback(true); 
   };
 
   const handleNextQuestion = () => {
     setShowFeedback(false); 
     setInputAnswer(""); 
-    setBgColor("transparent"); 
 
     if (currentQuestion < quizzes.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -98,9 +85,6 @@ function QuizMain() {
   };
 
   const submitQuizResults = async (answerNumber) => {
-
-    console.log("정답 개수 : " + answerNumber);
-
     const resultData = {
       quizClassId: id,
       answerNumber: answerNumber, 
@@ -116,7 +100,6 @@ function QuizMain() {
       });
 
       if (response.ok) {
-        console.log('퀴즈 결과가 성공적으로 전송되었습니다.');
         navigate(`/quiz/result/${id}`, { state: { answerNumber } });
       } else {
         console.error('퀴즈 결과 전송 실패');
@@ -126,65 +109,76 @@ function QuizMain() {
     }
   };
 
-  
-
   return (
-    <div style={{ background: bgColor, transition: "background 0.3s ease" }}> 
+    <div> 
       <div className="Navigate-Box">
         <Navigate />
       </div>
-
-      <div className="Quiz-Main">
-        {loading ? (
-          <div className="No-Content">
-          <div>준비중입니다...</div>
-          <div className="Button-Box">
-            <button className="Home-Button" onClick={handleClickToHome}>Home</button>
-          </div>
-        </div>
-        ) : quizzes.length > 0 ? (
-          <>
-            <div className="Quiz-Image">
-              <img
-                src={`http://localhost:4000/${quizzes[currentQuestion].imageUrl}`}
-                alt="Quiz"
-                style={{ width: "500px", height: "400px" }}
-              />
-            </div>
-
-            {!showFeedback ? (
-              <div className="Quiz-Input">
-                <input
-                  type="text"
-                  value={inputAnswer}
-                  onChange={handleInputChange}
-                  placeholder="정답"
-                />
-                <button onClick={handleSubmit}>정답</button>
+      <div className="Quiz-Main-Box">
+        <div className="Quiz-Main">
+          {loading ? (
+            <div className="No-Content">
+              <div>준비중입니다...</div>
+              <div className="Button-Box">
+                <button className="Home-Button" onClick={handleClickToHome}>Home</button>
               </div>
-            ) : (
-              <div className="Feedback">
-                <p>{feedback}</p>
-                <div className="Answer">{answer}</div>
-                {quizCompleted ? (
+            </div>
+          ) : quizzes.length > 0 ? (
+            <>
+              <div className="Quiz-Container">
+                <div className="Quiz-Image">
+                  <img
+                    src={`http://localhost:4000/${quizzes[currentQuestion].imageUrl}`}
+                    alt="Quiz"
+                    style={{ width: "500px", height: "400px" }}
+                  />
+                </div>
+                {showFeedback && (
                   <div>
-                    <p>퀴즈를 완료하셨습니다!</p>
-                    <button onClick={handleClickToHome}>홈으로 가기</button>
+                  <div className="Feedback-Overlay">
+                    <img
+                      src={feedback === '정답' ? '/O.png' : '/X.png'}
+                      alt={feedback}
+                      className="Feedback-Image"
+                    />
+                    </div>
+                    <div className="Quiz-Answer-Box">
+                    <div className="Quiz-Feedback">{feedback}</div>
+                    <div className="Answer">{answer}</div>
+                    {quizCompleted ? (
+                      <div>
+                        <p>퀴즈를 완료하셨습니다!</p>
+                        <button onClick={handleClickToHome}>홈으로 가기</button>
+                      </div>
+                    ) : (
+                      <button onClick={handleNextQuestion} className="Next-Button">다음 문제</button>
+                    )}
                   </div>
-                ) : (
-                  <button onClick={handleNextQuestion} className="Next-Button">다음 문제</button>
+                  </div>
                 )}
               </div>
-            )}
-          </>
-        ) : (
-          <div className="No-Content">
-            <div>준비중입니다...</div>
-            <div className="Button-Box">
-              <button className="Home-Button" onClick={handleClickToHome}>Home</button>
+
+              {!showFeedback ? (
+                <div className="Quiz-Input">
+                  <input
+                    type="text"
+                    value={inputAnswer}
+                    onChange={handleInputChange}
+                    placeholder="정답"
+                  />
+                  <button className="Quiz-Answer-Button" onClick={handleSubmit}>정답</button>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="No-Content">
+              <div>준비중입니다...</div>
+              <div className="Button-Box">
+                <button className="Home-Button" onClick={handleClickToHome}>Home</button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

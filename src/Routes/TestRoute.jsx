@@ -3,6 +3,7 @@ import { useRoutes } from "react-router-dom";
 import Test from "../Test/Test";
 import TestStartPage from "../Test/TestStartPage";
 import TestMain from "../Test/TestMain";
+import TestResult from "../Test/TestResult";
 
 
 
@@ -22,6 +23,11 @@ const TestRoute = () => {
     {
       path: "/:id",
       element: <TestMain />,
+    },
+
+    {
+      path: "/result",
+      element: <TestResult />,
     },
     
 
