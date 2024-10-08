@@ -1,19 +1,17 @@
 import React from "react";
-import "./ContentBox.css"
+import "./css/ContentBox.css"
 
-function ContentBox() {
-
-  
+function ContentBox({ title, description, imageUrl }) {
   return (
     <div className="QuizBox">
       <div>
         <img 
-          src={`${process.env.PUBLIC_URL}/QUIZ.jpeg`} 
+          src={imageUrl} 
           alt="Quiz" 
         />
       </div>
-      <div className="hover-text"><div className="Quiz-Descript">남다른 상식문제를 통해 새로운 상식기준을 측정 해보세요</div></div> 
-      <div className="Quiz-title">아이돌 이상형월드컵</div> 
+      <div className="hover-text"><div className="Quiz-Descript">{description}</div></div> 
+      <div className="Quiz-title">{title}</div> 
     </div>
   );
 }

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import "./css/Quiz.css";
+import "./css/Test.css";
 import Navigate from "../Navigate";
 import { useNavigate } from 'react-router-dom';
 import ContentBox from "../Common/ContentBox";
 
-function Quiz() {
+function Test() {
   const [quizData, setQuizData] = useState([]); 
 
   const navigate = useNavigate();
 
-  const handleClickToQuiz = (id) => {
-    navigate(`/quiz/start/${id}`);
+  const handleClickToTest = (id) => {
+    navigate(`/test/start/${id}`);
   };
 
   const scrollToTop = () => {
@@ -23,7 +23,7 @@ function Quiz() {
  
   useEffect(() => {
 
-    fetch('http://localhost:4000/api/quizClass/all')
+    fetch('http://localhost:4000/api/testClass/all')
       .then(response => response.json())
       .then(data => setQuizData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
@@ -35,10 +35,10 @@ function Quiz() {
         <Navigate />
       </div>
 
-      <div className="Quiz-Main-Box">
-        <div className="Quiz-Total-Box">
+      <div className="Test-Main-Box">
+        <div className="Test-Total-Box">
           {quizData.map((item, index) => (
-            <div className="Quiz-Box" key={index} onClick={() => handleClickToQuiz(item.id)}>
+            <div className="Test-Box" key={index} onClick={() => handleClickToTest(item.id)}>
               <ContentBox
                 title={item.title} 
                 description={item.description}  
@@ -61,4 +61,4 @@ function Quiz() {
   );
 }
 
-export default Quiz;
+export default Test;

@@ -1,0 +1,46 @@
+.Main-Box-QuizStartPage{
+    background-color: rgb(247, 247, 247);
+}
+
+.descript-Box{
+    margin-left: 200px;
+    position: relative;
+
+    
+}
+
+.description{
+    margin-top: 20px;
+    border: 2px solid rgb(207, 207, 207);
+    width: 500px;
+    height: 250px;
+    border-radius: 40px;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.content-Box{
+    display: flex;
+    position: relative;
+    left: 350px;
+    
+}
+
+.TestStart-Button-Box{
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.TestStart-Button{
+
+    border: none;
+    width: 200px;
+    height: 50px;
+    border-radius: 40px;
+    background-color: rgb(133, 133, 133);
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+
+}

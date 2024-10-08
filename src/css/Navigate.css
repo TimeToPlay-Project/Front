@@ -1,14 +1,15 @@
-.menu-Box{
+.menu-Box {
     margin-left: 60px;
     display: flex;
 }
 
-.menus{
+.menus {
     line-height: 90px;
     margin-left: 30px;
     font-size: 18px;
     font-weight: bold;
-    color: gray;
+    color: rgb(177, 177, 177);
+    transition: color 0.3s ease; /* 색상 전환 효과 */
 }
 
 .menus:hover {
@@ -19,7 +20,11 @@
     color: rgb(218, 214, 214); 
 }
 
-.login-Box{
+.menus.active { /* 선택된 메뉴 스타일 */
+    color: black; /* 선택된 메뉴는 검은색 */
+}
+
+.login-Box {
     margin-left: auto;
     margin-right: 40px;
     border: 2px solid black;
@@ -35,9 +40,9 @@
 .login {
     text-align: center;
     line-height: 40px;
-  }
+}
 
-.start-Box{
+.start-Box {
     margin-right: 40px;
     border: 2px solid black;
     width: 110px;
@@ -52,11 +57,9 @@
 .start {
     text-align: center;
     line-height: 40px;
+}
 
-  }
-
-
-.Top-navigate{    
+.Top-navigate {    
     position: fixed; 
     top: 0;         
     left: 0;   
