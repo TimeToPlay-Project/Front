@@ -1,31 +1,27 @@
-<<<<<<< HEAD
-.Main-Box-QuizStartPage{
+.Main-Box-TestStartPage{
     background-color: rgb(247, 247, 247);
+    height: calc(100vh + 200px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
-.descript-Box{
-    margin-left: 200px;
-    position: relative;
-
+.Test-descript-Box{
+    width: 100%;
+    max-width: 500px;
+    min-width: 400px;
     
 }
 
-.description{
-    margin-top: 20px;
+.Test-description{
+    margin-top: 70px;
     border: 2px solid rgb(207, 207, 207);
-    width: 500px;
-    height: 250px;
-    border-radius: 40px;
+    border-radius: 20px;
     text-align: center;
     padding-top: 20px;
+    padding: 40px;
 }
 
-.content-Box{
-    display: flex;
-    position: relative;
-    left: 350px;
-    
-}
 
 .TestStart-Button-Box{
     margin-top: 100px;
@@ -44,51 +40,14 @@
     font-weight: 700;
     font-size: 15px;
 
-=======
-.Main-Box-QuizStartPage{
-    background-color: rgb(247, 247, 247);
 }
 
-.descript-Box{
-    margin-left: 200px;
-    position: relative;
-
-    
-}
-
-.description{
-    margin-top: 20px;
-    border: 2px solid rgb(207, 207, 207);
-    width: 500px;
-    height: 250px;
-    border-radius: 40px;
-    text-align: center;
-    padding-top: 20px;
-}
-
-.content-Box{
+.Test-content-Box {
+    border-radius: 20px;
+    width: 800px;
     display: flex;
-    position: relative;
-    left: 350px;
-    
-}
-
-.TestStart-Button-Box{
-    margin-top: 100px;
-    display: flex;
+    flex-direction: column;
     justify-content: center;
-}
-
-.TestStart-Button{
-
-    border: none;
-    width: 200px;
-    height: 50px;
-    border-radius: 40px;
-    background-color: rgb(133, 133, 133);
-    color: white;
-    font-weight: 700;
-    font-size: 15px;
-
->>>>>>> 1db3dfa4f2ddfde8fee81c4d870dfc338aa90978
+    align-items: center;
+    padding: 50px;
 }
