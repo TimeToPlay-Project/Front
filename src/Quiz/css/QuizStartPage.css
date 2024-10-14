@@ -1,45 +1,63 @@
-.Main-Box-QuizStartPage{
+.Main-Box-QuizStartPage {
     background-color: rgb(247, 247, 247);
+    height: calc(100vh + 200px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
-.descript-Box{
-    margin-left: 200px;
-    position: relative;
-
-    
+.Quiz-descript-Box {
+    width: 100%;
+    max-width: 500px;
+    min-width: 400px;
 }
 
-.description{
-    margin-top: 20px;
+.Quiz-description {
+    margin-top: 70px;
     border: 2px solid rgb(207, 207, 207);
-    width: 500px;
-    height: 250px;
-    border-radius: 40px;
+    border-radius: 20px;
     text-align: center;
     padding-top: 20px;
+    padding: 40px;
 }
 
-.content-Box{
+.Quiz-content-Box {
+    border-radius: 20px;
+    width: 800px;
     display: flex;
-    position: relative;
-    left: 350px;
-    
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
 }
 
-.Number-Button-Box{
-    margin-top: 100px;
+.Quiz-image-Box {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+}
+
+.Number-Button-Box {
+    margin-top: 60px;
     display: flex;
     justify-content: center;
 }
 
-.Number-Button{
-
-    border: none;
-    width: 120px;
-    height: 40px;
+.Number-Button {
+    border: 2px solid rgb(204, 203, 203);
+    width: 180px;
+    height: 50px;
     border-radius: 40px;
-    background-color: rgb(133, 133, 133);
-    color: white;
+    background-color: white;
+    color: black;
     font-weight: 700;
+}
 
+
+@media (max-height: 750px) {
+    
+    .Main-Box-QuizStartPage {
+        height: calc(100vh + 300px);
+        
+    }
 }

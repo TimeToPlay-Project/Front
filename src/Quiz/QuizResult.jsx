@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Navigate from "../Navigate";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, ReferenceLine, YAxis, Label } from 'recharts';
@@ -34,9 +33,9 @@ function ResultChart() {
     };
 
     return (
-        <div style={{ marginTop: '30px' }}>
+        <div style={{ marginTop: '40px' }}>
             <h3>당신의 평균</h3>
-            <ResponsiveContainer width={1500} height={400}>
+            <ResponsiveContainer width= "100%" height={400} >
                 <LineChart data={resultData}>
                     <Line type="monotone" dataKey="count" stroke="#2D8CFF" strokeWidth={2} dot={{ r: 4 }} />
                     

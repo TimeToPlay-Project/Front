@@ -39,15 +39,15 @@ function TestStartPage() {
    
 
 
-    <div className="Main-Box-QuizStartPage" style={{ display: 'flex', alignItems: 'center', height: '100vh'  }}>
-        <div className="content-Box">
+    <div className="Main-Box-TestStartPage">
+        <div className="Test-content-Box">
             <img
                 src={`http://localhost:4000/${testData}`}
                 alt="Quiz"
-                style={{ width: "300px", height: "400px" }}
+                style={{ width: "400px", height: "auto" }}
             />
-            <div className="descript-Box">
-                <div className="description">00000 0 000 000 00</div>
+            <div className="Test-descript-Box">
+                <div className="Test-description">00000 0 000 000 00</div>
                 <div className="TestStart-Button-Box">
                     <button className="TestStart-Button" onClick={() => handleClickToStart(10)}>테스트 시작</button>
            
