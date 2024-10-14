@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .Test-Main-Box {
     display: flex;
     justify-content: center;
@@ -31,3 +32,38 @@
 
 
 
+=======
+.Test-Main-Box {
+    display: flex;
+    justify-content: center;
+    align-items: center;     
+    margin: auto;          
+    background-color: rgb(248, 245, 245);
+    margin-top: 80px   ;
+}
+
+.Test-Total-Box {
+    margin-top: 50px;
+    width: 82%;
+    display: flex;  
+    flex-wrap: wrap;
+    row-gap: 30px;
+    justify-content: center;
+}
+
+.Test-Box {
+    margin: 10px;
+
+}
+
+.Top-Button{
+   
+    position: fixed;  
+    bottom: 5%;;          
+    right: 3%;
+    text-align: center;  
+}
+
+
+
+>>>>>>> 1db3dfa4f2ddfde8fee81c4d870dfc338aa90978

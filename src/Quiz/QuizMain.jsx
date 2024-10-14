@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import "./css/QuizMain.css";
 import Navigate from "../Navigate";
