@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import "./css/Navigate.css";
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -55,7 +53,7 @@ function Navigate() {
                     </div>
                     <div 
                         className={`menus ${selectedMenu === 'To' ? 'active' : ''}`} 
-                        onClick={() => handleMenuClick('To', '/To')}
+                        onClick={() => handleMenuClick('tournament', '/tournament')}
                     >
                         BBBB
                     </div>
