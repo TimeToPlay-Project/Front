@@ -3,7 +3,8 @@
     align-items: center;     
     margin: auto;          
     background-color: rgb(248, 245, 245);
-    margin-top: 80px   ;
+    margin-top: 80px;
+    padding-top: 10px;
 }
 
 .tournament-image-pair {

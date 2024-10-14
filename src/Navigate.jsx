@@ -53,7 +53,7 @@ function Navigate() {
                     </div>
                     <div 
                         className={`menus ${selectedMenu === 'To' ? 'active' : ''}`} 
-                        onClick={() => handleMenuClick('To', '/To')}
+                        onClick={() => handleMenuClick('tournament', '/tournament')}
                     >
                         BBBB
                     </div>
