@@ -31,3 +31,18 @@
 
 
 
+/** 모바일 **/
+
+@media ( (max-width: 500px) and (max-height: 1000px) ) {
+
+
+    .Test-Main-Box {
+        display: flex;
+        justify-content: center;
+        align-items: center;     
+        margin: auto;          
+        background-color: rgb(248, 245, 245);
+        margin-top: 50px   ;
+    }
+
+}

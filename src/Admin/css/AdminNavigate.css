@@ -1,0 +1,67 @@
+.Top-navigate-Admin {    
+
+
+    position: fixed;  
+    z-index: 100;
+    width: 270px;
+    height: 100%;    
+    border-bottom: 2px solid rgb(246, 246, 246);
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    justify-content: center;
+    border-right: 3px solid rgb(162, 162, 162);
+
+
+}
+
+.Logo{
+    width: 180px;
+    height: auto;
+}
+
+.Logo-Box-Admin{
+    margin-right: 1px;
+    border-bottom: 2px solid rgb(213, 213, 213);
+    height: 90px;
+    width: 280px;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-Box-Admin {
+    display: grid;
+    width: 270px;
+    justify-content: center;
+    margin-bottom: 100px;
+
+}
+
+
+.menus-admin {
+    line-height: 90px;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(177, 177, 177);
+    transition: color 0.3s ease; /* 색상 전환 효과 */
+}
+
+.menus-admin :hover {
+    color: black;
+}
+
+.menus-admin :active {
+    color: rgb(218, 214, 214); 
+}
+
+.menus-admin .active { /* 선택된 메뉴 스타일 */
+    color: black; /* 선택된 메뉴는 검은색 */
+}
+
+.Logout-Box{
+    line-height: 90px;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(177, 177, 177);
+    transition: color 0.3s ease; 
+}

@@ -4,7 +4,7 @@ import "./css/ContentBox.css"
 
 function ContentBox({ title, description, imageUrl }) {
   return (
-    <div className="QuizBox">
+    <div className="ContentBox">
       <div>
         <img 
           src={imageUrl} 
@@ -12,7 +12,7 @@ function ContentBox({ title, description, imageUrl }) {
         />
       </div>
       <div className="hover-text"><div className="Quiz-Descript">{description}</div></div> 
-      <div className="Quiz-title">{title}</div> 
+      <div className="Content-title">{title}</div> 
     </div>
   );
 }

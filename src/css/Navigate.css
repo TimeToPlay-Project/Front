@@ -71,3 +71,80 @@
     display: flex;
     background-color: white;
 }
+
+.Logo{
+    width: 200px;
+    height: auto;
+}
+
+.Logo-Box{
+    margin-left: 80px;
+}
+
+
+
+@media ( (max-width: 500px) and (max-height: 1000px) ) {
+
+
+    .Logo-Box{
+        margin-top: 5px;
+        margin-left: 1px;
+    }
+
+
+    .Logo{
+        width: 110px;
+        height: auto;
+
+    }
+
+    .Top-navigate {    
+        position: fixed; 
+        top: 0;         
+        left: 0;   
+        z-index: 100;
+        width: 100%;    
+        height: 56px;
+        border-bottom: 2px solid rgb(246, 246, 246);
+        display: flex;
+        background-color: white;
+    }
+
+    .menu-Box {
+        margin-left: 1px;
+        display: flex;
+    }
+
+    .menus {
+        line-height: 55px;
+        margin-left: 30px;
+        font-size: 13px;
+        font-weight: bold;
+        color: rgb(177, 177, 177);
+        transition: color 0.3s ease; /* 색상 전환 효과 */
+    }
+
+    .login-Box {
+        margin-left: auto;
+        margin-right: 8px;
+        border: 2px solid black;
+        width: 50px;
+        height: 20px;
+        margin-top: 18px;
+        border-radius: 25px;
+        background-color: black;
+        color: white;
+        font-weight: bold;
+    }
+
+    .login {
+        text-align: center;
+        line-height: 20px;
+        font-size: 10px;
+    }
+
+    .start-Box {
+        display: none;
+    }
+
+}

@@ -16,7 +16,7 @@ function TestResult() {
             
             <div className="Test-Result-Box">
                 <div className="Test-Result-Img-Box">
-                    <img src={`http://localhost:4000${result[2]}`} alt="Result" className="result-image" />
+                    <img src={`http://localhost:4000/${result[2]}`} alt="Result" className="result-image" />
                 </div>
                 <div className="Test-Result-Description-Box">
                     <div className="Test-Result-Description-Smallbox">

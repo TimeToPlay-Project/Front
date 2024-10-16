@@ -14,6 +14,8 @@
     max-width: 600px;
     overflow: hidden; 
     margin: auto;
+
+    
 }
   
   .progress-bar {
@@ -107,4 +109,52 @@
     opacity: 1;
     transform: scale(1) translateY(0); /* 원래 크기와 위치로 */
   }
+
 }
+
+
+/* 노트북  */
+
+@media ( (max-width: 1700px) and (max-height: 1100px) ) {
+  
+  .TestBox {
+
+      position: relative; 
+      width: 400px;
+      height: 600px;
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden; 
+      margin: auto;
+  
+  }
+
+  .progress-bar {
+    margin-top: 10px;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .image-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center; 
+    margin-bottom: 20px;
+  }
+  
+  .Test-Content-Img {
+    width: 180px;
+    height: auto;
+  }
+
+
+}
+

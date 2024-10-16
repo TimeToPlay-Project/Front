@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./css/Navigate.css";
+import "./css/AdminNavigate.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function Navigate() {
+function AdminNavigate() {
     const navigate = useNavigate();
     const location = useLocation();  
     const [selectedMenu, setSelectedMenu] = useState(null);
@@ -39,8 +39,8 @@ function Navigate() {
 
     return (
         <div>
-            <div className="Top-navigate">
-                <div className="Logo-Box"> 
+            <div className="Top-navigate-Admin">
+                <div className="Logo-Box-Admin"> 
                     <img 
                         onClick={handleClickToMain}
                         src={`${process.env.PUBLIC_URL}/Logo.PNG`} 
@@ -49,42 +49,39 @@ function Navigate() {
                         
                     />
                 </div>
-                <div className="menu-Box">
+                <div className="menu-Box-Admin">
                     <div 
-                        style={{marginLeft:'1px'}}
-                        className={`menus ${selectedMenu === 'quiz' ? 'active' : ''}`} 
+                        className={`menus-admin ${selectedMenu === 'quiz' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('quiz', '/quiz')}
                     >
                         AAAA
                     </div>
                     <div 
-                        className={`menus ${selectedMenu === 'To' ? 'active' : ''}`} 
+                        className={`menus-admin  ${selectedMenu === 'To' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('tournament', '/tournament')}
                     >
                         BBBB
                     </div>
                     <div 
-                        className={`menus ${selectedMenu === 'test' ? 'active' : ''}`} 
+                        className={`menus-admin  ${selectedMenu === 'test' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('test', '/test')}
                     >
                         CCCC
                     </div>
                     <div 
-                        className={`menus ${selectedMenu === 'M' ? 'active' : ''}`} 
+                        className={`menus-admin  ${selectedMenu === 'M' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('M', '/M')}
                     >
                         DDDD
                     </div>
                 </div>
-                <div className="login-Box" onClick={handleClickToLogin}>
-                    <div className="login">로그인</div>
-                </div>  
-                <div className="start-Box" onClick={handleClickToAdmin}>
-                    <div className="start">시작하기</div>
+                
+                <div className="Logout-Box" onClick={handleClickToAdmin}>
+                    <div className="Logout">로그아웃</div>
                 </div>  
             </div>
         </div>
     );
 }
 
-export default Navigate;
+export default AdminNavigate;
