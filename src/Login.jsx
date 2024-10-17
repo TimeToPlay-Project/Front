@@ -26,10 +26,10 @@ function Login() {
     <div className="Login-Box">
 
             <img 
-            className="Login-Logo"
-            onClick={handleClickToMain}
-            src={`${process.env.PUBLIC_URL}/Login-Logo.PNG`} 
-            alt="Logo" 
+              className="Login-Logo"
+              onClick={handleClickToMain}
+              src={`${process.env.PUBLIC_URL}/Login-Logo.PNG`} 
+              alt="Logo" 
             />
 
         <div className="ID-PW-InputBox">

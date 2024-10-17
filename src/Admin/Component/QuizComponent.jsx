@@ -36,10 +36,10 @@ function QuizComponent() {
       </div>
       
 
-      <div className="Quiz-Main-Box">
-        <div className="Quiz-Total-Box">
+      <div className="QuizComponent-Main-Box">
+        <div className="QuizComponent-Total-Box">
           {quizData.map((item, index) => (
-            <div className="Quiz-Box" key={index} onClick={() => handleClickToQuiz(item.id)}>
+            <div className="QuizComponent-Box" key={index} onClick={() => handleClickToQuiz(item.id)}>
               <ContentBox
                 title={item.title} 
                 id = {index}

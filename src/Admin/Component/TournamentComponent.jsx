@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import ContentBox from "./AdminContentBox";
+import "./css/QuizComponent.css";
+
 
 function TournamentComponent() {
   const [tournamentData, setTournamentData] = useState([]); 
@@ -24,12 +26,16 @@ function TournamentComponent() {
 
   return (
     <div>
+
+      <div className="Admin-Create-Button-Box">
+        <button className="Admin-Create-Button">Create</button>
+      </div>
       
 
-      <div className="Quiz-Main-Box">
-        <div className="Quiz-Total-Box">
+      <div className="QuizComponent-Main-Box">
+        <div className="QuizComponent-Total-Box">
           {tournamentData.map((item, index) => (
-            <div className="Quiz-Box" key={index} onClick={() => handleClickTournament(item.id)}>
+            <div className="QuizComponent-Box" key={index} onClick={() => handleClickTournament(item.id)}>
               <ContentBox
                 title={item.title} 
                 description={item.description}  

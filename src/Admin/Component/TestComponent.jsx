@@ -24,12 +24,16 @@ function TestComponent() {
 
   return (
     <div>
+
+      <div className="Admin-Create-Button-Box">
+        <button className="Admin-Create-Button">Create</button>
+      </div>
       
 
-      <div className="Test-Main-Box">
-        <div className="Test-Total-Box">
+      <div className="TestComponent-Main-Box">
+        <div className="TestComponent-Total-Box">
           {testData.map((item, index) => (
-            <div className="Test-Box" key={index} onClick={() => handleClickToTest(item.id)}>
+            <div className="TestComponent-Box" key={index} onClick={() => handleClickToTest(item.id)}>
               <ContentBox
                 title={item.title} 
                 description={item.description}  
