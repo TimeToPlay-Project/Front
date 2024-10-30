@@ -2,12 +2,14 @@
 import React from "react";
 import "./css/AdminContentBox.css"
 
-function AdminContentBox({ title, description, imageUrl, id }) {
+function AdminContentBox({ title, setEditorState, imageUrl, id, setContentIndex }) {
 
 
 
-  const handleEdit= () =>{
-    console.log(id);
+
+  const handleEdit = (id) =>{
+    setContentIndex(id);
+    setEditorState(true);
   }
 
 
@@ -21,7 +23,7 @@ function AdminContentBox({ title, description, imageUrl, id }) {
       </div>
       <div className="hover-text">
         <div className="Quiz-Descript">
-          <button className="Admin-Update" onClick={handleEdit(id)} >Edit</button>
+          <button className="Admin-Update" onClick={() => handleEdit(id)} >Edit</button>
           <button className="Admin-Delete">Delete</button>
         </div>
       </div> 

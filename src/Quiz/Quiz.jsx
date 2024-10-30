@@ -43,7 +43,7 @@ function Quiz() {
               <ContentBox
                 title={item.title} 
                 description={item.description}  
-                imageUrl={`http://localhost:4000/${item.imageUrl}`}  
+                imageUrl={`${process.env.REACT_APP_API_URL}/${item.imageUrl}`}  
               />
             </div>
           ))}

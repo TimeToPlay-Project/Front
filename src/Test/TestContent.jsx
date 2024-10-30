@@ -16,7 +16,7 @@ function TestContent() {
   useEffect(() => {
     console.log("id : " + id);
 
-    fetch(`http://localhost:4000/api/test/${id}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/test/${id}`)
       .then(response => response.json())
       .then(data => {
         setTestData(data);  
@@ -55,7 +55,7 @@ function TestContent() {
 
   const submitAnswers = ({ id, answers }) => {
     console.log(JSON.stringify({ id: id, answers: answers })); 
-    fetch(`http://localhost:4000/api/test/submit`, { 
+    fetch(`${process.env.REACT_APP_API_URL}/api/test/submit`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function TestContent() {
         {testData.length > 0 && currentIndex < testData.length && (
           <img 
             className={`Test-Content-Img ${fadeClass}`} 
-            src={`http://localhost:4000/${testData[currentIndex].imageUrl}`} 
+            src={`${process.env.REACT_APP_API_URL}/${testData[currentIndex].imageUrl}`} 
             alt="Question visual" 
           />
         )}

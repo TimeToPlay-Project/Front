@@ -26,7 +26,7 @@ function QuizMain() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/quiz/${id}/${Number}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/quiz/${id}/${Number}`);
         const data = await response.json();
         if(data.length === 0){
           setQuizzes([]);
@@ -91,7 +91,7 @@ function QuizMain() {
     };
 
     try {
-      const response = await fetch('http://localhost:4000/api/quiz/results/submit', {
+      const response = await fetch('${process.env.REACT_APP_API_URL}/api/quiz/results/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ function QuizMain() {
               <div className="Quiz-Container">
                 <div className="Quiz-Image-Box">
                   <img
-                    src={`http://localhost:4000/${quizzes[currentQuestion].imageUrl}`}
+                    src={`${process.env.REACT_APP_API_URL}/${quizzes[currentQuestion].imageUrl}`}
                     alt="Quiz"
                     className="Quiz-Image"
                   />

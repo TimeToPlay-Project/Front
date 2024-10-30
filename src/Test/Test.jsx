@@ -23,7 +23,7 @@ function Test() {
  
   useEffect(() => {
 
-    fetch('http://localhost:4000/api/testClass/all')
+    fetch(`${process.env.REACT_APP_API_URL}/api/testClass/all`)
       .then(response => response.json())
       .then(data => setTestData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
@@ -42,7 +42,7 @@ function Test() {
               <ContentBox
                 title={item.title} 
                 description={item.description}  
-                imageUrl={`http://localhost:4000/${item.imageUrl}`}  
+                imageUrl={`${process.env.REACT_APP_API_URL}/${item.imageUrl}`}  
               />
             </div>
           ))}

@@ -13,7 +13,7 @@ function QuizStartPage() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:4000/api/quizClass/imageUrl/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/quizClass/imageUrl/${id}`)
             .then(response => response.json())
             .then(data => setQuizData(data))
             .catch(error => console.error('데이터 가져오기 실패:', error));
@@ -29,7 +29,7 @@ function QuizStartPage() {
                 <div className="Quiz-content-Box">
                     <div className="Quiz-image-Box">
                         <img
-                            src={`http://localhost:4000/${quizData}`}
+                            src={`${process.env.REACT_APP_API_URL}/${quizData}`}
                             alt="Quiz"
                             style={{ width: "100%", height: "auto" }}
                         />

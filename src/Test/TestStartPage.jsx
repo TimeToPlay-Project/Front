@@ -18,7 +18,7 @@ function TestStartPage() {
 
     useEffect(() => {
 
-        fetch(`http://localhost:4000/api/testClass/imageUrl/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/testClass/imageUrl/${id}`)
           .then(response => response.json())
           .then(data => setTestData(data))  
           .catch(error => console.error('데이터 가져오기 실패:', error));
@@ -42,7 +42,7 @@ function TestStartPage() {
     <div className="Main-Box-TestStartPage">
         <div className="Test-content-Box">
             <img
-                src={`http://localhost:4000/${testData}`}
+                src={`${process.env.REACT_APP_API_URL}/${testData}`}
                 alt="Quiz"
                 style={{ width: "400px", height: "auto" }}
             />

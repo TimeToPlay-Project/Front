@@ -50,6 +50,148 @@
 
 }
 
+.QuizCreateStart-Box{
+    margin-bottom: 50px;
+    display: flex;
+    margin-top: 50px;
+    margin-left: 230px;
+}
+
+.QuizCreateStart{
+    line-height: 50px;
+    text-align: center;
+    justify-content: center;
+    border: 2px solid rgb(196, 196, 196);
+    border-radius: 50px;
+    width: 120px;
+    height: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    
+}
+
+.QuizCreateStart:hover{
+    background-color: rgb(196, 196, 196);
+}
+
+/*
+.input-Box {
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    background-position: center;
+    border: 1px solid #d3d3d3;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 100px;
+}
+*/
+
+.input-Box {
+    display: flex; /* 추가: 내부 요소를 정렬하기 위해 */
+    align-items: center; /* 추가: 수직 중앙 정렬 */
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    background-position: center;
+    border: 1px solid #d3d3d3;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 50px;
+    position: relative; /* 추가: 자식 요소의 위치를 위해 */
+}
+
+.input-image {
+    position: absolute; /* 추가: 위치를 절대값으로 설정 */
+    top: 0;
+    left: 0;
+    width: 100%; /* 추가: 상위 요소와 동일한 크기로 설정 */
+    height: 100%; /* 추가: 상위 요소와 동일한 크기로 설정 */
+    opacity: 0; /* 추가: 보이지 않게 설정 */
+    cursor: pointer; /* 추가: 포인터 커서 */
+}
+
+
+  
+.input-image{
+    justify-content: center;
+    display: none;
+}
+
+.QuizCreate-Content-Box{
+    border: 2px solid rgb(170, 170, 170);
+    display: flex;
+    width: 200px;
+    height: 300px; 
+    flex-wrap: wrap;
+    margin-right: 50px;
+    margin-bottom: 30px;
+}
+
+.QuizCreate-Content-Box2{
+
+    border: 2px solid rgb(170, 170, 170);
+    display: flex;
+    width: 400px;
+    height: 400px; 
+    flex-wrap: wrap;
+    margin-left: 200px;
+    margin-bottom: 100px;
+    margin-top: 100px;
+}
+
+.answer{
+    width: 100px;
+}
+
+.QuizCreate-Content-ToTal-Box{
+    margin-left: 300px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Main-Button-Box{
+    position: relative;
+    left: 750px;
+}
+
+.QuizCreate-Box {
+    display: flex;
+    flex-direction: column; /* 세로로 쌓이도록 설정 */
+    align-items: center; /* 가운데 정렬 */
+    width: 100%; /* 전체 너비 사용 */
+    padding: 20px; /* 내부 여백 */
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
+  }
+
+
+
+  .QuizCreate-Main-button, .QuizCreate-Submit-Button {
+
+    width: 120px;
+    height: 40px;
+    border: 2px solid black;
+    background-color: transparent;
+    border-radius: 20px;
+    margin-right: 20px;
+
+}
+.QuizCreate-Main-button:hover , .QuizCreate-Submit-Button:hover {
+
+ 
+    background-color: rgb(187, 187, 187);
+
+
+}
+
+
+
+
+
+
+
+
 
 @media (max-height: 750px) {
     .QuizComponent-Main-Box {

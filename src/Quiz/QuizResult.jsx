@@ -16,7 +16,7 @@ function ResultChart() {
     const [topPercentage, setTopPercentage] = useState(0);
 
     useEffect(() => {
-        fetch(`http://localhost:4000/api/quiz/results/${id}/${answerNumber}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/quiz/results/${id}/${answerNumber}`)
           .then(response => response.json())
           .then(data => {
             setResultData(data.counts); 
