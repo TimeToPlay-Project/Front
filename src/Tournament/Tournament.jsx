@@ -15,7 +15,7 @@ function Tournament() {
   };
 
   const handleClickTournament = (id) => {
-    navigate(`/tournament/${id}`);
+    navigate(`/tournament/start/${id}`);
   }
 
  

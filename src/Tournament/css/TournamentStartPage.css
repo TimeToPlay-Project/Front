@@ -1,0 +1,67 @@
+.Main-Box-TournamentStartPage{
+    background-color: rgb(247, 247, 247);
+    height: calc(100vh + 100px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.Tournament-descript-Box{
+    width: 100%;
+    max-width: 500px;
+    min-width: 400px;
+    
+}
+
+.Tournament-description{
+    margin-top: 10px;
+    border: 2px solid rgb(207, 207, 207);
+    border-radius: 20px;
+    text-align: center;
+    padding-top: 20px;
+    padding: 40px;
+}
+
+
+.TournamentStart-Button-Box{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.TournamentStart-Button{
+    border: none;
+    width: 200px;
+    height: 50px;
+    border-radius: 40px;
+    background-color: rgb(133, 133, 133);
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+
+}
+
+.Tournament-content-Box {
+    border-radius: 20px;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+
+.Tournament-select-box {
+    margin-top: 20px;
+}
+
+.Tournament-select-box span{
+    margin-right: 10px;
+}
+
+#tournament-round-select {
+    height: 25px;
+    width: 100px;
+    font-size: 1em;
+}
+
