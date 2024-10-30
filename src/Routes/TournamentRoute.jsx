@@ -3,6 +3,7 @@ import { useRoutes } from "react-router-dom";
 import Tournament from "../Tournament/Tournament";
 import TournamentMain from "../Tournament/TournamentMain";
 import TournamentRanking from "../Tournament/TournamentRanking";
+import TournamentStartPage from "../Tournament/TournamentStartPage";
 
 
 
@@ -12,9 +13,14 @@ const TournamentRoute = () => {
       path: "/",
       element: <Tournament/>,
     },
+
+    {
+      path: "/start/:id",
+      element: <TournamentStartPage/>,
+    },
     
     {
-      path: "/:id",
+      path: "/:id/:selectedCount",
       element: <TournamentMain />,
     },
 

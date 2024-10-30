@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 
 function TournamentMain() {
-    const { id } = useParams();
+    const { id, selectedCount } = useParams();
     const [currentRound, setCurrentRound] = useState(1);
     const [currentImages, setCurrentImages] = useState([]);
     const [nextRoundImages, setNextRoundImages] = useState([]);
@@ -14,6 +14,10 @@ function TournamentMain() {
 
     const handleClickToTournament = () => {
         navigate('/tournament');
+    }
+
+    const handleClickToRestart = () => {
+        navigate(`/tournament/start/${id}`);
     }
 
     const handleClickToTournamentRanking = () => {
@@ -43,35 +47,7 @@ function TournamentMain() {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:4000/api/tournament/counts/${id}`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('tournament count response not ok');
-            }
-            return response.json();
-          })
-          .then(data => {
-            const countOptions = {};
-            data.forEach(count => {
-              countOptions[count.key] = count.value;
-            });
-    
-            Swal.fire({
-              title: '총 라운드를 선택하세요',
-              input: 'select',
-              inputOptions: countOptions,
-              confirmButtonText: '확인',
-              cancelButtonText: '이상형월드컵',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const selectedCount = result.value;
-                    console.log("selectedCount:", selectedCount);
-                    getTournamentImages(id, selectedCount);
-                } else if(result.isDenied) {
-                    navigate('/tournament');
-                }
-            })
-        })
+        getTournamentImages(id, selectedCount);
     }, []);
 
     useEffect(() => {
@@ -143,7 +119,7 @@ function TournamentMain() {
                         </div>
                         <div>
                             <div className="tournament-menu-box">
-                                <button type="button" onClick={() => window.location.reload()}>다시시작</button>
+                                <button type="button" onClick={() => handleClickToRestart()}>다시시작</button>
                                 <button type="button" onClick={() => handleClickToTournamentRanking()}>랭킹보기</button>
                                 <button type="button" onClick={() => handleClickToTournament()}>다른 월드컵보기</button>
                             </div>
