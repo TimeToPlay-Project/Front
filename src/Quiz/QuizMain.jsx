@@ -116,14 +116,7 @@ function QuizMain() {
       </div>
       <div className="Quiz-Main-Box">
         <div className="Quiz-Main">
-          {loading ? (
-            <div className="No-Content">
-              <div>준비중입니다...</div>
-              <div className="Button-Box">
-                <button className="Home-Button" onClick={handleClickToHome}>Home</button>
-              </div>
-            </div>
-          ) : quizzes.length > 0 ? (
+          {quizzes.length > 0 ? (
             <>
               <div className="Quiz-Container">
                 <div className="Quiz-Image-Box">
