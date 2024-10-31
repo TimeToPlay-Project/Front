@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./css/TestComponent.css";
 import { useNavigate } from 'react-router-dom';
-import AdminContentBox from "./AdminContentBox";
+import EditorContentBox from "./EditorContentBox";
 
 function TestComponent() {
   const [testData, setTestData] = useState([]); 
@@ -15,7 +15,7 @@ function TestComponent() {
   };
 
   const handleClickCreate = () =>{
-    setCreateState(true);
+    navigate(`/editor/test/edit/new`);
   }
 
   const handleClickCreateNon = () =>{
@@ -35,48 +35,15 @@ function TestComponent() {
   }, [contentState]);
 
   return (
-
-
-    
     <div>
-      {createState ? ( 
-
-
-
-
-        <div>
-
-        <div>sss</div>
-
-
-        <div>
-          <button onClick={handleClickCreateNon}>Main</button>
-        </div>
-
-
-        </div>
-
-
-
-
-
-       
-
-
-
-      ):(
-    <>
-
-      <div className="Admin-Create-Button-Box">
-        <button className="Admin-Create-Button"  onClick={handleClickCreate}>Create</button>
+      <div className="Editor-Create-Button-Box">
+        <button className="Editor-Create-Button"  onClick={handleClickCreate}>Create</button>
       </div>
-      
-
       <div className="TestComponent-Main-Box">
         <div className="TestComponent-Total-Box">
           {testData.map((item, index) => (
             <div className="TestComponent-Box" key={index} onClick={() => handleClickToTest(item.id)}>
-              <AdminContentBox
+              <EditorContentBox
                 title={item.title} 
                 id = {index}
                 description={item.description}  
@@ -88,8 +55,6 @@ function TestComponent() {
           ))}
         </div>
       </div>
-      </>
-      )}
     </div>
   );
 }

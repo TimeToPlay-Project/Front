@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import AdminContentBox from "./AdminContentBox";
+import EditorContentBox from "./EditorContentBox";
 import "./css/QuizComponent.css";
 
 
@@ -67,8 +67,8 @@ function TournamentComponent() {
       ):(
     <>
 
-      <div className="Admin-Create-Button-Box">
-        <button className="Admin-Create-Button"  onClick={handleClickCreate}>Create</button>
+      <div className="Editor-Create-Button-Box">
+        <button className="Editor-Create-Button"  onClick={handleClickCreate}>Create</button>
       </div>
       
 
@@ -76,7 +76,7 @@ function TournamentComponent() {
         <div className="QuizComponent-Total-Box">
           {tournamentData.map((item, index) => (
             <div className="QuizComponent-Box" key={index} onClick={() => handleClickTournament(item.id)}>
-              <AdminContentBox
+              <EditorContentBox
                 title={item.title} 
                 id = {index}
                 description={item.description}  

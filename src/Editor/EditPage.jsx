@@ -1,23 +1,24 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import "../css/Main.css";
-import AdminNavigate from "./AdminNavigate";
-import QuizComponent from "./Component/QuizComponent";
-import TestComponent from "./Component/TestComponent";
-import TournamentComponent from "./Component/TournamentComponent";
+import EditorNavigate from "./EditorNavigate";
+import QuizEditPage from "./Component/QuizEditPage";
+import TestEditPage from "./Component/TestEditPage";
+import TournamentEditPage from "./Component/TournamentEditPage";
 
 
 
-function AdminMain() {
-  const [activeComponent, setActiveComponent] = useState('main'); 
+function EditorMain() {
+  const { type, id } = useParams();
 
   const renderComponent = () => {
-    switch (activeComponent) {
+    switch (type) {
       case 'quiz':
-        return <QuizComponent />;
+        return <QuizEditPage />;
       case 'tournament':
-        return <TournamentComponent />;
+        return <TournamentEditPage />;
       case 'test':
-        return <TestComponent />;
+        return <TestEditPage />;
     //   case 'M':
     //     return <MComponent />;
       default:
@@ -28,7 +29,7 @@ function AdminMain() {
   return (
     <div>
       <div className="Navigate-Box">
-        <AdminNavigate setActiveComponent={setActiveComponent} />
+        <EditorNavigate sctiveComponent={type} />
       </div>
       <div className="Main-Box" style={{ display: 'flex', justifyContent: 'center',  height: '100vh' }}>
         {renderComponent()}
@@ -37,4 +38,4 @@ function AdminMain() {
   );
 }
 
-export default AdminMain;
+export default EditorMain;

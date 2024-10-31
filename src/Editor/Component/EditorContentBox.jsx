@@ -1,8 +1,8 @@
 
 import React from "react";
-import "./css/AdminContentBox.css"
+import "./css/EditorContentBox.css"
 
-function AdminContentBox({ title, setEditorState, imageUrl, id, setContentIndex }) {
+function EditorContentBox({ title, setEditorState, imageUrl, id, setContentIndex }) {
 
 
 
@@ -23,8 +23,8 @@ function AdminContentBox({ title, setEditorState, imageUrl, id, setContentIndex 
       </div>
       <div className="hover-text">
         <div className="Quiz-Descript">
-          <button className="Admin-Update" onClick={() => handleEdit(id)} >Edit</button>
-          <button className="Admin-Delete">Delete</button>
+          <button className="Editor-Update" onClick={() => handleEdit(id)} >Edit</button>
+          <button className="Editor-Delete">Delete</button>
         </div>
       </div> 
       <div className="Content-title">{title}</div> 
@@ -32,4 +32,4 @@ function AdminContentBox({ title, setEditorState, imageUrl, id, setContentIndex 
   );
 }
 
-export default AdminContentBox;
+export default EditorContentBox;

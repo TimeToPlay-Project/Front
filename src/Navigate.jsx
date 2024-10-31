@@ -29,7 +29,7 @@ function Navigate() {
     };
 
     const handleClickToAdmin = () =>{
-        navigate("/admin");
+        navigate("/editor/main");
     }
 
     const handleMenuClick = (menu, path) => {
