@@ -1,17 +1,18 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import "../css/Main.css";
-import AdminNavigate from "./AdminNavigate";
-import QuizComponent from "./Component/QuizComponent";
-import TestComponent from "./Component/TestComponent";
-import TournamentComponent from "./Component/TournamentComponent";
+import EditorNavigate from "./EditorNavigate";
+import QuizComponent from "./Quiz/QuizComponent";
+import TestComponent from "./Test/TestComponent";
+import TournamentComponent from "./Tournament/TournamentComponent";
 
 
 
-function AdminMain() {
-  const [activeComponent, setActiveComponent] = useState('main'); 
+function EditorMain() {
+  const { type } = useParams();
 
   const renderComponent = () => {
-    switch (activeComponent) {
+    switch (type) {
       case 'quiz':
         return <QuizComponent />;
       case 'tournament':
@@ -28,7 +29,7 @@ function AdminMain() {
   return (
     <div>
       <div className="Navigate-Box">
-        <AdminNavigate setActiveComponent={setActiveComponent} />
+        <EditorNavigate type={type} />
       </div>
       <div className="Main-Box" style={{ display: 'flex', justifyContent: 'center',  height: '100vh' }}>
         {renderComponent()}
@@ -37,4 +38,4 @@ function AdminMain() {
   );
 }
 
-export default AdminMain;
+export default EditorMain;

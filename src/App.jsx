@@ -4,7 +4,7 @@ import CommonRoutes from "./Routes/CommonRoutes";
 import QuizRoutes from "./Routes/QuizRoutes";
 import TestRoute from "./Routes/TestRoute";
 import TournamentRoute from "./Routes/TournamentRoute";
-import AdminRoute from "./Routes/AdminRoutes"
+import EditorRoutes from "./Routes/EditorRoutes";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
 
         <Route path="/tournament/*" element={<TournamentRoute />} />
 
-        <Route path="/admin/*" element={<AdminRoute />} />
+        <Route path="/editor/*" element={<EditorRoutes />} />
 
 
       </Routes>

@@ -1,4 +1,4 @@
-.Top-navigate-Admin {    
+.Top-navigate-Editor {    
 
 
     position: fixed;  
@@ -21,7 +21,7 @@
     height: auto;
 }
 
-.Logo-Box-Admin{
+.Logo-Box-Editor{
     margin-right: 1px;
     border-bottom: 2px solid rgb(213, 213, 213);
     height: 90px;
@@ -30,7 +30,7 @@
     justify-content: center;
 }
 
-.menu-Box-Admin {
+.menu-Box-Editor {
     display: grid;
     width: 100%;
     justify-content: center;
@@ -40,7 +40,7 @@
 }
 
 
-.menus-admin {
+.menus-Editor {
     line-height: 80px;
     font-size: 18px;
     width: 230px;
@@ -51,16 +51,16 @@
     text-align: center;
 }
 
-.menus-admin:hover {
+.menus-Editor:hover {
     color: black;
     background-color: rgb(224, 187, 242);
 }
 
-.menus-admin:active {
+.menus-Editor:active {
     color: rgb(218, 214, 214); 
 }
 
-.menus-admin.active { /* 선택된 메뉴 스타일 */
+.menus-Editor.active { /* 선택된 메뉴 스타일 */
     color: black; /* 선택된 메뉴는 검은색 */
 }
 
