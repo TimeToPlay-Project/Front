@@ -14,11 +14,11 @@ function EditorMain() {
   const renderComponent = () => {
     switch (type) {
       case 'quiz':
-        return <QuizEditPage />;
+        return <QuizEditPage id={id}/>;
       case 'tournament':
-        return <TournamentEditPage />;
+        return <TournamentEditPage id={id}/>;
       case 'test':
-        return <TestEditPage />;
+        return <TestEditPage id={id}/>;
     //   case 'M':
     //     return <MComponent />;
       default:

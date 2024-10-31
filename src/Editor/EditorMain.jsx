@@ -29,7 +29,7 @@ function EditorMain() {
   return (
     <div>
       <div className="Navigate-Box">
-        <EditorNavigate sctiveComponent={type} />
+        <EditorNavigate type={type} />
       </div>
       <div className="Main-Box" style={{ display: 'flex', justifyContent: 'center',  height: '100vh' }}>
         {renderComponent()}

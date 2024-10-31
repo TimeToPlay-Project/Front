@@ -1,7 +1,8 @@
 import React from "react";
 import "./css/TournamentComponent.css";
 
-function TournamentEditPage() {
+function TournamentEditPage(id) {
+    console.log(id);
     return (
         <div>
             <div>sss</div>

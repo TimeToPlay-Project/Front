@@ -43,7 +43,7 @@ function TournamentComponent() {
             <div className="QuizComponent-Box" key={index} onClick={() => handleClickTournament(item.id)}>
               <EditorContentBox
                 title={item.title} 
-                id = {index}
+                id = {item.id}
                 description={item.description}  
                 imageUrl={`http://localhost:4000/${item.thumbnail}`}  
                 type="tournament"
