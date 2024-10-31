@@ -5,9 +5,6 @@ import EditorContentBox from "./EditorContentBox";
 
 function TestComponent() {
   const [testData, setTestData] = useState([]); 
-  const [contentState, setContentState] = useState(false);
-  const [contentIndex, setContentIndex] = useState(0);
-  const [createState, setCreateState] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,11 +12,10 @@ function TestComponent() {
   };
 
   const handleClickCreate = () =>{
-    navigate(`/editor/test/edit/new`);
+    navigate('/editor/test/edit/new');
   }
 
   const handleClickCreateNon = () =>{
-    setCreateState(false);
   }
 
 
@@ -32,7 +28,7 @@ function TestComponent() {
       .then(response => response.json())
       .then(data => setTestData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
-  }, [contentState]);
+  }, []);
 
   return (
     <div>
@@ -46,10 +42,9 @@ function TestComponent() {
               <EditorContentBox
                 title={item.title} 
                 id = {index}
-                description={item.description}  
-                setContentState = {setContentState}
-                setContentIndex = {setContentIndex}
-                imageUrl={`http://localhost:4000/${item.imageUrl}`}  
+                description={item.description}
+                imageUrl={`http://localhost:4000/${item.imageUrl}`}
+                type = "test"
               />
             </div>
           ))}

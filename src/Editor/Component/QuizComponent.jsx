@@ -43,7 +43,7 @@ function QuizComponent() {
   }
 
   const handleClickCreate = () => {
-    navigate(`/editor/quiz/edit/new`);
+    navigate('/editor/quiz/edit/new');
   }
 
   const handleClickCreateNon = () => {
@@ -90,7 +90,7 @@ function QuizComponent() {
       .then(data => setQuizData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
 
-  }, [contentState]);
+  }, []);
 
 
 
@@ -108,9 +108,8 @@ function QuizComponent() {
                   title={item.title} 
                   id={index}
                   description={item.description}  
-                  setEditorState={setEditorState}
-                  setContentIndex={setContentIndex}
                   imageUrl={`http://localhost:4000/${item.imageUrl}`}  
+                  type="quiz"
                 />
               </div>
             ))}

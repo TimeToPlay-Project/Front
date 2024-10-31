@@ -1,15 +1,12 @@
-
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import "./css/EditorContentBox.css"
 
-function EditorContentBox({ title, setEditorState, imageUrl, id, setContentIndex }) {
-
-
-
+function EditorContentBox({ title, id, description, imageUrl, type }) {
+  const navigate = useNavigate();
 
   const handleEdit = (id) =>{
-    setContentIndex(id);
-    setEditorState(true);
+    navigate(`/editor/${type}/edit/${id}`);
   }
 
 

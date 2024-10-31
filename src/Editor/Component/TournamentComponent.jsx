@@ -6,9 +6,6 @@ import "./css/QuizComponent.css";
 
 function TournamentComponent() {
   const [tournamentData, setTournamentData] = useState([]); 
-  const [contentState, setContentState] = useState(false);
-  const [contentIndex, setContentIndex] = useState(0);
-  const [editorState, setEditorState] = useState(false);
 
 
   const navigate = useNavigate();
@@ -18,55 +15,23 @@ function TournamentComponent() {
  
   }
 
-  const handleClickCreateNon = () =>{
-    setEditorState(false);
-  }
-
   const handleClickCreate = () =>{
-    setEditorState(true);
+    navigate('/editor/tournament/edit/new');
   }
 
 
  
   useEffect(() => {
-
     fetch('http://localhost:4000/api/tournament/all')
       .then(response => response.json())
       .then(data => setTournamentData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
-  }, [contentState]);
+  }, []);
 
   
 
   return (
     <div>
-      {editorState ? ( 
-
-
-
-
-          <div>
-
-          <div>sss</div>
-
-
-          <div>
-            <button onClick={handleClickCreateNon}>Main</button>
-          </div>
-
-
-          </div>
-
-
-
-
-
-
-
-
-      ):(
-    <>
-
       <div className="Editor-Create-Button-Box">
         <button className="Editor-Create-Button"  onClick={handleClickCreate}>Create</button>
       </div>
@@ -80,19 +45,13 @@ function TournamentComponent() {
                 title={item.title} 
                 id = {index}
                 description={item.description}  
-                setEditorState = {setEditorState}
-                setContentIndex = {setContentIndex} 
                 imageUrl={`http://localhost:4000/${item.thumbnail}`}  
-                
+                type="tournament"
               />
             </div>
           ))}
         </div>
       </div>
-      </>
-      )}
-
-   
     </div>
   );
 }
