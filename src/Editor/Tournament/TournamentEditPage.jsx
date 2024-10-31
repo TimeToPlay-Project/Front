@@ -1,8 +1,15 @@
-import React from "react";
-import "./css/TournamentComponent.css";
+import React, { useEffect, useState } from "react";
+
 
 function TournamentEditPage(id) {
-    console.log(id);
+    const [tournamentData, setTournamentData] = useState([]);
+
+    useEffect(() => {
+        if (id !== "new") {
+            
+        }
+    }, [id])
+    
     return (
         <div>
             <div>sss</div>

@@ -24,13 +24,16 @@ function TournamentMain() {
         navigate(`/tournament/ranking/${id}`);
     }
 
+    const shuffleImages = (images) => {
+        return images.sort(() => Math.random() - 0.5);
+    }
+
 
     const getTournamentImages = (id, count) => {
         fetch(`http://localhost:4000/api/tournament/images/${id}/${count}`)
         .then(response => response.json())
         .then(data => {
             setNextRoundImages([]);
-            // setCurrentImages(Object.entries(data));
             setCurrentImages(data);
             setIsLoading(false);
         })
@@ -68,7 +71,7 @@ function TournamentMain() {
     
             if (remainingImages.length === 0) {
                 setCurrentRound(currentRound + 1);
-                setCurrentImages(updatedNextRoundImages);
+                setCurrentImages(shuffleImages(updatedNextRoundImages));
                 setNextRoundImages([]);
             } else {
                 setCurrentImages(remainingImages);
