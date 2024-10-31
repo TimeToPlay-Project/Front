@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import EditorContentBox from "./EditorContentBox";
-import "./css/QuizComponent.css";
+import EditorContentBox from "../EditorContentBox";
 
 
 function TournamentComponent() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./css/TestComponent.css";
 import { useNavigate } from 'react-router-dom';
-import EditorContentBox from "./EditorContentBox";
+import EditorContentBox from "../EditorContentBox";
 
 function TestComponent() {
   const [testData, setTestData] = useState([]); 

@@ -4,7 +4,7 @@ import "./css/QuizComponent.css";
 import axios from 'axios';
 
 
-import EditorContentBox from "./EditorContentBox";
+import EditorContentBox from "../EditorContentBox";
 
 function QuizComponent() {
   const navigate = useNavigate();

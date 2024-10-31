@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useParams } from 'react-router-dom';
 import "../css/Main.css";
 import EditorNavigate from "./EditorNavigate";
-import QuizComponent from "./Component/QuizComponent";
-import TestComponent from "./Component/TestComponent";
-import TournamentComponent from "./Component/TournamentComponent";
+import QuizComponent from "./Quiz/QuizComponent";
+import TestComponent from "./Test/TestComponent";
+import TournamentComponent from "./Tournament/TournamentComponent";
 
 
 

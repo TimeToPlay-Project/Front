@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useParams } from 'react-router-dom';
 import "../css/Main.css";
 import EditorNavigate from "./EditorNavigate";
-import QuizEditPage from "./Component/QuizEditPage";
-import TestEditPage from "./Component/TestEditPage";
-import TournamentEditPage from "./Component/TournamentEditPage";
+import QuizEditPage from "./Quiz/QuizEditPage";
+import TestEditPage from "./Test/TestEditPage";
+import TournamentEditPage from "./Tournament/TournamentEditPage";
 
 
 
