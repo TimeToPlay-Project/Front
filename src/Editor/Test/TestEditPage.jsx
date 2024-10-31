@@ -1,7 +1,7 @@
 import React from "react";
 import "./css/TestComponent.css";
 
-function TestEditPage(id) {
+function TestEditPage({id}) {
     return (
         <div>
             <div>sss</div>

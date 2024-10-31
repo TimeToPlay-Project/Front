@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./css/QuizComponent.css";
 import axios from 'axios';
 
-function QuizEditPage(id) {
+function QuizEditPage({id}) {
   const [quizData, setQuizData] = useState([]); 
   const [contentState, setContentState] = useState(false);
   const [contentIndex, setContentIndex] = useState(0);
