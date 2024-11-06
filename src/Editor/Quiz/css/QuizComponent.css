@@ -115,10 +115,10 @@
   
 .input-image{
     justify-content: center;
-    display: none;
+  
 }
 
-.QuizCreate-Content-Box{
+.QuizCreate-Content-Box{    
     border: 2px solid rgb(170, 170, 170);
     display: flex;
     width: 200px;

@@ -13,6 +13,9 @@ function QuizEditPage(id) {
   const [quizScript, setQuizScript] = useState([]);
     
   function handleFileUpload(e, index) {
+
+    console.log("!!!!!!");
+
     const fileArr = e.target.files;
     //const newPostImg = {file: fileArr[0], Topic, Description};
     setPostImg(prev =>{ 
@@ -62,7 +65,7 @@ function QuizEditPage(id) {
     });
 
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/quiz/AA`, formData, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/quiz/AA`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -102,8 +105,10 @@ function QuizEditPage(id) {
                   />
 
                 </label>
+                
           
                 <div className="Answer-Box">
+                  
                   주제: &nbsp;
                   <input
                     className="answer"
