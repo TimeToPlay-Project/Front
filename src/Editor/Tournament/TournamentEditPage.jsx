@@ -32,21 +32,26 @@ function TournamentEditPage({ id }) {
     console.log("tournamentData: ", tournamentData);
     console.log("imageFiles: ", imageFiles);
 
+    const getRandomFileName = () => Math.random().toString(36).substring(2, 10);
+
     const handleImageUpload = (file, type, index = null) => {
         console.log(index);
-        const newUrl = URL.createObjectURL(file);
+        const randomFileName = `${getRandomFileName()}${file.name.substring(file.name.lastIndexOf("."))}`;
+        const renamedFile = new File([file], randomFileName, { type: file.type });
+        const newUrl = URL.createObjectURL(renamedFile);
         console.log(newUrl);
         if (type === "tournament") {
             handleFieldChange(type, "thumbnail", newUrl);
-            setThumbnailFile(file);
+            setThumbnailFile(renamedFile);
         } else if (type === "image" && index !== null) {
             handleFieldChange(type, "image_url", newUrl, index);
             setImageFiles((prev) => {
                 const updatedImageFiles = [...prev];
-                updatedImageFiles[index] = file;
+                updatedImageFiles[index] = {id: tournamentData.images[index].id, file: renamedFile};
                 return updatedImageFiles;
             });
         }
+        console.log(imageFiles);
     };
 
     const handleFieldChange = (type, field, value, index = null) => {
@@ -74,17 +79,22 @@ function TournamentEditPage({ id }) {
 
     const handleEditSubmit = async() => {
         const formData = new FormData();
-        formData.append('tournamentData', JSON.stringify(tournamentData));
+        const updatedTournamentData = {
+            ...tournamentData,
+            images: tournamentData.images.filter((image) => image.is_update === true),
+        };
+        formData.append('tournamentData', JSON.stringify(updatedTournamentData));
         formData.append('thumbnail', thumbnailFile);
+        const imageFileMap = []
 
-        imageFiles.forEach((file) => {
-            if (file) {
-                formData.append(`images`, file);
-            } else {
-                const emptyFile = new Blob([''], { type: 'image/png' });
-                formData.append('images', emptyFile, 'empty.png');
+        imageFiles.forEach((fileMap) => {
+            if (fileMap) {
+                imageFileMap.push({id: fileMap.id, fileName: fileMap.file.name})
+                formData.append(`images`, fileMap.file);
             }
         });
+
+        formData.append('imageFileMap', JSON.stringify(imageFileMap));
         
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/tournament/submit/${id}`, formData, {
@@ -96,7 +106,6 @@ function TournamentEditPage({ id }) {
         } catch (error) {
             console.error(error);
         }
-        
     }
 
     if (isLoading) {
@@ -179,7 +188,7 @@ function TournamentEditPage({ id }) {
                             <input
                                 id={`tournament-image-input-${index}`}
                                 className="tournament-file-input"
-                                accept=".png, .jpeg, .jpg"
+                                accept=".png, .jpeg, .jpg, .webp"
                                 type="file"
                                 onChange={(e) => {
                                     if (e.target.files[0]) {
