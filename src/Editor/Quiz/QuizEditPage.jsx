@@ -1,181 +1,279 @@
 import React, { useEffect, useState } from "react";
-import "./css/QuizComponent.css";
-import axios from 'axios';
+import axios from "axios";
+import "./css/QuizEditPage.css";
 
-function QuizEditPage({id}) {
-  const [quizData, setQuizData] = useState([]); 
-  const [contentState, setContentState] = useState(false);
-  const [contentIndex, setContentIndex] = useState(0);
-  const [editorState, setEditorState] = useState(false);
-  const [postImg, setPostImg] = useState([]);
-  const [previewImg, setPreviewImg] = useState('');
-  const [quizNum, setQuizNum] = useState(10);
-  const [quizScript, setQuizScript] = useState([]);
-    
-  function handleFileUpload(e, index) {
-    const fileArr = e.target.files;
-    //const newPostImg = {file: fileArr[0], Topic, Description};
-    setPostImg(prev =>{ 
-      const updatedPostImg = [...prev];
-      updatedPostImg[index] = { file: fileArr[0], answer: updatedPostImg[index]?.answer || '' }; 
-      return updatedPostImg;
+function QuizEditPage({ id }) {
+    const [quizData, setQuizData] = useState({
+        quizClass: { title: '', description: '', imageUrl: '', is_update: false, is_fileUpload: false },
+        quizzes: [],
     });
-    setQuizScript()
+    const [quizClassFile, setQuizClassFile] = useState(null);
+    const [imageFiles, setImageFiles] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [quizzesIdInfo, setQuizzesIdInfo] = useState([]);
 
-    if (fileArr[0]) {
-      const fileReader = new FileReader();
-      fileReader.onload = function () {
-        setPreviewImg(fileReader.result);
-      };
-      fileReader.readAsDataURL(fileArr[0]);
-    } else {
-      setPreviewImg('');
-    }
-  }
 
-  const handleClickToQuiz = () => {
-    // Quiz 클릭 처리 로직 추가
-  }
 
-  const handleClickCreate = () => {
-    setEditorState(true);
-  }
-
-  const handleClickCreateNon = () => {
-    setEditorState(false);
-  }
-
-  const handleClickQuiznumPlus = () =>{
-    setQuizNum(quizNum+1);
-  }
-
-  const handleClickQuiznumMinus = () =>{
-    setQuizNum(quizNum-1);
-  }
-
-  const handleClickCreateNon2 = async () => {
-    const formData = new FormData();
-    postImg.forEach((item) => {
-        if (item.file) {
-            formData.append('postImg', item.file);
+    useEffect(() => {
+        if (id !== "new") {
+            fetch(`${process.env.REACT_APP_API_URL}/api/editor/quiz/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                  setQuizData({
+                    quizClass: {
+                        ...data.quizClass,
+                        is_update: data.quizClass.is_update || false,
+                        is_fileUpload: data.quizClass.is_fileUpload || false,
+                    },
+                    quizzes: data.quizzes.map(quiz => ({
+                      ...quiz,
+                      is_update: quiz.is_update || false,
+                      is_fileUpload: quiz.is_fileUpload || false,
+                      
+                    }))
+                    
+                });
+                console.log("RRRRRRR : " + data.quizzes);
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching tournamentEditData:', error);
+                    setIsLoading(false);
+                });
+        } else {
+            setIsLoading(false);
         }
-    });
+    }, [id]);
 
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/quiz/AA`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        console.log(response.data);
-    } catch (error) {
-        console.error('Axios error', error);
+    const generateRandomString = () => Math.random().toString(36).substring(2, 10);
+
+
+    const handleImageUpload = (file, type, index = null, id) => {
+        
+        const newUrl = URL.createObjectURL(file);
+        const randomFileName = generateRandomString();
+
+        const updatedFile = new File([file], randomFileName + file.name.slice(file.name.lastIndexOf('.')), {
+          type: file.type,
+      });
+
+        console.log(newUrl);
+        if (type === "quizClass") {
+            handleFieldChange(type, "imageUrl", newUrl);
+            setQuizClassFile(updatedFile);
+            setQuizData(prev => ({
+              ...prev,
+              quizClass: {
+                  ...prev.quizClass,
+                  is_fileUpload: true,
+                  
+              }
+          }))
+        } else if (type === "quizzes" && index !== null) {
+            handleFieldChange(type, "imageUrl", newUrl, index);
+            setImageFiles((prev) => {
+                const updatedImageFiles = [...prev];
+                updatedImageFiles[index] = {updatedFile, id};
+                return updatedImageFiles;
+            });
+            setQuizData(prev => {
+              const updatedImages = [...prev.quizzes];
+              updatedImages[index] = {
+                  ...updatedImages[index],
+                  is_fileUpload: true,
+                  
+              };
+              return { ...prev, quizzes: updatedImages};
+          });
+            
+           
+        }
+    };
+
+    const handleFieldChange = (type, field, value, index = null) => {
+        if (type === "quizClass") {
+            setQuizData(prev => ({
+                ...prev,
+                quizClass: {
+                    ...prev.quizClass,
+                    [field]: value,
+                    is_update: true,
+                    
+                }
+            }))
+        } else if (type === "quizzes" && index !== null) {
+            setQuizData(prev => {
+                const updatedImages = [...prev.quizzes];
+                updatedImages[index] = {
+                    ...updatedImages[index],
+                    [field]: value,
+                    is_update: true,
+                    
+                };
+                return { ...prev, quizzes: updatedImages};
+            });
+        }
     }
 
+    const handleEditSubmit = async() => {
 
-};
+      
+      const updatedQuizClass = quizData.quizClass.is_update ? quizData.quizClass : null;
+
+      const updatedQuizzes = quizData.quizzes.filter(quiz => quiz.is_update === true);
+
+      let newResQuizData = {
+          quizClass: updatedQuizClass,
+          quizzes: updatedQuizzes,
+     };
 
 
-  return (
-    <div className="QuizCreate-Box">
-        <div className="Main-Button-Box">
-          <button className="QuizCreate-Main-button" onClick={handleClickCreateNon}>Main</button>
-          <button className="QuizCreate-Submit-Button" onClick={handleClickCreateNon2}>Main2</button>
-        </div>
+      const formData = new FormData();
+      formData.append('quizData', JSON.stringify(newResQuizData));  
+      formData.append('quizClass', quizClassFile);
+  
+      
+      imageFiles.forEach((fileObj, index) => {
+        if (fileObj) {
+            const fileData = {
+                fileName : fileObj.filename,
+                id: fileObj.id
+            };
+            setQuizzesIdInfo((...prev) =>[
+                ...prev,
+                fileData
+            ])
+            
+            formData.append('quizzes', fileObj.updatedFile);
+        }
+        formData.append('quizzesIdInfo', JSON.stringify(quizzesIdInfo)); 
+    });
+  
+      try {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/quiz/submit/${id}`, formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+          });
+          console.log(response);
+          if(response.data === 'success'){
+            setImageFiles([]);
+            setQuizClassFile([]);
+            newResQuizData={};
+          }
+      } catch (error) {
+          console.error(error);
+      }
+  };
 
-        <div className="QuizCreate-Content-Box2">
-              <div className="QuizItem">
-                썸네일
-                <label
-                  className="input-Box"
-                  style={{
-                    backgroundImage: postImg[0] && postImg[0].file ? `url(${URL.createObjectURL(postImg[0].file)})` : `url('/image.png')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                >
-                  <input
-                    className="input-image"
-                    accept=".png, .jpeg, .jpg"
-                    type="file"
-                    onChange={(e) => handleFileUpload(e, 0)} 
-                  />
-
-                </label>
-          
-                <div className="Answer-Box">
-                  주제: &nbsp;
-                  <input
-                    className="answer"
-                    type="text"
-                    value={postImg[0]?.Topic || ''} 
-                    onChange={(e) => {
-                        const newPostImg = [...postImg];
-                        newPostImg[0] = { ...newPostImg[0], Topic: e.target.value }; 
-                        setPostImg(newPostImg);
-                    }}
-                  />
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    
+    return (
+        <div className="tournament-edit-container">
+            <div className="tournament-edit-box">
+                <span>썸네일</span>
+                <div className="tournament-thumbnail-box">
+                    <label
+                        htmlFor="tournament-thumbnail-input"
+                        className="tournament-thumbnail-label"
+                        style={{
+                            backgroundImage: quizData?.quizClass?.imageUrl 
+                                ? `url(${quizData.quizClass.imageUrl.startsWith('blob') 
+                                    ? quizData.quizClass.imageUrl 
+                                    : `${process.env.REACT_APP_API_URL}/${quizData.quizClass.imageUrl}`})` 
+                                : `url('/image.png')`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                        }}
+                    >
+                    </label>
+                    <input
+                        id="tournament-thumbnail-input"
+                        className="tournament-file-input"
+                        accept=".png, .jpeg, .jpg"
+                        type="file"
+                        onChange={(e) => {
+                            if (e.target.files[0]) {
+                                handleImageUpload(e.target.files[0], "quizClass");
+                            }
+                        }}
+                    />
                 </div>
-                <div className="Answer-Box">
-                  설명: &nbsp;
-                  <input
-                    className="answer"
-                    type="text"
-                    value={postImg[0]?.Description || ''} 
-                    onChange={(e) => {
-                        const newPostImg = [...postImg];
-                        newPostImg[0] = { ...newPostImg[0], Description: e.target.value }; 
-                        setPostImg(newPostImg);
-                    }}
-                  />
+            
+                <div className="tournament-text-input-box">
+                    <span>제목</span>
+                    <div>
+                        <input
+                            className="tournament-text-input"
+                            type="text"
+                            value={quizData?.quizClass?.title || ''} 
+                            onChange={(e) => handleFieldChange('quizClass', 'title', e.target.value)}
+                        />
+                    </div>
                 </div>
-              </div>
+                <div className="tournament-text-input-box">
+                    <span>설명</span>
+                    <div>
+                        <input
+                            className="tournament-text-input"
+                            type="text"
+                            value={quizData?.quizClass?.description || ''} 
+                            onChange={(e) => handleFieldChange('quizClass', 'description', e.target.value)}
+                        />
+                    </div>
+                </div>
             </div>
-
-            <div className="QuizCreateStart-Box">
-          <div className="QuizCreateStart" onClick={() => handleClickQuiznumMinus()}>-</div>
-          <div className="QuizCreateStart" onClick={() => handleClickQuiznumPlus()}>+</div>
-        </div>
-
-        <div className="QuizCreate-Content-ToTal-Box">
-          {Array.from({ length: quizNum }).map((_, boxIndex) => (
-            <div className="QuizCreate-Content-Box" key={boxIndex+1}>
-              <div className="QuizItem">
-                <label
-                  className="input-Box"
-                  style={{
-                    backgroundImage: postImg[boxIndex+1] && postImg[boxIndex+1].file ? `url(${URL.createObjectURL(postImg[boxIndex+1].file)})` : `url('/image.png')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                >
-                  <input
-                    className="input-image"
-                    accept=".png, .jpeg, .jpg"
-                    type="file"
-                    onChange={(e) => handleFileUpload(e, boxIndex+1)} 
-                  />
-                </label>
-
-                <div className="Answer-Box">
-                  정답 {boxIndex+1}: &nbsp;
-                  <input
-                    className="answer"
-                    type="text"
-                    value={postImg[boxIndex+1]?.answer || ''} 
-                    onChange={(e) => {
-                        const newPostImg = [...postImg];
-                        newPostImg[boxIndex+1] = { ...newPostImg[boxIndex+1], answer: e.target.value }; 
-                        setPostImg(newPostImg);
-                    }}
-                  />
-                </div>
-              </div>
+            <div className="tournament-image-edit-container">
+                {quizData.quizzes.map((quiz, index) => (
+                    <div key={quiz.id} className="tournament-image-edit-box">
+                        <div className="tournament-thumbnail-box">
+                            <label
+                                htmlFor={`tournament-image-input-${index}`}
+                                className="tournament-image-label"
+                                style={{
+                                    backgroundImage: quiz.imageUrl 
+                                        ? `url(${quiz.imageUrl.startsWith('blob') 
+                                            ? quiz.imageUrl
+                                            : `${process.env.REACT_APP_API_URL}/${quiz.imageUrl}`})` 
+                                        : `url('/image.png')`,
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
+                                }}
+                            >
+                            </label>
+                            <input
+                                id={`tournament-image-input-${index}`}
+                                className="tournament-file-input"
+                                accept=".png, .jpeg, .jpg"
+                                type="file"
+                                onChange={(e) => {
+                                    if (e.target.files[0]) {
+                                        handleImageUpload(e.target.files[0], "quizzes", index, quiz.id);
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="tournament-text-input-box">
+                            <span>정답</span>
+                            <div>
+                                <input
+                                    className="tournament-text-input"
+                                    type="text"
+                                    value={quiz.answer || ''} 
+                                    onChange={(e) => handleFieldChange('quizzes', 'answer', e.target.value, index)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-          ))}
+            <div className="edit-button-box">
+                <button type="button" onClick={() => handleEditSubmit()}>제출</button>
+            </div>
         </div>
-    </div>
-  );
+    );
 }
 
 export default QuizEditPage;

@@ -109,6 +109,33 @@
 }
 
 
+/** 패드 및 작은 노트북 **/
+
+@media  (max-width: 1150px) {
+    
+    .ContentBox {
+
+        width: 220px;
+        height: 290px;
+    }
+
+    .Editor-Update{
+        width: 70px;
+        height: 30px;
+    }
+
+    .Editor-Delete{
+        width: 70px;
+        height: 30px;
+    }
+
+    .ContentBox .Content-title {
+        bottom: 10px; 
+    }
+
+
+
+}
 
 
 /** 모바일 **/

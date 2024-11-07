@@ -71,3 +71,20 @@
     color: rgb(177, 177, 177);
     transition: color 0.3s ease; 
 }
+
+/** 패드 및 작은 노트북 **/
+
+@media  (max-width: 1150px) {
+    
+
+    .Top-navigate-Editor {    
+        width: 160px;
+    }
+
+    .menus-Editor {
+        width: 160px;
+    }
+
+
+
+}

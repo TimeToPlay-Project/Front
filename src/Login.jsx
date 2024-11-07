@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/Login.css"
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 
 function Login() {
+
+  const [loginInfo, setLoginInfo] = useState({
+    loginId:'' ,
+    loginPW :'' 
+  })
+
+
+  const handleChangeLoginId = (e) =>{
+    setLoginInfo((prevInfo) => ({
+      ...prevInfo,
+      loginId: e
+    }));
+  }
+
+  const handleChangeLoginPW = (e) =>{
+    setLoginInfo((prevInfo)=> ({
+      ...prevInfo,
+      loginPW: e
+    }))
+  }
+
 
 
     const navigate = useNavigate();
@@ -23,15 +44,42 @@ function Login() {
 
     const handleLogin = async (e) =>{
 
+      const loginData ={
+        loginId : loginInfo.loginId,
+        loginPW : loginInfo.loginPW
+      }
+    
+
+
       e.preventDefault();
 
       try{
         const req = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/session`, { withCredentials: true });
+        const req2 = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/login`, loginData, {
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+          withCredentials: true,  
+        });
+        console.log(req2.data);
+        if(req2.data==='success'){
+          Swal.fire({
+            icon: "success",
+            title: "로그인 성공",
+          });
+          navigate('/main');
+        }
+        else{
+          Swal.fire({
+            icon: "error",
+            title: "비밀번호가 다릅니다2",
+          });
+        }
       }
       catch(error){
         Swal.fire({
           icon: "error",
-          title: "비밀번호가 다릅니다",
+          title: "아이디 또는 비밀번호를 확인해주세요",
         });
 
       }
@@ -53,10 +101,26 @@ function Login() {
       <form onSubmit={handleLogin}>
         <div className="ID-PW-InputBox">
         <div className="Input-Wrapper">
-          <input type="text" className="Login-Input-ID" placeholder="아이디" />
+          <input 
+            type="text" 
+            className="Login-Input-ID" 
+            placeholder="아이디" 
+            value={loginInfo.loginId}
+            onChange={(e) => {
+              handleChangeLoginId(e.target.value)
+            }}
+          />
         </div>
         <div className="Input-Wrapper">
-          <input type="password" className="Login-Input-PW" placeholder="비밀번호" />
+          <input 
+            type="password" 
+            className="Login-Input-PW" 
+            placeholder="비밀번호" 
+            value={loginInfo.loginPW}
+            onChange={(e) => {
+              handleChangeLoginPW(e.target.value)
+            }}
+            />
         </div>
         </div>
         <button className="Login-Button">로그인</button>

@@ -73,6 +73,10 @@ function TournamentEditPage({ id }) {
     }
 
     const handleEditSubmit = async() => {
+
+
+        console.log("TournamentData : " + tournamentData);
+
         const formData = new FormData();
         formData.append('tournamentData', JSON.stringify(tournamentData));
         formData.append('thumbnail', thumbnailFile);
@@ -80,7 +84,8 @@ function TournamentEditPage({ id }) {
         imageFiles.forEach((file) => {
             if (file) {
                 formData.append(`images`, file);
-            } else {
+            } 
+            else {
                 const emptyFile = new Blob([''], { type: 'image/png' });
                 formData.append('images', emptyFile, 'empty.png');
             }

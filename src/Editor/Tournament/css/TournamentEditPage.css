@@ -59,3 +59,19 @@
     height: 200px;
     border-radius: 20px;
 }
+
+
+
+/** 패드 및 작은 노트북 **/
+
+@media  (max-width: 1150px) {
+
+
+    .tournament-edit-container {
+        margin-top: 50px;
+        margin-left: 160px;
+
+    }
+
+
+}

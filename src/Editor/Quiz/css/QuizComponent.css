@@ -188,6 +188,20 @@
 
 
 
+/** 패드 및 작은 노트북 **/
+
+@media  (max-width: 1150px) {
+
+    .QuizComponent-Total-Box {
+
+        margin-left: 160px;
+
+    }
+
+
+}
+
+
 
 
 
