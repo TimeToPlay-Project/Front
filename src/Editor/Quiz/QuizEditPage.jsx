@@ -55,12 +55,15 @@ function QuizEditPage({ id }) {
 
         const updatedFile = new File([file], randomFileName + file.name.slice(file.name.lastIndexOf('.')), {
           type: file.type,
-      });
+        });
+        const updatedFileToQuizClass = new File([file], 'QuizClass' + file.name.slice(file.name.lastIndexOf('.')), {
+            type: file.type,
+        });
 
         console.log(newUrl);
         if (type === "quizClass") {
             handleFieldChange(type, "imageUrl", newUrl);
-            setQuizClassFile(updatedFile);
+            setQuizClassFile(updatedFileToQuizClass);
             setQuizData(prev => ({
               ...prev,
               quizClass: {
@@ -132,22 +135,24 @@ function QuizEditPage({ id }) {
       formData.append('quizData', JSON.stringify(newResQuizData));  
       formData.append('quizClass', quizClassFile);
   
-      
-      imageFiles.forEach((fileObj, index) => {
+      const newQuizzesIdInfo = [];  
+
+    imageFiles.forEach((fileObj) => {
         if (fileObj) {
             const fileData = {
-                fileName : fileObj.filename,
+                fileName: fileObj.updatedFile.name,
                 id: fileObj.id
             };
-            setQuizzesIdInfo((...prev) =>[
-                ...prev,
-                fileData
-            ])
+            newQuizzesIdInfo.push(fileData);  
+           
             
             formData.append('quizzes', fileObj.updatedFile);
         }
-        formData.append('quizzesIdInfo', JSON.stringify(quizzesIdInfo)); 
     });
+
+    setQuizzesIdInfo((prev) => [...prev, ...newQuizzesIdInfo]);  
+    formData.append('quizzesIdInfo', JSON.stringify(newQuizzesIdInfo));
+    console.log("newQuizzesIdInfo:", JSON.stringify(newQuizzesIdInfo));
   
       try {
           const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/quiz/submit/${id}`, formData, {
