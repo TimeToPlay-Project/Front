@@ -53,9 +53,35 @@
     margin: 20px;
 }
 
-
 .tournament-image-label {
     width: 100%;
     height: 200px;
     border-radius: 20px;
 }
+
+.tournament-image-add-box {
+    display: flex;
+    width: 200px;
+    border-radius: 8px;
+    border: 2px solid rgb(150, 80, 150);
+    padding: 20px;
+    flex-direction: column;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.tournament-image-add-box:hover {
+    background-color: rgb(150, 80, 150);
+}
+
+.tournament-image-add-box:hover .tournament-image-add-icon-box {
+    color: white;
+}
+
+
+.tournament-image-add-icon-box {
+    height: 100%;
+    display: flex;
+    color: rgb(150, 80, 150);
+}
+

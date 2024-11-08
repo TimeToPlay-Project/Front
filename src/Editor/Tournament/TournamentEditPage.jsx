@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./css/TournamentEditPage.css";
+import TournamentImageEditBox from "./TournamentImageEditBox";
 
 function TournamentEditPage({ id }) {
     const [tournamentData, setTournamentData] = useState({
@@ -32,11 +33,11 @@ function TournamentEditPage({ id }) {
     console.log("tournamentData: ", tournamentData);
     console.log("imageFiles: ", imageFiles);
 
-    const getRandomFileName = () => Math.random().toString(36).substring(2, 10);
+    const getUniqueId = () => Math.random().toString(36).substring(2, 10);
 
     const handleImageUpload = (file, type, index = null) => {
         console.log(index);
-        const randomFileName = `${getRandomFileName()}${file.name.substring(file.name.lastIndexOf("."))}`;
+        const randomFileName = `${getUniqueId()}${file.name.substring(file.name.lastIndexOf("."))}`;
         const renamedFile = new File([file], randomFileName, { type: file.type });
         const newUrl = URL.createObjectURL(renamedFile);
         console.log(newUrl);
@@ -85,11 +86,11 @@ function TournamentEditPage({ id }) {
         };
         formData.append('tournamentData', JSON.stringify(updatedTournamentData));
         formData.append('thumbnail', thumbnailFile);
-        const imageFileMap = []
+        const imageFileMap = {}
 
         imageFiles.forEach((fileMap) => {
             if (fileMap) {
-                imageFileMap.push({id: fileMap.id, fileName: fileMap.file.name})
+                imageFileMap[fileMap.id]= fileMap.file.name;
                 formData.append(`images`, fileMap.file);
             }
         });
@@ -106,6 +107,25 @@ function TournamentEditPage({ id }) {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    const handleAddImage = () => {
+        const newImage = {
+            id: getUniqueId(),
+            image_name: '',
+            image_url: `url('/image.png')`,
+            win_count: 0,
+            tournament_id: tournamentData.tournament.id,
+            is_update: false
+        };
+        setTournamentData(prev => {
+            const updatedImages = [...prev.images, newImage];
+            return { ...prev, images: updatedImages};
+        });
+        setImageFiles(prev => {
+            const updatedImageFiles = [...prev, null];
+            return updatedImageFiles;
+        })
     }
 
     if (isLoading) {
@@ -134,7 +154,7 @@ function TournamentEditPage({ id }) {
                     <input
                         id="tournament-thumbnail-input"
                         className="tournament-file-input"
-                        accept=".png, .jpeg, .jpg"
+                        accept=".png, .jpeg, .jpg, .webp"
                         type="file"
                         onChange={(e) => {
                             if (e.target.files[0]) {
@@ -169,47 +189,23 @@ function TournamentEditPage({ id }) {
             </div>
             <div className="tournament-image-edit-container">
                 {tournamentData.images.map((image, index) => (
-                    <div key={image.id} className="tournament-image-edit-box">
-                        <div className="tournament-thumbnail-box">
-                            <label
-                                htmlFor={`tournament-image-input-${index}`}
-                                className="tournament-image-label"
-                                style={{
-                                    backgroundImage: image.image_url 
-                                        ? `url(${image.image_url.startsWith('blob') 
-                                            ? image.image_url
-                                            : `${process.env.REACT_APP_API_URL}/${image.image_url}`})` 
-                                        : `url('/image.png')`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
-                            >
-                            </label>
-                            <input
-                                id={`tournament-image-input-${index}`}
-                                className="tournament-file-input"
-                                accept=".png, .jpeg, .jpg, .webp"
-                                type="file"
-                                onChange={(e) => {
-                                    if (e.target.files[0]) {
-                                        handleImageUpload(e.target.files[0], "image", index);
-                                    }
-                                }}
-                            />
-                        </div>
-                        <div className="tournament-text-input-box">
-                            <span>이름</span>
-                            <div>
-                                <input
-                                    className="tournament-text-input"
-                                    type="text"
-                                    value={image.image_name || ''} 
-                                    onChange={(e) => handleFieldChange('image', 'image_name', e.target.value, index)}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <TournamentImageEditBox 
+                        image={image} 
+                        index={index}
+                        handleImageUpload={handleImageUpload}
+                        handleFieldChange={handleFieldChange}
+                    />
                 ))}
+                <div 
+                    className="tournament-image-add-box"
+                    onClick={() => handleAddImage()}
+                >
+                    <div className="tournament-image-add-icon-box">
+                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
             <div className="edit-button-box">
                 <button type="button" onClick={() => handleEditSubmit()}>제출</button>
