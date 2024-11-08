@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./css/QuizEditPage.css";
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 function QuizEditPage({ id }) {
+
+    const navigate = useNavigate();
     const [quizData, setQuizData] = useState({
         quizClass: { title: '', description: '', imageUrl: '', is_update: false, is_fileUpload: false },
         quizzes: [],
@@ -33,7 +37,7 @@ function QuizEditPage({ id }) {
                     }))
                     
                 });
-                console.log("RRRRRRR : " + data.quizzes);
+
                     setIsLoading(false);
                 })
                 .catch(error => {
@@ -60,7 +64,7 @@ function QuizEditPage({ id }) {
             type: file.type,
         });
 
-        console.log(newUrl);
+
         if (type === "quizClass") {
             handleFieldChange(type, "imageUrl", newUrl);
             setQuizClassFile(updatedFileToQuizClass);
@@ -152,7 +156,6 @@ function QuizEditPage({ id }) {
 
     setQuizzesIdInfo((prev) => [...prev, ...newQuizzesIdInfo]);  
     formData.append('quizzesIdInfo', JSON.stringify(newQuizzesIdInfo));
-    console.log("newQuizzesIdInfo:", JSON.stringify(newQuizzesIdInfo));
   
       try {
           const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/quiz/submit/${id}`, formData, {
@@ -160,11 +163,20 @@ function QuizEditPage({ id }) {
                   'Content-Type': 'multipart/form-data',
               },
           });
-          console.log(response);
+          console.log("%%%%%%% : ",response);
           if(response.data === 'success'){
             setImageFiles([]);
             setQuizClassFile([]);
             newResQuizData={};
+            Swal.fire({
+                icon: "success",
+                title: "변경 되었습니다.",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                 
+                    navigate("/editor/quiz");
+                }
+            });
           }
       } catch (error) {
           console.error(error);
