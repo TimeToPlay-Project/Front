@@ -117,7 +117,7 @@ function TournamentEditPage({ id }) {
         const newImage = {
             id: getUniqueId(),
             image_name: '',
-            image_url: `url('/image.png')`,
+            image_url: '',
             win_count: 0,
             tournament_id: tournamentData.tournament.id,
             is_update: false
