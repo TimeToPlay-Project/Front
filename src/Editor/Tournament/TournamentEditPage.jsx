@@ -79,6 +79,10 @@ function TournamentEditPage({ id }) {
     }
 
     const handleEditSubmit = async() => {
+        const url = id !== "new" ? `${process.env.REACT_APP_API_URL}/api/editor/tournament/update/${id}` 
+                        : `${process.env.REACT_APP_API_URL}/api/editor/tournament/create`;
+
+        console.log(`submit url: ${url}`);
         const formData = new FormData();
         const updatedTournamentData = {
             ...tournamentData,
@@ -98,7 +102,7 @@ function TournamentEditPage({ id }) {
         formData.append('imageFileMap', JSON.stringify(imageFileMap));
         
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/editor/tournament/submit/${id}`, formData, {
+            const response = await axios.post(url, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
