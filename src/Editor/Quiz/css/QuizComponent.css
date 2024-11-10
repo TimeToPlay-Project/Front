@@ -29,26 +29,8 @@
     text-align: center;  
 }
 
-.Editor-Create-Button{
-    position: absolute;
-    left: 1600px;
-    /* left: 1300px; */
-    width: 200px;
-    height: 60px;
-    top: 50px;
-    border-radius: 30px;
-    background-color: transparent;
-    font-weight: 900;
-    color: plum;
-    border: 4px solid rgb(168, 167, 167);
-}   
 
-.Editor-Create-Button:hover{
 
-    background-color: plum;
-    color:white
-
-}
 
 .QuizCreateStart-Box{
     margin-bottom: 50px;

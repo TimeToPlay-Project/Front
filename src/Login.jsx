@@ -98,7 +98,7 @@ function Login() {
               alt="Logo" 
             />
 
-      <form onSubmit={handleLogin}>
+      <form>
         <div className="ID-PW-InputBox">
         <div className="Input-Wrapper">
           <input 
@@ -123,7 +123,7 @@ function Login() {
             />
         </div>
         </div>
-        <button className="Login-Button">로그인</button>
+        <button className="Login-Button" onClick={handleLogin}>로그인</button>
       </form>
             <div className="Join-PWFind-Box">
               | &nbsp; &nbsp; <span className="Join" onClick={handleClickToJoin}>회원가입</span>  &nbsp; &nbsp;  | 

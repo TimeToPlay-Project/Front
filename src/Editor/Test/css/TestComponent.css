@@ -29,13 +29,19 @@
     text-align: center;  
 }
 
-.Editor-Create-Button{
-    position: absolute;
-    left: 1600px;
+.Editor-Create-ButtonBox{
+
+    position: relative;
+    left: 1700px;
     /* left: 1300px; */
+} 
+
+.Editor-Create-Button{
+    position: relative;
+    top: 50px;
+    left: 600px;
     width: 200px;
     height: 60px;
-    top: 50px;
     border-radius: 30px;
     background-color: transparent;
     font-weight: 900;

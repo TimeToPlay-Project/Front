@@ -3,6 +3,7 @@ import "./css/TestComponent.css";
 import { useNavigate } from 'react-router-dom';
 import EditorContentBox from "../EditorContentBox";
 
+
 function TestComponent() {
   const [testData, setTestData] = useState([]); 
 
@@ -31,7 +32,7 @@ function TestComponent() {
   }, []);
 
   return (
-    <div>
+    <div className="QuizCreate-Box">
       <div className="Editor-Create-Button-Box">
         <button className="Editor-Create-Button"  onClick={handleClickCreate}>Create</button>
       </div>

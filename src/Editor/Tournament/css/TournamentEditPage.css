@@ -53,25 +53,41 @@
     margin: 20px;
 }
 
-
 .tournament-image-label {
     width: 100%;
     height: 200px;
     border-radius: 20px;
 }
 
+.tournament-image-add-box {
+    display: flex;
+    width: 200px;
+    border-radius: 8px;
+    border: 2px solid rgb(150, 80, 150);
+    padding: 20px;
+    flex-direction: column;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.tournament-image-add-box:hover {
+    background-color: rgb(150, 80, 150);
+}
+
+.tournament-image-add-box:hover .tournament-image-add-icon-box {
+    color: white;
+}
 
 
-/** 패드 및 작은 노트북 **/
+.tournament-image-add-icon-box {
+    height: 100%;
+    display: flex;
+    color: rgb(150, 80, 150);
+}
 
-@media  (max-width: 1150px) {
-
-
-    .tournament-edit-container {
-        margin-top: 50px;
-        margin-left: 160px;
-
-    }
-
+.delete-button{
+    position: relative;
+    bottom: 280px;
+    left: 190px;
 
 }

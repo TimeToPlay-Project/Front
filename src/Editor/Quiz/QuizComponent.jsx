@@ -16,6 +16,7 @@ function QuizComponent() {
   const [previewImg, setPreviewImg] = useState('');
   const [quizNum, setQuizNum] = useState(10);
   const [quizScript, setQuizScript] = useState([]);
+  const [deleteStauts, setDeleteStatus] = useState(false);
     
   function handleFileUpload(e, index) {
     const fileArr = e.target.files;
@@ -89,8 +90,8 @@ function QuizComponent() {
       .then(response => response.json())
       .then(data => setQuizData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
-
-  }, []);
+    setDeleteStatus(false);
+  }, [deleteStauts]);
 
 
 
@@ -110,6 +111,7 @@ function QuizComponent() {
                   description={item.description}  
                   imageUrl={`http://localhost:4000/${item.imageUrl}`}  
                   type="quiz"
+                  setDeleteStatus = {setDeleteStatus}
                 />
               </div>
             ))}
