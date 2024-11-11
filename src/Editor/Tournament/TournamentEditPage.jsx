@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import Swal from "sweetalert2";
 import "./css/TournamentEditPage.css";
 import TournamentImageEditBox from "./TournamentImageEditBox";
 
 function TournamentEditPage({ id }) {
+    const navigate = useNavigate();
     const [tournamentData, setTournamentData] = useState({
         tournament: { title: '', description: '', thumbnail: '', is_update: false },
         images: [],
@@ -81,7 +84,8 @@ function TournamentEditPage({ id }) {
     const handleEditSubmit = async() => {
         const url = id !== "new" ? `${process.env.REACT_APP_API_URL}/api/editor/tournament/update/${id}` 
                         : `${process.env.REACT_APP_API_URL}/api/editor/tournament/create`;
-
+        const successMessage = id !== "new" ? "수정되었습니다." : "생성되었습니다.";
+        const failMessage = id !== "new" ? "수정에 실패했습니다." : "생성에 실패했습니다.";
         console.log(`submit url: ${url}`);
         const formData = new FormData();
         const updatedTournamentData = {
@@ -107,7 +111,25 @@ function TournamentEditPage({ id }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response);
+            if (response.status === 200) {
+                Swal.fire({
+                    title: successMessage,
+                    icon:'success',
+                    confirmButtonColor: 'rgb(150, 80, 150)',
+                    confirmButtonText: "확인",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate("/editor/tournament");
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: failMessage,
+                    icon:'error',
+                    confirmButtonColor: 'rgb(150, 80, 150)',
+                    confirmButtonText: "확인",
+                });
+            }
         } catch (error) {
             console.error(error);
         }
@@ -130,6 +152,76 @@ function TournamentEditPage({ id }) {
             const updatedImageFiles = [...prev, null];
             return updatedImageFiles;
         })
+    }
+
+    const checkImageExist = async (imageId) => {
+        const url = `${process.env.REACT_APP_API_URL}/api/editor/tournament/exist/${id}/${imageId}`;
+        try {
+            const response = await axios.get(url);
+            console.log(response);
+            return response.data.isExist;
+        } catch (error) {
+            console.error("error in checkImageExist: ", error);
+            return 500;
+        }
+    }
+
+    const deleteExistImage = async (imageId) => {
+        const url = `${process.env.REACT_APP_API_URL}/api/editor/tournament/delete/${imageId}`;
+        try {
+            const response = await axios.get(url);
+            console.log("deleteExistImage: ",response);
+            return response.status;
+        } catch (error) {
+            console.error("error in deleteExistImage: ", error);
+            return 500;
+        }
+    }
+
+    const removeImageFromArray = (index) => {
+        setTournamentData(prev => {
+            const updatedImages = prev.images.filter((_, i) => i !== index);
+            return { ...prev, images: updatedImages };
+        });
+        setImageFiles(prev => {
+            const updatedImageFiles = prev.filter((_, i) => i !== index);
+            return updatedImageFiles;
+        });
+    }
+
+    const handleDeleteImage = async (imageId, index) => {
+        const isImageExist = await checkImageExist(imageId);
+        console.log(isImageExist);
+        if (isImageExist) {
+            const result = await Swal.fire({
+                icon: "info",
+                title: "삭제하시겠습니까?",
+                confirmButtonText: "삭제",
+                showCancelButton: true,
+                cancelButtonText: "취소",
+            });
+            console.log(result);
+            if (result.isConfirmed) {
+                const isImageDeleted = await deleteExistImage(imageId);
+                if (isImageDeleted === 200) {
+                    removeImageFromArray(index);
+                    Swal.fire({
+                        icon: "success",
+                        title: "삭제 되었습니다.",
+                        confirmButtonText: "확인",
+                    })
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "삭제에 실패했습니다.",
+                        confirmButtonText: "확인",
+                    });
+                }
+            }
+
+        } else {
+           removeImageFromArray(index);
+        }
     }
 
     if (isLoading) {
@@ -198,6 +290,7 @@ function TournamentEditPage({ id }) {
                         index={index}
                         handleImageUpload={handleImageUpload}
                         handleFieldChange={handleFieldChange}
+                        handleDeleteImage={handleDeleteImage}
                     />
                 ))}
                 <div 

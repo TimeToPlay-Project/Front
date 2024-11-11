@@ -1,8 +1,27 @@
 import React from "react";
 
-function TournamentImageEditBox({ image, index, handleImageUpload, handleFieldChange}) {
+function TournamentImageEditBox({ image, index, handleImageUpload, handleFieldChange, handleDeleteImage}) {
     return (
         <div key={image.id} className="tournament-image-edit-box">
+            <button
+                className="edit-box-delete-button"
+                onClick={() => handleDeleteImage(image.id, index)}
+                style={{
+                    position: "absolute",
+                    top: "-12px",
+                    right: "-12px",
+                    background: "rgba(255, 30, 30, 0.8)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "28px",
+                    height: "28px",
+                    cursor: "pointer",
+                    fontSize: "1.5em"
+                }}
+            >
+                &times;
+            </button>
             <div className="tournament-thumbnail-box">
                 <label
                     htmlFor={`tournament-image-input-${index}`}
