@@ -54,15 +54,15 @@ function Login() {
       e.preventDefault();
 
       try{
-        const req = await axios.get(`${process.env.REACT_APP_API_URL}/api/user/session`, { withCredentials: true });
         const req2 = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/login`, loginData, {
           headers: {
             'Content-Type': 'application/json', 
           },
           withCredentials: true,  
+
         });
-        console.log(req2.data);
-        if(req2.data==='success'){
+        console.log(req2.status);
+        if(req2.status===200){
           Swal.fire({
             icon: "success",
             title: "로그인 성공",
