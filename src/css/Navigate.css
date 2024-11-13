@@ -28,6 +28,22 @@
 .login-Box {
     margin-left: auto;
     margin-right: 40px;
+    display: flex;
+    
+}
+.login-text-Box {
+    margin-left: auto;
+    width: 200px;
+    height: 40px;
+    margin-top: 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    line-height: 40px;
+}
+
+.login {
+    text-align: center;
+    line-height: 40px;
     border: 2px solid black;
     width: 100px;
     height: 40px;
@@ -36,11 +52,6 @@
     background-color: black;
     color: white;
     font-weight: bold;
-}
-
-.login {
-    text-align: center;
-    line-height: 40px;
 }
 
 .start-Box {

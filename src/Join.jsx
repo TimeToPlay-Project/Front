@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./css/Join.css"
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import axios from "axios";
 
 
 function Join() {
@@ -130,15 +131,15 @@ function Join() {
       };
 
       try{
-        const res = await fetch('/api/user/join', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(JoinData),
-        });
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/join`, JoinData, 
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
-        if(res.ok){
+        if(res.status===200){
           Swal.fire({
             icon: "success",
             title: "회원가입 되었습니다.",

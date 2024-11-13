@@ -60,15 +60,18 @@
 }
 
 .Login-Button {
+    margin-top: 30px;
     width: 100%;
     padding: 12px;
-    background-color: #fb9277;
+    background-color: #a841e4;
+
     color: white;
     border: none;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-weight: 900;
 }
 
 .Login-Button:hover {

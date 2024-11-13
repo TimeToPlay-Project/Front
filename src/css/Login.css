@@ -64,13 +64,15 @@
     margin-top: 30px;
     width: 100%;
     padding: 12px;
-    background-color: #fb9277;
+    /* background-color: #cb77fb; */
+    background-color: black;
     color: white;
     border: none;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-weight: 900;
 }
 
 .Login-Button:hover {

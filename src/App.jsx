@@ -5,25 +5,28 @@ import QuizRoutes from "./Routes/QuizRoutes";
 import TestRoute from "./Routes/TestRoute";
 import TournamentRoute from "./Routes/TournamentRoute";
 import EditorRoutes from "./Routes/EditorRoutes";
+import { AuthProvider } from "./AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
+    <AuthProvider>
+      <Router>
+        <Routes>
 
-        <Route path="/*" element={<CommonRoutes />} />
-        
-        <Route path="/quiz/*" element={<QuizRoutes />} />
+          <Route path="/*" element={<CommonRoutes />} />
+          
+          <Route path="/quiz/*" element={<QuizRoutes />} />
 
-        <Route path="/test/*" element={<TestRoute />} />
+          <Route path="/test/*" element={<TestRoute />} />
 
-        <Route path="/tournament/*" element={<TournamentRoute />} />
+          <Route path="/tournament/*" element={<TournamentRoute />} />
 
-        <Route path="/editor/*" element={<EditorRoutes />} />
+          <Route path="/editor/*" element={<EditorRoutes />} />
 
 
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

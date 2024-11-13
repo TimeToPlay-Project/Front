@@ -4,6 +4,24 @@ function QuizImageEditBox({ quiz, index, handleImageUpload, handleFieldChange, h
     return (
         
                     <div key={quiz.id} className="tournament-image-edit-box">
+
+<button
+                className="edit-box-delete-button"
+                // onClick={() => handleDeleteImage(index)}
+                style={{
+                    position: "absolute",
+                    top: "-12px",
+                    right: "-12px",
+                    background: "rgba(255, 30, 30, 0.8)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "28px",
+                    height: "28px",
+                    cursor: "pointer",
+                    fontSize: "1.5em"
+                }}
+            > & </button>
                         <div className="tournament-thumbnail-box">
                             <label
                                 htmlFor={`tournament-image-input-${index}`}
@@ -46,6 +64,7 @@ function QuizImageEditBox({ quiz, index, handleImageUpload, handleFieldChange, h
                             <img src="/X.png" style={{width: "45px", height: "auto"}}
                                 onClick={()=>handleDelete(quiz.id)}
                             ></img>
+                            
                             
                         </div>
                     </div>

@@ -167,6 +167,20 @@
 
 }
 
+.quiz-eidt-delete-button{
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: rgba(255, 30, 30, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 1.5em;
+}
+
 
 
 
