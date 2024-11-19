@@ -1,202 +1,296 @@
+.Quiz-Main-Box {
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(247, 247, 247);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .Quiz-Main {
-    width: 100%;
-    height: calc(100vh + 100px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 80px;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.quiz-progress {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.quiz-progress span {
+  font-size: 1.2rem;
+  color: #2D8CFF;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2D8CFF, #5CA9FF);
+  transition: width 0.3s ease;
+}
+
+.Quiz-Container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
 .Quiz-Image-Box {
-    margin-bottom: 40px; 
-    
-}
-.Quiz-Image{
-    width: 100%;
-    max-width: 500px;
-    max-height: 300px;
-    height: auto;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.Quiz-Answer-Button{
-    margin-top: 40px;
+.Quiz-Image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.Quiz-Image:hover {
+  transform: scale(1.02);
 }
 
 .Quiz-Input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
- 
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .Quiz-Input input {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 300px;
-    height: 20px;
+  flex: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-.Quiz-Input button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007BFF; 
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 200px;
+.Quiz-Input input:focus {
+  outline: none;
+  border-color: #2D8CFF;
+  box-shadow: 0 0 0 3px rgba(45, 140, 255, 0.2);
 }
 
-.Quiz-Input button:hover {
-    background-color: #0056b3; 
+.Quiz-Answer-Button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  color: white;
+  background: linear-gradient(45deg, #2D8CFF, #5CA9FF);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.Feedback {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 0px;
-    margin-bottom: 100px;
+.Quiz-Answer-Button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 140, 255, 0.3);
 }
 
-.Feedback p {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
+.Quiz-Answer-Button:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
-.No-Content {
-    margin-top: 350px;
-    height: calc(100vh - 430px); 
-    font-size: 40px;
-    font-weight: 900;
-    justify-content: center;
-}
-
-.Button-Box{
-    margin-top: 30px;
-    margin-left: 25px;
-}
-
-.Home-Button{
-    width: 200px;
-    height: 50px;
-    border: 2px solid black;
-    background-color: transparent;
-    border-radius: 50px;
-    font-weight: 900;
-}
-
-.Home-Button:hover {
-    background-color: black;
-    color: white; 
-    border-color: white; 
-}
-
-.Home-Button:active {
-    background-color: white; 
-    color: black; 
-    border-color: black; 
-    transform: scale(0.95); 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-}
-
-.Next-Button{
-    font-weight: 600;
-    height: 35px;
-    width: 100px;
-    background-color: #007BFF;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    color: white;
-}
-
-.Answer{
-    margin-top: 30px;
-    margin-bottom: 50px;
-    font-size: 35px;
-    font-weight: 900;
-    
-}
-
-.Feedback-Image{
-    width: 120px;
-    height: auto;
+.feedback-container {
+  width: 100%;
+  text-align: center;
+  animation: fadeInScale 0.3s ease-out;
 }
 
 .Feedback-Overlay {
-    position: absolute; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    top: 13%; /* 상단에서의 위치를 조정 */
-    left: 50%; 
-    transform: translateX(-50%); /* 수평 중앙 정렬 */
-    
+  margin: 2rem 0;
+}
 
-  }
+.Feedback-Image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
 
 .Quiz-Answer-Box {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    flex-direction: column; 
+  padding: 2rem;
+  background: rgba(45, 140, 255, 0.1);
+  border-radius: 15px;
+  margin-top: 1rem;
 }
 
-.Quiz-Feedback{
-    font-size: 21px;
-    font-weight: 900;
+.Quiz-Feedback {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2D8CFF;
+  margin-bottom: 1rem;
 }
 
-
-@media (max-height: 750px) {
-    .Quiz-Main {
-        width: 100%;
-        height: calc(100vh + 200px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 50px;
-        /*background-color: rgb(247, 247, 247);*/
-    }
-
-    .Quiz-Answer-Button{
-        margin-top: 20px;
-    }
-
-    .Answer{
-        margin-top: 15px;
-        margin-bottom: 20px;
-        font-size: 35px;
-        font-weight: 900;
-        
-    }
-
-    .Feedback-Overlay {
-        position: absolute; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; 
-        top: 8%; /* 상단에서의 위치를 조정 */
-        left: 50%; 
-        transform: translateX(-50%); /* 수평 중앙 정렬 */
-        
-    
-      }
-
-      .Feedback-Image{
-        width: 100px;
-        height: auto;
-    }
-
+.Answer {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
 }
 
+.Next-Button {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  color: white;
+  background: linear-gradient(45deg, #2D8CFF, #5CA9FF);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.Next-Button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 140, 255, 0.3);
+}
 
+.No-Content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.No-Content div {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.Home-Button {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  color: white;
+  background: linear-gradient(45deg, #2D8CFF, #5CA9FF);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.Home-Button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 140, 255, 0.3);
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2D8CFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.error-message {
+  text-align: center;
+  padding: 3rem;
+  color: #ff4444;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .Quiz-Main {
+    width: 95%;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .Quiz-Input {
+    flex-direction: column;
+  }
+
+  .Quiz-Answer-Button,
+  .Next-Button,
+  .Home-Button {
+    width: 100%;
+  }
+
+  .Quiz-Input input {
+    width: 100%;
+  }
+
+  .Quiz-Feedback {
+    font-size: 1.2rem;
+  }
+
+  .Answer {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Quiz-Main {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .Quiz-Image-Box {
+    border-radius: 10px;
+  }
+
+  .Quiz-Input input,
+  .Quiz-Answer-Button,
+  .Next-Button,
+  .Home-Button {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+}

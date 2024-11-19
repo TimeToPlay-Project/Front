@@ -30,7 +30,7 @@ function Tournament() {
   
 
   return (
-    <div>
+    <div className="root-box">
       <div className="Navigate-Box">
         <Navigate />
       </div>

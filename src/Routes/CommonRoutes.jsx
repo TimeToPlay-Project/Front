@@ -8,6 +8,7 @@ import Join from "../Join";
 import Passwordfind from "../password-find";
 import Quiz from "../Quiz/Quiz";
 import Test from "../Test/Test";
+import MainPageTogether from "../MainPageTogether";
 
 
 
@@ -19,6 +20,11 @@ const CommonRoutes  = () => {
     {
       path: "/main", 
       element: <MainPage />,
+    },
+
+    {
+      path: "/TogetherMain", 
+      element: <MainPageTogether />,
     },
 
     {

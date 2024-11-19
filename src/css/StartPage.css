@@ -1,0 +1,122 @@
+.game-mode-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+    width: 100%;
+    margin-top: 500px;
+}
+
+.mode-title {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+.buttons-wrapper {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+}
+
+.mode-button {
+    position: relative;
+    padding: 1.5rem 3rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 200px;
+    height: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon {
+    font-size: 3rem;
+}
+
+.text {
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+
+.mode-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mode-button:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.solo {
+    background: linear-gradient(135deg, rgba(66, 139, 202, 0.4), rgba(66, 139, 202, 0.5));
+}
+
+.multi {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.4), rgba(92, 184, 92, 0.5));
+}
+
+.solo:hover {
+    background: linear-gradient(135deg, rgba(66, 139, 202, 0.6), rgba(66, 139, 202, 0.7));
+}
+
+.multi:hover {
+    background: linear-gradient(135deg, rgba(92, 184, 92, 0.6), rgba(92, 184, 92, 0.7));
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .buttons-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mode-button {
+        width: 180px;
+        height: 180px;
+    }
+
+    .mode-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mode-button {
+        width: 150px;
+        height: 150px;
+        padding: 1rem 2rem;
+    }
+
+    .icon {
+        font-size: 2.5rem;
+    }
+
+    .text {
+        font-size: 1.1rem;
+    }
+
+    .mode-title {
+        font-size: 1.8rem;
+    }
+}

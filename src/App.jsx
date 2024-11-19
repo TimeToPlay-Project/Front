@@ -6,6 +6,7 @@ import TestRoute from "./Routes/TestRoute";
 import TournamentRoute from "./Routes/TournamentRoute";
 import EditorRoutes from "./Routes/EditorRoutes";
 import { AuthProvider } from "./AuthContext";
+import LiarRoutes from "./Routes/LiarRoutes";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/tournament/*" element={<TournamentRoute />} />
 
           <Route path="/editor/*" element={<EditorRoutes />} />
+
+          <Route path="/Liar/*" element={<LiarRoutes />} />
 
 
         </Routes>

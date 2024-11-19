@@ -80,6 +80,7 @@ function TestContent() {
   };
 
   if (isLoading || testData.length === 0 || currentIndex >= testData.length) {
+    console.log("testData.length : " + testData);
     return (
       <div className="No-Content">
         <div>준비중입니다...</div>

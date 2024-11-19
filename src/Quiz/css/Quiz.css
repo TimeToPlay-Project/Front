@@ -1,10 +1,9 @@
 .Quiz-Main-Box {
     display: flex;
-    justify-content: center;
-    align-items: center;     
+    justify-content: center;   
     margin: auto;          
     background-color: rgb(248, 245, 245);
-    margin-top: 80px   ;
+    margin-top: 80px;
 }
 
 .Quiz-Total-Box {
@@ -13,49 +12,48 @@
     display: flex;  
     flex-wrap: wrap;
     row-gap: 30px;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .Quiz-Box {
     margin: 10px;
-
 }
 
-.Top-Button{
-   
+.Top-Button {
     position: fixed;  
-    bottom: 5%;;          
+    bottom: 5%;          
     right: 3%;
     text-align: center;  
 }
-
+.root-box{
+    background-color: rgb(247, 247, 247);
+    height: 100vh;
+}
 
 @media (max-height: 750px) {
     .Quiz-Main-Box {
         display: flex;
         justify-content: center;
-        align-items: center;     
+        align-items: flex-start;     
         margin: auto;          
         background-color: rgb(248, 245, 245);
         margin-top: 50px;
     }
 }
 
-
-
-
 /** 모바일 **/
-
-@media ( (max-width: 500px) and (max-height: 1000px) ) {
-
+@media ((max-width: 500px) and (max-height: 1000px)) {
     .Quiz-Main-Box {
         display: flex;
         justify-content: center;
-        align-items: center;     
+        align-items: flex-start;     
         margin: auto;          
         background-color: rgb(248, 245, 245);
         margin-top: 50px;
     }
 
+    .Quiz-Total-Box {
+        justify-content: flex-start;
+    }
 }
-

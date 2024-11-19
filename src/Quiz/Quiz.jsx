@@ -31,7 +31,7 @@ function Quiz() {
   }, []);
 
   return (
-    <div>
+    <div className="root-box">
       <div className="Navigate-Box">
         <Navigate />
       </div>

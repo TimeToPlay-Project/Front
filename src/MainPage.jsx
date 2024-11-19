@@ -1,10 +1,11 @@
 import React from "react";
 import "./css/Main.css"
 import Navigate from "./Navigate";
+import useNavigate from 'react-router-dom';
 
 
 function MainPage() {
-
+  
     
 
 
