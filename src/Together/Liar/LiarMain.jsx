@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./css/LiarMain.css"
 import Navigate3 from "../../Navigate3";
-import { connectWebSocket, sendMessage, setMessageHandler } from './websocket/chatService';
+import { connectWebSocket, sendMessage, setMessageHandler, disconnectWebSocket } from './websocket/chatService';
 import GameRoom from './components/GameRoom';
+import { useNavigate } from "react-router-dom";
 
 function LiarMain() {
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [nickname, setNickname] = useState('');
@@ -14,41 +16,94 @@ function LiarMain() {
     const [rooms, setRooms] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [joinNickname, setJoinNickname] = useState('');
+    const [client, setClient] = useState(null);
+    const [searchHostName, setSearchHostName] = useState('');
+    const [hostStatus, setHostStatus] = useState(false);
+    const [hostName, setHostName] = useState('');
 
     useEffect(() => {
-        const client = connectWebSocket();
-        
-        // 메시지 핸들러 설정
-        setMessageHandler((response) => {
-            switch(response.type) {
-                case 'ROOM_CREATED':
-                    setCurrentRoom(response.data);
-                    break;
-                case 'ROOM_LIST':
-                    setRooms(response.data);
-                    break;
-                case 'PLAYER_JOINED':
-                case 'PLAYER_LEFT':
-                    setCurrentRoom(response.data);
-                    break;
-                case 'ERROR':
-                    alert(response.data.message);
-                    break;
-                default:
-                    break;
-            }
-        });
-
+        setHostName('');
         return () => {
             if (client) {
                 client.deactivate();
             }
         };
-    }, []);
+       
+    }, [client]);
+
+    const initializeWebSocket = () => {
+     
+            const newClient = connectWebSocket();
+            setClient(newClient);
+            
+            setMessageHandler((response) => {
+                switch(response.type) {
+                    case 'ROOM_CREATED':
+                        setHostStatus(true);
+                        setCurrentRoom(response.data);
+                        break;
+                    case 'PLAYER_JOINED':
+                    case 'PLAYER_LEFT':
+                        setCurrentRoom(response.data);
+                        break;
+                    case 'ERROR':
+                        alert(response.data.message);
+                        break;
+                    case 'ROOM_LIST':
+                        setRooms(response.data);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        
+    };
 
     const onCreateRoom = () => {
+        initializeWebSocket();
         setShowModal(true);
     };
+
+    const handleCreateRoomCancle = () => {
+        setShowModal(false);
+        if (client) {
+            client.deactivate();
+            disconnectWebSocket();
+            setClient(null);
+        }
+    }
+
+    const handleJoinCancle = () => {
+        setShowJoinModal(false);
+        setSelectedRoom(null);
+        setJoinNickname('');
+        if (client) {
+            client.deactivate();
+            disconnectWebSocket();
+            setClient(null);
+        }
+    }
+
+   
+    // useEffect(() => {
+    //     if (showModal) {
+    //         initializeWebSocket();
+    //     }
+    //     else{
+    //         if (client) {
+    //             client.deactivate();
+    //             setClient(null);
+    //         }
+    //     }
+    // }, [showModal]);
+
+    useEffect(() => {
+        if (currentRoom) {
+            navigate("/liar/room/" + currentRoom.roomId, {
+                state: { roomId: currentRoom.roomId, hostStatus: "active" , hostName:hostName},
+            });
+        }
+    }, [currentRoom, navigate]);
 
     const handleCreateRoom = () => {
         if (!nickname.trim()) {
@@ -70,10 +125,12 @@ function LiarMain() {
         };
         
         sendMessage('/app/game.createRoom', roomData);
+        setHostName(nickname)
         setShowModal(false);
     };
 
     const handleJoinClick = () => {
+        initializeWebSocket();
         sendMessage('/app/game.getRooms', { type: 'GET_ROOMS' });
         setShowJoinModal(true);
     };
@@ -171,7 +228,7 @@ function LiarMain() {
                         </div>
                         <div className="modal-buttons">
                             <button onClick={handleCreateRoom}>생성하기</button>
-                            <button onClick={() => setShowModal(false)}>취소</button>
+                            <button onClick={handleCreateRoomCancle}>취소</button>
                         </div>
                     </div>
                 </div>
@@ -181,27 +238,55 @@ function LiarMain() {
                     <div className="modal-content join-modal">
                         <h2>방 입장하기</h2>
                         <div className="room-list">
-                            {rooms.map(room => (
-                                <div
-                                    key={room.roomId}
-                                    className={`room-item ${selectedRoom?.roomId === room.roomId ? 'selected' : ''}`}
-                                    onClick={() => setSelectedRoom(room)}
-                                >
-                                    <div className="room-item-header">
-                                        <span className="room-item-name">{room.roomName}</span>
-                                        <span className="room-item-id">#{room.roomId.substring(0, 8)}</span>
-                                    </div>
-                                    <div className="room-item-info">
-                                        <span>{room.players.length} / {room.maxPlayers} 명</span>
-                                        <span>방장: {room.hostName}</span>
-                                    </div>
+                            <div className="search-container">
+                                <div className="search-box">
+                                    <input
+                                        type="text"
+                                        placeholder="방장 닉네임을 입력하세요"
+                                        value={searchHostName}
+                                        onChange={(e) => setSearchHostName(e.target.value)}
+                                        className="search-input"
+                                    />
+                                    <button 
+                                        className="search-button"
+                                        onClick={() => {
+                                            if (searchHostName.trim()) {
+                                                sendMessage('/app/game.getRooms', { 
+                                                    type: 'GET_ROOMS',
+                                                    data: { hostName: searchHostName.trim() }
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        <span className="search-icon">🔍</span>
+                                        검색
+                                    </button>
                                 </div>
-                            ))}
-                            {rooms.length === 0 && (
-                                <div className="no-rooms">
-                                    현재 생성된 방이 없습니다.
-                                </div>
-                            )}
+                                {rooms.length > 0 ? (
+                                    <div className="search-results">
+                                        {rooms.map(room => (
+                                            <div
+                                                key={room.roomId}
+                                                className={`room-item ${selectedRoom?.roomId === room.roomId ? 'selected' : ''}`}
+                                                onClick={() => setSelectedRoom(room)}
+                                            >
+                                                <div className="room-item-header">
+                                                    <span className="room-item-name">{room.roomName}</span>
+                                                    <span className="room-item-id">#{room.roomId.substring(0, 8)}</span>
+                                                </div>
+                                                <div className="room-item-info">
+                                                    <span>{room.players.length} / {room.maxPlayers} 명</span>
+                                                    <span>방장: {room.hostName}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="no-rooms">
+                                        검색된 방이 없습니다
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         {selectedRoom && (
                             <input
@@ -216,11 +301,7 @@ function LiarMain() {
                             <button onClick={handleJoinRoom} disabled={!selectedRoom || !joinNickname.trim()}>
                                 입장하기
                             </button>
-                            <button onClick={() => {
-                                setShowJoinModal(false);
-                                setSelectedRoom(null);
-                                setJoinNickname('');
-                            }}>
+                            <button onClick={handleJoinCancle}>
                                 취소
                             </button>
                         </div>

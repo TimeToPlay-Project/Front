@@ -260,3 +260,118 @@
     padding: 20px;
     color: rgba(255, 255, 255, 0.6);
 }
+
+.search-container {
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.search-input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    outline: none;
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-button:hover {
+    background: #357abd;
+    transform: translateY(-1px);
+}
+
+.search-icon {
+    font-size: 18px;
+}
+
+.search-results {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.no-rooms {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-size: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+}
+
+.room-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.room-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #4a90e2;
+}
+
+.room-item.selected {
+    border: 2px solid #4a90e2;
+    background: #f0f7ff;
+}
+
+.room-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.room-item-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.room-item-id {
+    color: #666;
+    font-size: 14px;
+}
+
+.room-item-info {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 14px;
+}

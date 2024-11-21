@@ -24,7 +24,7 @@ function App() {
 
           <Route path="/editor/*" element={<EditorRoutes />} />
 
-          <Route path="/Liar/*" element={<LiarRoutes />} />
+          <Route path="/liar/*" element={<LiarRoutes />} />
 
 
         </Routes>
