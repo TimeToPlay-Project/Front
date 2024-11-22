@@ -1,6 +1,6 @@
 .game-room {
     padding: 2rem;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.9);
     border-radius: 15px;
@@ -144,4 +144,39 @@
 
 .leave-button:hover {
     background: #da190b;
+}
+
+/* 비밀번호 입력 팝업 스타일 */
+.MuiDialog-paper {
+    background: rgba(0, 0, 0, 0.9) !important;
+    color: white !important;
+}
+
+.MuiDialogTitle-root {
+    text-align: center !important;
+    color: white !important;
+}
+
+.MuiTextField-root {
+    margin: 20px 0 !important;
+}
+
+.MuiOutlinedInput-root {
+    color: white !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: white !important;
+}
+
+.MuiButton-root {
+    margin: 10px !important;
 }
