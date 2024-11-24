@@ -3,7 +3,6 @@ import "./css/LiarMain.css"
 import Navigate3 from "../../Navigate3";
 import { connectWebSocket, sendMessage, setMessageHandler, disconnectWebSocket } from './websocket/chatService';
 import GameRoom from './components/GameRoom';
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
@@ -23,13 +22,103 @@ function LiarMain() {
     const [hostStatus, setHostStatus] = useState(false);
     const [hostName, setHostName] = useState('');
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
-    const [data, setData] = useState(null);
+    const [room, setRoom] = useState(null);
 
-   
+    useEffect(() => {
+        setHostName('');
+        return () => {
+            disconnectWebSocket();
+        };
+    }, []);
 
-   
+    const initializeWebSocket = async () => {
+        try {
+            const newClient = await connectWebSocket();
+            setClient(newClient);
+            
+            // 전체 메시지 구독 추가
+            newClient.subscribe('/topic/game', (message) => {
+                console.log("전체 메시지 수신:", message);
+                const response = JSON.parse(message.body);
+                console.log("파싱된 응답:", response);
+                
+                
+            });
+            
+            setMessageHandler((response) => {
+                console.log("받은 응답:", response);
+                switch(response.type) {
+                    case 'ROOM_CREATED':
+                        setRoom(response.data);
+                        setHostStatus(true);
+                        setCurrentRoom(response.data);
+                        setShowModal(false);
+                        setIsCreatingRoom(false);
+                        moveToRoom(response.data);
+                        break;
+                    case 'PLAYER_JOINED':
+                    case 'PLAYER_LEFT':
+                        setCurrentRoom(response.data);
+                        break;
+                    case 'ERROR':
+                        setIsCreatingRoom(false);
+                        alert(response.data.message);
+                        break;
+                    case 'ROOM_LIST':
+                        setRooms(response.data);
+                        break;
+                    default:
+                        console.log("알 수 없는 메시지 타입:", response.type);
+                        break;
+                }
+            });
+        
+        } catch (error) {
+            console.error("WebSocket 연결 실패:", error);
+            setIsCreatingRoom(false);
+        }
+    };
+
+    // 페이지 이동 함수를 별도로 분리
+    const moveToRoom = async (room) => {
+        console.log("moveToRoom 호출됨:", room);
+        console.log("현재 hostName:", room.hostName); // 디버깅용 로그 추가
+        
+        try {
+            await disconnectWebSocket();
+            console.log("웹소켓 연결 해제 후 페이지 이동");
+            // roomId가 없는 경우를 위한 안전장치 추가
+            if (!room || !room.roomId) {
+                console.error("잘못된 room 데이터:", room);
+                alert("방 정보가 올바르지 않습니다.");
+                return;
+            }
+            navigate(`/liar/room/${room.roomId}`, {
+                state: { 
+                    roomId: room.roomId, 
+                    hostStatus: "active",
+                    hostName: room.hostName 
+                }
+            });
+        } catch (error) {
+            console.error("페이지 이동 중 에러:", error);
+            if (!room || !room.roomId) {
+                console.error("잘못된 room 데이터:", room);
+                alert("방 정보가 올바르지 않습니다.");
+                return;
+            }
+            navigate(`/liar/room/${room.roomId}`, {
+                state: { 
+                    roomId: room.roomId, 
+                    hostStatus: "active",
+                    hostName: hostName // nickname 대신 hostName 사용
+                }
+            });
+        }
+    };
 
     const onCreateRoom = () => {
+        initializeWebSocket();
         setShowModal(true);
     };
 
@@ -53,42 +142,42 @@ function LiarMain() {
     }
 
     const handleCreateRoom = async () => {
+        if (isCreatingRoom) return; // 중복 생성 방지
+
         if (!nickname.trim()) {
             alert('닉네임을 입력해주세요.');
             return;
         }
-    
+
         if (!roomPassword.trim()) {
             alert('비밀번호를 입력해주세요.');
             return;
         }
-    
-        try {
-            const response = await axios.post("http://localhost:8080/api/create/room", {
+
+        setIsCreatingRoom(true);
+
+        const roomData = {
+            type: 'CREATE_ROOM',
+            data: {
                 nickname: nickname,
-                password: roomPassword,
-                maxPlayer: maxPlayers
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            console.log("Response data:", response.data);
-            alert("Room created successfully!");
-            navigate('/liar/room/' + response.data, {
-                state: { hostName: nickname, isHost: true }
-            });
-    
+                maxPlayers: maxPlayers,
+                password: roomPassword
+            }
+        };
+        
+        try {
+            console.log("방 생성 요청 전송:", roomData);
+            await sendMessage('/app/game.createRoom', roomData);
+            setHostName(nickname);
         } catch (error) {
-            console.error("Error posting data:", error);
-            alert("Something went wrong.");
+            console.error("방 생성 실패:", error);
+            alert("방 생성에 실패했습니다. 다시 시도해주세요.");
+            setIsCreatingRoom(false);
         }
     };
-    
 
     const handleJoinClick = () => {
-     
+        initializeWebSocket();
         sendMessage('/app/game.getRooms', { type: 'GET_ROOMS' });
         setShowJoinModal(true);
     };
