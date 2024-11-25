@@ -210,6 +210,10 @@ function GameRoom() {
                             console.log("채팅 메시지 수신:", response);
                             setMessages(prev => [...prev, response.data]);
                             break;
+                        case 'CREATE_LIARGAME':
+                            console.log("라이어게임 만듬")
+                            navigate(`/liar/game/${response.data.liarGameId}`)
+                            break;
                         case 'ERROR':
                             console.error("에러 메시지 수신:", response);
                             alert(response.data.message);
@@ -256,7 +260,7 @@ function GameRoom() {
     }
 
     const handleExit = async () =>{
-        if (!playerInfo) {
+        if (!playerInfo && !hostName) {
             console.error("플레이어 정보가 없습니다.");
             return;
         }
@@ -273,18 +277,28 @@ function GameRoom() {
             });
             
             if (result.isConfirmed) {
-                sendMessage('/app/game.leaveRoom', {
-                    roomId: UserRoomId, 
-                    nickname: playerInfo
-                });
+                if(playerInfo){
+                    sendMessage('/app/game.leaveRoom', {
+                        roomId: UserRoomId, 
+                        nickname: playerInfo
+                    });
+                }
+                else{
+                    sendMessage('/app/game.leaveRoom', {
+                        roomId: UserRoomId, 
+                        nickname: hostName
+                    });
+                }
+              
             }
         } catch (error) {
             console.error("방 나가기 메시지 전송 실패:", error);
         }
     }
 
-    const handleRedy = () =>{
+    const handleStart = () =>{
         
+        sendMessage('/app/game.createLiarGame', {roomId : UserRoomId, players : room.players})
     }
 
     return (
@@ -358,7 +372,8 @@ function GameRoom() {
                                 <div>
                                     <button
                                         className="button startButton"
-                                        disabled={room.players.length < 3}
+                                        // disabled={room.players.length < 3}
+                                        onClick={handleStart}
                                     >
                                         게임 시작
                                     </button>
