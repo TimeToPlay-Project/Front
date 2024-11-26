@@ -15,9 +15,9 @@ function LiarGame() {
     const location = useLocation();
     const pathname = window.location.pathname;
     const gameId = pathname.split('/').pop();
-    
-    // 게임 상태 관리
-    const [gameState, setGameState] = useState('waiting'); // waiting, playing, voting, result
+    const { nickname, isHost, hostName } = location.state || {};
+
+    const [gameState, setGameState] = useState('waiting');
     const [players, setPlayers] = useState([]);
     const [currentTurn, setCurrentTurn] = useState(null);
     const [word, setWord] = useState('');
@@ -28,11 +28,13 @@ function LiarGame() {
     const [messages, setMessages] = useState([]);
     const [chatInput, setChatInput] = useState('');
     const [game, setGame] = useState(null);
+    const [countdown, setCountdown] = useState(null);
     const LiarGameId = pathname.split('/').pop();
     
     const chatContainerRef = useRef(null);
 
-    // 웹소켓 연결 및 메시지 핸들러 설정
+
+ 
     useEffect(() => {
         let isSubscribed = true;
 
@@ -41,13 +43,12 @@ function LiarGame() {
                 const client = await connectWebSocket();
                 console.log("게임 웹소켓 연결 성공");
 
-                // 게임룸 구독
+
                 await subscribeToRoom(gameId);
                 console.log(`게임 ${gameId} 구독 완료`);
 
                 sendMessage('/app/game.getLiarGame', {LiarGameId : LiarGameId });
 
-                // 메시지 핸들러 설정
                 setMessageHandler((response) => {
                     if (!isSubscribed) return;
                     
@@ -57,6 +58,7 @@ function LiarGame() {
                         case 'GET_GAME':
                             console.log("게임 정보 수신:", response.data);
                             setGame(response.data);
+                            setCountdown(3);
                             break;
                         case 'GAME_START':
                             handleGameStart(response.data);
@@ -74,7 +76,8 @@ function LiarGame() {
                             handleGameResult(response.data);
                             break;
                         case 'CHAT':
-                            handleChat(response.data);
+                            console.log("채팅 메시지 수신:", response);
+                            setMessages(prev => [...prev, response.data]);
                             break;
                         case 'ERROR':
                             handleError(response.data);
@@ -100,14 +103,32 @@ function LiarGame() {
         };
     }, [gameId, navigate]);
 
-    // 채팅 자동 스크롤
+
+ 
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [messages]);
 
-    // 게임 이벤트 핸들러들
+
+    useEffect(() => {
+        if (countdown === null) return;
+        
+        if (countdown === 0) {
+            setCountdown(null);
+            // 여기에 카운트다운 후 실행할 로직을 넣습니다
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            setCountdown(countdown - 1);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [countdown]);
+
+
     const handleGameStart = (data) => {
         setGameState('playing');
         setPlayers(data.players);
@@ -135,7 +156,7 @@ function LiarGame() {
 
     const handleGameResult = (data) => {
         setGameState('result');
-        // 결과 처리 로직
+     
     };
 
     const handleChat = (data) => {
@@ -146,7 +167,7 @@ function LiarGame() {
         alert(data.message);
     };
 
-    // 사용자 액션 핸들러들
+
     const handleVote = (playerName) => {
         sendMessage('/app/game.vote', {
             gameId: gameId,
@@ -156,10 +177,13 @@ function LiarGame() {
 
     const handleSendChat = () => {
         if (!chatInput.trim()) return;
+        console.log("nickname : ", nickname);
+        const senderNickname = isHost ? hostName : nickname;
         
-        sendMessage('/app/game.chat', {
+        sendMessage('/app/game.chatGame', {
             gameId: gameId,
-            content: chatInput
+            content: chatInput,
+            sender: senderNickname
         });
         setChatInput('');
     };
@@ -176,6 +200,12 @@ function LiarGame() {
                 </button>
             </div>
 
+            {countdown !== null && (
+                <div className="countdown-overlay">
+                    <div className="countdown-number">{countdown}</div>
+                </div>
+            )}
+
             <div className="game-content">
                 <div className="players-section">
                     {[...Array(6)].map((_, index) => {
@@ -186,9 +216,9 @@ function LiarGame() {
                                     {player.nickname.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="player-info">
-                                    <div className="player-name">{player.nickname}</div>
+                                    {/* <div className="player-name">{player.nickname}</div> */}
                                     <div className="player-status">
-                                        {player.liar ? '라이어' : '시민'}
+                                    {player.nickname}
                                     </div>
                                 </div>
                             </div>
@@ -208,13 +238,16 @@ function LiarGame() {
                 <div className="chat-section">
                     <div className="chat-messages" ref={chatContainerRef}>
                         {messages.map((msg, index) => (
-                            <div key={index} className="message">
-                                <strong>{msg.sender}: </strong>
-                                <span>{msg.content}</span>
-                            </div>
+                            <div
+                            key={index}
+                            className={`message ${msg.sender === (isHost ? hostName : nickname) ? 'my-message' : ''}`}
+                        >
+                            <strong>{msg.sender}: </strong>
+                            <span className="messageContent">{msg.content}</span>
+                        </div>
                         ))}
                     </div>
-                    <div className="chat-input">
+                    <div className="chat-input2">
                         <input
                             type="text"
                             value={chatInput}

@@ -31,6 +31,10 @@ export const connectWebSocket = () => {
 
         stompClient.onConnect = () => {
             console.log('WebSocket 연결 성공');
+            
+            // 전체 메시지 구독
+            subscribeToGlobal();
+            
             resolve(stompClient);
         };
 
