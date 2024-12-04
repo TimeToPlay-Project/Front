@@ -2,16 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import { FaCopy } from 'react-icons/fa'; 
 import { 
     connectWebSocket, 
     sendMessage, 
     setMessageHandler, 
     disconnectWebSocket, 
     subscribeToRoom, 
-    unsubscribeFromRoom 
+    unsubscribeFromRoom ,
 } from '../websocket/chatService';
 import '../css/GameRoom.css';
 import '../css/chat.css';
+import axios from 'axios';
 
 function GameRoom() {
     const navigate = useNavigate();
@@ -25,6 +27,11 @@ function GameRoom() {
     const [loginStatus, setLoginStatus] = useState(false);
     const [nickname, setNickname] = useState('');
     const [playerInfo, setPlayerInfo] = useState(null);
+    const [update, setUpdate] = useState(false);
+    const [turnTime, setTurnTime] = useState(2);
+    const [rounds, setRounds] = useState(1);
+    const [category, setCategory] = useState('나라');
+    const categories = ['랜덤','나라', '동물', '무기', '탈것', '음식', '장소', '직업', '가수'];
     const MAX_RECONNECT_ATTEMPTS = 5;
     const { hostName, isHost } = location.state || {};
     const pathname = window.location.pathname;
@@ -33,6 +40,8 @@ function GameRoom() {
     const [messages, setMessages] = useState([]);
     const [chatInput, setChatInput] = useState('');
     const chatContainerRef = useRef(null);
+
+    const [showSettings, setShowSettings] = useState(false);
 
     // 채팅 자동 스크롤
     useEffect(() => {
@@ -55,12 +64,50 @@ function GameRoom() {
 
     const handlePasswordSubmit = async () => {
         try {
-            await sendMessage('/app/game.login', { roomId : UserRoomId, password : password });
+            const response = await axios.post(
+                `http://localhost:8080/api/password/check`,
+                {
+                    roomId: UserRoomId,
+                    password: password,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            // 상태 코드가 200일 경우
+            if (response.status === 200) {
+                setLoginStatus(true);
+                setShowPasswordDialog(false);
+            }
         } catch (error) {
-            console.error("비밀번호 검증 실패:", error);
-            alert("비밀번호가 올바르지 않습니다.");
+            // 상태 코드가 400일 경우
+            if (error.response && error.response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '오류',
+                    text: '비밀번호가 틀렸습니다.',
+                    customClass: {
+                        popup: 'swal-top',
+                    },
+                });
+                
+            } else {
+                // 기타 서버 오류 처리
+                Swal.fire({
+                    icon: 'error',
+                    title: '서버 오류',
+                    text: '서버에 문제가 발생했습니다. 다시 시도해주세요.',
+                    customClass: {
+                        popup: 'swal-top',
+                    },
+                });
+            }
         }
     };
+    
 
     const handleNicknameSubmit = async () => {
         if (!nickname.trim()) {
@@ -68,14 +115,89 @@ function GameRoom() {
             return;
         }
         try {
-            await sendMessage('/app/game.join', { roomId: UserRoomId, nickname: nickname });
-            setJoinStatus(true);
-            setShowPasswordDialog(false);
+            const response = await axios.post(
+                `http://localhost:8080/api/nickname`,
+                {
+                    roomId: UserRoomId,
+                    nickname: nickname,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            // 상태 코드가 200일 경우
+            if (response.status === 200) {
+                setRoom(response.data);
+                setJoinStatus(true);
+                setShowPasswordDialog(false);
+                const client = await connectWebSocket();
+                    console.log("웹소켓 연결 성공");
+                    setConnectionError(false);
+                    setReconnectCount(0);
+
+
+                    await subscribeToRoom(UserRoomId);
+                    console.log(`게임 ${UserRoomId} 구독 완료`);
+                
+                setUpdate(true);
+                
+            }
+            else if(response.status ===202){
+                Swal.fire({
+                    icon: 'error',
+                    title: '중복된 닉네임입니다',
+                    customClass: {
+                        popup: 'swal-top',
+                    },
+                });
+            }
         } catch (error) {
-            console.error("닉네임 설정 실패:", error);
-            alert("닉네임 설정에 실패했습니다. 다시 시도해주세요.");
+            // 상태 코드가 400일 경우
+            if (error.response && error.response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '오류',
+                    text: '오류',
+                    customClass: {
+                        popup: 'swal-top',
+                    },
+                });
+                
+            } else {
+                // 기타 서버 오류 처리
+                Swal.fire({
+                    icon: 'error',
+                    title: '서버 오류',
+                    text: '서버에 문제가 발생했습니다. 다시 시도해주세요.',
+                    customClass: {
+                        popup: 'swal-top',
+                    },
+                });
+            }
         }
     };
+
+
+    useEffect(()=>{
+        if (update) {
+            const updateRoom = async () => {
+                try {
+                    await sendMessage('/app/game.getRoom', { 
+                        roomId: UserRoomId
+                    });
+                    setUpdate(false);
+                } catch (error) {
+                    console.error("방 정보 업데이트 실패:", error);
+                }
+            };
+            updateRoom();
+        }
+        setUpdate(false);
+    },[update])
+
 
     const handleSendMessage = async () => {
         if (!chatInput.trim()) return;
@@ -108,24 +230,28 @@ function GameRoom() {
         
 
         const connectAndSetup = async () => {
-            if (reconnectCount >= MAX_RECONNECT_ATTEMPTS) {
-                setConnectionError(true);
-                alert('서버 연결에 문제가 있습니다. 로비로 이동합니다.');
-                navigate('/liar');
-                return;
-            }
+            // if (reconnectCount >= MAX_RECONNECT_ATTEMPTS) {
+            //     setConnectionError(true);
+            //     alert('서버 연결에 문제가 있습니다. 로비로 이동합니다.');
+            //     navigate('/liar');
+            //     return;
+            // }
 
             try {
-                const client = await connectWebSocket();
-                console.log("웹소켓 연결 성공");
-                setConnectionError(false);
-                setReconnectCount(0);
+
+                if(isHost){
+                    const client = await connectWebSocket();
+                    console.log("웹소켓 연결 성공");
+                    setConnectionError(false);
+                    setReconnectCount(0);
 
 
-                await subscribeToRoom(UserRoomId);
-                console.log(`게임 ${UserRoomId} 구독 완료`);
+                    await subscribeToRoom(UserRoomId);
+                    console.log(`게임 ${UserRoomId} 구독 완료`);
                 
-                if (!isSubscribed) return;
+                }
+                
+                // if (!isSubscribed) return;
 
                 if(isHost){
                     setShowPasswordDialog(false);
@@ -136,17 +262,16 @@ function GameRoom() {
                     });
                     console.log(`방 ${UserRoomId} 정보 요청 완료`);
                 }
-                else{
-                    await sendMessage('/app/game.getRoom', { 
-                        roomId: UserRoomId, 
-                        hostName: nickname
-                    });
-                    console.log(`방 ${UserRoomId} 정보 요청 완료`);
-                }
+                // else{
+                //     await sendMessage('/app/game.getRoom', { 
+                //         roomId: UserRoomId, 
+                //         hostName: nickname
+                //     });
+                //     console.log(`방 ${UserRoomId} 정보 요청 완료`);
+                // }
 
                 // 방 구독
-                await subscribeToRoom(UserRoomId);
-                console.log(`방 ${UserRoomId} 구독 완료`);
+            
 
                 // 방 정보 요청
             
@@ -168,16 +293,7 @@ function GameRoom() {
                             setJoinStatus(true);
 
                             break;
-                        case 'IS_LOGIN':
-                            console.log("IS_LOGIN 메시지 수신:", response);
-                            if(response.data === 'not'){
-                                alert('비밀번호가 일치하지 않습니다.');
-                            } else {
-                                
-                                setLoginStatus(true);
-                                setShowPasswordDialog(false);
-                            }
-                            break;
+                        
                         case 'PLAYER_JOINED':
                             console.log("PLAYER_JOINED 메시지 수신:", response);
                             if(response.data === 'not'){
@@ -305,16 +421,49 @@ function GameRoom() {
         }
     }
 
-    const handleStart = () =>{
-        
-        sendMessage('/app/game.createLiarGame', {roomId : UserRoomId, players : room.players})
-    }
+    const handleStart = () => {
+        sendMessage('/app/game.createLiarGame', {
+            roomId: UserRoomId, 
+            players: room.players,
+            turnTime: turnTime,
+            rounds: rounds,
+            category: category
+        });
+    };
+
+    // 게임 설정을 Material-UI Dialog를 사용한 팝업으로 변경하고, 설정 버튼을 추가합니다.
+    const handleSettings = () => {
+        setShowSettings(true);
+    };
+
+    const copyToClipboard = (text, type) => {
+        navigator.clipboard.writeText(text).then(() => {
+            // 복사 성공 시 버튼에 애니메이션 효과
+            const button = document.getElementById(`copy-${type}`);
+            button.classList.add('copy-success');
+            
+            // 애니메이션 종료 후 클래스 제거
+            setTimeout(() => {
+                button.classList.remove('copy-success');
+            }, 500);
+
+            // 복사 성공 알림
+            Swal.fire({
+                title: '복사 완료!',
+                text: `${type === 'url' ? 'URL이' : '비밀번호가'} 클립보드에 복사되었습니다.`,
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }).catch(err => {
+            console.error('복사 실패:', err);
+        });
+    };
 
     return (
         <div>
             {connectionError && (
                 <div className="connection-error">
-                    서버와의 연결이 불안정합니다. 잠시 후 다시 시도해주세요.
                 </div>
             )}
     
@@ -367,14 +516,35 @@ function GameRoom() {
             {/* 게임룸 메인 화면 */}
             {room && joinStauts && (
                 <div className="gameContainer">
+                    {isHost && (
+                        <button 
+                            className="settings-btn"
+                            onClick={handleSettings}
+                        >
+                            게임 설정
+                        </button>
+                    )}
                     <div className="header">
                         <h2 className="roomTitle">
-                            <span className="roomId">
-                                http://localhost:3000/liar/room/{room.roomId}
-                            </span>
-                            <span className="roomId">
-                                {room.password}
-                            </span>
+                            <div className="url-container">
+                                <span className="roomId">
+                                    http://localhost:3000/liar/room/{room.roomId}
+                                </span>
+                                <button 
+                                    id="copy-url"
+                                    className="copy-button"
+                                    onClick={() => copyToClipboard(`http://localhost:3000/liar/room/${room.roomId}`, 'url')}
+                                    title="URL 복사"
+                                >
+                                    <FaCopy />
+                                </button>
+                            </div>
+                            <div className="password-container">
+                                <span className="roomId">
+                                    {room.password}
+                                </span>
+                                
+                            </div>
                         </h2>
                         <div className="controls">
                             {isHost ?(
@@ -451,6 +621,80 @@ function GameRoom() {
                     </div>
                 </div>
             )}
+            {/* 설정 팝업 */}
+            <Dialog 
+                open={showSettings} 
+                onClose={() => setShowSettings(false)}
+                maxWidth="md"
+                fullWidth
+                PaperProps={{
+                    style: {
+                        backgroundColor: 'rgb(81, 81, 81)',
+                        color: 'white',
+                        borderRadius: '15px',
+                    },
+                }}
+            >
+                <DialogTitle>게임 설정</DialogTitle>
+                <DialogContent>
+                    <div className="game-settings">
+                        
+
+                        <div className="setting-group">
+                            <label>라운드 설정 (총 게임 횟수)</label>
+                            <div className="toggle-container">
+                                {[1, 2, 3, 4].map((num) => (
+                                    <button
+                                        key={num}
+                                        className={`toggle-btn ${rounds === num ? 'active' : ''}`}
+                                        onClick={() => setRounds(num)}
+                                    >
+                                        {num}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="setting-group">
+                            <label>턴 수(한 게임당 몇 턴 후 라이어를 찾을지)</label>
+                            <div className="toggle-container">
+                                <button
+                                    className={`toggle-btn ${turnTime === 2 ? 'active' : ''}`}
+                                    onClick={() => setTurnTime(2)}
+                                >
+                                    2
+                                </button>
+                                <button
+                                    className={`toggle-btn ${turnTime === 3 ? 'active' : ''}`}
+                                    onClick={() => setTurnTime(3)}
+                                >
+                                    3
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="setting-group">
+                            <label>카테고리 설정</label>
+                            <div className="category-buttons">
+                                {categories.map((cat) => (
+                                    <button
+                                        key={cat}
+                                        className={`category-btn ${category === cat ? 'active' : ''}`}
+                                        onClick={() => setCategory(cat)}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowSettings(false)} style={{ color: 'white' }}>
+                        닫기
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

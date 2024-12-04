@@ -174,12 +174,12 @@
 }
 
 .roomTitle {
-    font-size: 24px;
-    font-weight: 700;
-    color: #2c3e50;
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
 }
 
 .roomId {
@@ -467,15 +467,168 @@
     box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
+.settings-btn {
+    padding: 8px 20px;
+    background: linear-gradient(45deg, #2196F3, #21CBF3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin: 10px;
+}
+
+.settings-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.game-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 10px auto;
+    width: 70%;
+}
+
+.setting-group {
+    padding: 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.setting-group label {
+    display: block;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.toggle-btn {
+    padding: 6px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    min-width: 50px;
+}
+
+.toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.toggle-btn.active {
+    background: linear-gradient(45deg, #2196F3, #21CBF3);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.category-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    justify-content: center;
+    text-align: center;
+}
+
+.category-btn {
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.category-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.category-btn.active {
+    background: linear-gradient(45deg, #FF4B2B, #FF416C);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(255, 75, 43, 0.3);
+}
+
+.copy-button {
+    background: rgba(73, 73, 73, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.copy-button:hover {
+    background: rgba(30, 30, 30, 0.5);
+    transform: scale(1.1);
+}
+
+.copy-button:active {
+    transform: scale(0.95);
+}
+
+.copy-success {
+    animation: copySuccess 0.5s ease;
+}
+
+@keyframes copySuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.url-container, .password-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* 비밀번호 입력 팝업 스타일 */
 .MuiDialog-paper {
-    background: rgba(0, 0, 0, 0.9) !important;
+    background-color: rgb(81, 81, 81) !important;
     color: white !important;
 }
 
 .MuiDialogTitle-root {
-    text-align: center !important;
     color: white !important;
+}
+
+.MuiDialogContent-root {
+    background-color: rgb(81, 81, 81) !important;
+}
+
+.MuiDialogActions-root {
+    background-color: rgb(81, 81, 81) !important;
+    justify-content: center !important;
+    padding: 20px !important;
 }
 
 .MuiTextField-root {
@@ -487,7 +640,7 @@
 }
 
 .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255) !important;
 }
 
 .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
@@ -500,4 +653,12 @@
 
 .MuiButton-root {
     margin: 10px !important;
+}
+
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+.dialog-overlay {
+    z-index: 1000;
 }

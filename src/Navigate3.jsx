@@ -76,13 +76,13 @@ function Navigate3() {
                         className={`menus ${selectedMenu === 'liar' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('liar', '/liar')}
                     >
-                        QQQQ
+                        라이어게임
                     </div>
                     <div 
                         className={`menus ${selectedMenu === 'To' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('tournament', '/tournament')}
                     >
-                        WWWW
+                        노래맞추기
                     </div>
                     
                     
