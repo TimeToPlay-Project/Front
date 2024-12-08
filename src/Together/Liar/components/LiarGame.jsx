@@ -48,6 +48,8 @@ function LiarGame() {
     const isTurnEnd = useRef(false);
     const chatContainerRef = useRef(null);
     const client = useRef(null);
+    const voteStatus = useRef(false);
+    const voteResult = useRef(null);
     const [selectedVote, setSelectedVote] = useState(null);
 
     useEffect(() => {
@@ -87,7 +89,7 @@ function LiarGame() {
                         case 'NEW_TURN':
                             console.log("NEW- turn");
                             console.log("뉴 턴 데이터 : ",response.data);
-                            turnUpdateStau(response.data);
+                            turnUpdateStausNewTurn(response.data);
                             break;
                         case 'GAME_START':
                             console.log("게임 스타트");
@@ -95,6 +97,17 @@ function LiarGame() {
                             break;
                         case 'PLAYER_READY':
                             handleRedyStatus(response.data);
+                            break;
+                        case 'VOTE':
+                            if(response.data.status === "OK"){
+                                return;
+                            }
+                            break;
+                        case 'END_VOTE':
+                            endVote(response.data);
+                            break;
+                        case 'ANSWER':
+                            voteAnswerResult(response.data);
                             break;
                         case 'TURN_CHANGE':
                             handleTurnChange(response.data);
@@ -161,19 +174,14 @@ function LiarGame() {
         };
     }, [gameId, navigate]);
 
-    // useEffect(()=>{
-    //     console.log("유즈 이벡트 커런트 턴 : ", currentTurn);
-    // },[currentTurn]);
+    useEffect(() => {
+        console.log("유즈 이벡트 커런트 턴 : ", currentTurn);
+    },[currentTurn]);
 
-    const turnUpdateStau = (data) => {
+
+
+    const turnUpdateStaus = (data) => {
         console.log("321");
-        if(data.currentPlayer === null){
-            endCurrentTurnRound();
-            return;
-        }
-        
-        console.log('Turn update received:', data);
-        setCurrentPlayerIndex(0);
 
         if(data.isTurnEnd){
             Swal.fire({
@@ -198,6 +206,35 @@ function LiarGame() {
 
 
         }
+
+        if(data.currentPlayer === null){
+            endCurrentTurnRound();
+            return;
+        }
+        
+        console.log('Turn update received:', data);
+        setCurrentPlayerIndex(0);
+
+
+        handleTurnUpdate(data);
+       
+    };
+
+
+
+    const turnUpdateStausNewTurn = (data) => {
+        
+
+
+        if(data.currentPlayer === null){
+            endCurrentTurnRound();
+            return;
+        }
+        
+        console.log('Turn update received:', data);
+        setCurrentPlayerIndex(0);
+
+        
 
         
         if(data.turn){
@@ -224,7 +261,7 @@ function LiarGame() {
                     if (result.isConfirmed) { 
                         turnStatus.current = false;
                         setCurrentTurn(turnRef.current);  
-                        handleTurnUpdate(data);
+                        handleTurnUpdateNewTurn(data);
                     }
                 }).catch((error) => {
                     console.error("Error in Swal:", error);
@@ -233,9 +270,57 @@ function LiarGame() {
                 console.error("Error showing Swal:", error);
             }
         } else {
-            handleTurnUpdate(data);
+            handleTurnUpdateNewTurn(data);
         }
     };
+
+
+    const handleTurnUpdateNewTurn = (data) => {
+        
+            
+        const currentNickname = isHost ? hostName : nickname;
+        console.log('Current player:', data.currentPlayer, 'My nickname:', currentNickname);
+        
+        
+            if (data.currentPlayer === currentNickname) {
+                Swal.fire({
+                    title: '제시어 설명',
+                    text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
+                    input: 'text',
+                    inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    confirmButtonText: '제출',
+                    customClass: {
+                        popup: 'word-popup',
+                        title: 'word-title',
+                        input: 'word-input',
+                        confirmButton: 'word-confirm-btn'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setTurnCount(pre=>pre+1);
+                        sendMessage('/app/game.submitWord', {gameId : LiarGameId, player : currentNickname, description : result.value});
+
+                        
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: '다른 플레이어 차례',
+                    text: `${data.currentPlayer}님이 설명중입니다...`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'turn-notification-popup'
+                    }
+                });
+            }
+        
+    
+    };
+
+
 
     const handleTurnUpdate = (data) => {
         
@@ -287,16 +372,16 @@ function LiarGame() {
         console.log('Received message:', response); // 디버깅용 로그
         
         switch(response.type) {
-            case 'PLAYER_READY':
-                handleRedyStatus(response.data);
-                break;
+            // case 'PLAYER_READY':
+            //     handleRedyStatus(response.data);
+            //     break;
             // case 'NEW_TURN':
             //     handleTurnUpdate(response.data);
             //     break;
             case 'START_GAME':
             case 'TURN_UPDATE':
                 console.log("QQQQQQQ");
-                turnUpdateStau(response.data);
+                turnUpdateStaus(response.data);
                 break;
         
             case 'GET_GAME':
@@ -304,7 +389,7 @@ function LiarGame() {
                 break;
             case 'REMOVE':
                 console.log("resut : " ,response.data.result )
-                if(response.data.result === true){
+                if(response.data.result){
                     // 게임 상태와 관련된 상태들을 초기화
                     setGameState('finished');
                     setGame(null);
@@ -541,10 +626,6 @@ function LiarGame() {
         setGameState('playing');
         turnStatus.current = true;
 
-        // sendMessage('/app/game.newTurn', {
-        //     gameId: LiarGameId, 
-            
-        // });
 
         sendMessage('/app/game.newTurn', {
             gameId: LiarGameId,
@@ -567,11 +648,7 @@ function LiarGame() {
         console.log("isHost : ", isHost);
         const senderNickname = isHost ? hostName : nickname;
         
-        sendMessage('/app/game.chatGame', {
-            gameId: gameId,
-            content: chatInput,
-            sender: senderNickname
-        });
+        
         setChatInput('');
     };
 
@@ -589,16 +666,438 @@ function LiarGame() {
             setSelectedVote(null);
             return;
         }
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire({
+                title: "투표 완료",
+                icon: "success"
+              });
+              setSelectedVote(playerNickname);
         
-        setSelectedVote(playerNickname);
+            // 투표 처리 로직
+            sendMessage('/app/game.vote', {
+                gameId: gameId,
+                playerNickname : playerNickname
+            });
+            }
+          });
         
-        // 투표 처리 로직
-        client.current.send('/pub/game/vote', {}, JSON.stringify({
-            roomId: LiarGameId,
-            voter: nickname,
-            votedPlayer: playerNickname
-        }));
+        
     };
+
+    const endVote = (data) => {
+        console.log("투표 완료");
+        console.log("라이어 : " , data.Liar);
+
+        const formattedResults = Object.entries(data.result)
+
+            .map(([key, value]) => `${key}: ${value}표`)
+            .join('\n');
+
+        // 투표 결과 Swal에만 적용될 스타일
+        const voteResultStyles = `
+            <style>
+                .vote-result-swal .swal2-popup {
+                    background: rgba(0, 0, 0, 0.9);
+                    border-radius: 15px;
+                    padding: 20px;
+                    animation: zoomIn 0.3s ease-out;
+                }
+                .vote-result-swal .swal2-title,
+                .vote-result-swal .swal2-content {
+                    color: white !important;
+                }
+                .vote-result-swal .swal2-html-container {
+                    margin: 1em 0;
+                }
+                .vote-result-swal pre {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin-top: 15px;
+                    font-family: 'Arial', sans-serif;
+                    white-space: pre-wrap;
+                }
+                @keyframes zoomIn {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+            </style>
+        `;
+
+        Swal.fire({
+            title: '투표 결과',
+            html: `
+                ${voteResultStyles}
+                <div style="text-align: left; margin: 20px;">
+                    <h3>투표 집계 결과:</h3>
+                    <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">${formattedResults}</pre>
+                </div>
+            `,
+            icon: 'info',
+            confirmButtonText: '확인',
+            showCancelButton: false,
+            allowOutsideClick: false,
+            customClass: {
+                container: 'vote-result-swal'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                if(data.status === "Draw"){
+                    Swal.fire({
+                        title: '결과',
+                        html: `
+                            ${voteResultStyles}
+                            <div style="text-align: left; margin: 20px;">
+                                <h3>결과</h3>
+                                <h3> 동점 상황으로 한 턴을 더 진행 합니다 </h3>
+                            </div>
+                        `,
+                        icon: 'info',
+                        confirmButtonText: '확인',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+                        startNextTurnRound();
+
+                    })
+                }
+                else{
+                    Swal.fire({
+                        title: '결과',
+                        html: `
+                            ${voteResultStyles}
+                            <div style="text-align: left; margin: 20px;">
+                                <h3>결과</h3>
+                                <h3>${data.winner === 'Player' ? '라이어를 찾았습니다.' : '라이어를 찾아내지 못했습니다.'} </h3>
+                                <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어는 ${data.Liar}</pre>
+                            </div>
+                        `,
+                        icon: 'info',
+                        confirmButtonText: '확인',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+                        if(data.winner === "Player"){
+                            if(data.Liar === nickname) {
+                                // 라이어인 경우 정답 입력 창 표시
+                                Swal.fire({
+                                    title: '정답 입력',
+                                    input: 'text',
+                                    inputLabel: '제시어를 맞춰보세요',
+                                    inputPlaceholder: '정답을 입력하세요...',
+                                    showCancelButton: false,
+                                    confirmButtonText: '제출',
+                                    allowOutsideClick: false,
+                                    customClass: {
+                                        container: 'vote-result-swal'
+                                    }
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        
+                                        // 투표 처리 로직
+                                        sendMessage('/app/game.answer', {
+                                            gameId: gameId,
+                                            answer: result.value
+                                        });
+                                    }
+                                });
+                                } else {
+                                    // 라이어가 아닌 경우 대기 메시지 표시
+                                    Swal.fire({
+                                        title: '라이어가 정답을 입력중입니다',
+                                        text: '잠시만 기다려주세요...',
+                                        showConfirmButton: false,
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                }
+                            }
+                        else{
+                            if(data.Liar === nickname){
+                                Swal.fire({
+                                    title: '투표 결과',
+                                    html: `
+                                        ${voteResultStyles}
+                                        <div style="text-align: left; margin: 20px;">
+                                            <h3>라이어 승리!</h3>
+                                            <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어가 모두를 속였습니다. </pre>
+                                        </div>
+                                    `,
+                                    icon: 'info',
+                                    confirmButtonText: '확인',
+                                    showCancelButton: false,
+                                    allowOutsideClick: false,
+                                    customClass: {
+                                        container: 'vote-result-swal'
+                                    }
+                                }).then((result) => {
+                
+                
+                                })
+                        }
+                        else{
+                            Swal.fire({
+                                title: '투표 결과',
+                                html: `
+                                    ${voteResultStyles}
+                                    <div style="text-align: left; margin: 20px;">
+                                        <h3>라이어 승리! ㅜㅜ</h3>
+                                        <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어에게 속았습니다 ㅜㅜ </pre>
+                                    </div>
+                                `,
+                                icon: 'info',
+                                confirmButtonText: '확인',
+                                showCancelButton: false,
+                                allowOutsideClick: false,
+                                customClass: {
+                                    container: 'vote-result-swal'
+                                }
+                            }).then((result) => {
+                
+                
+                            })
+                        }
+                        }
+                    });
+                }
+               
+                    
+                    // 투표 UI 초기화
+                    setShowVotingUI(false);
+                    isTurnEnd.current = false;
+                    setSelectedVote(null);
+                }
+            });
+    };
+
+    const voteAnswerResult = (data) =>{
+
+        if(data.winner === 'Liar'){
+             // 투표 결과 Swal에만 적용될 스타일
+                const voteResultStyles = `
+                <style>
+                    .vote-result-swal .swal2-popup {
+                        background: rgba(0, 0, 0, 0.9);
+                        border-radius: 15px;
+                        padding: 20px;
+                        animation: zoomIn 0.3s ease-out;
+                    }
+                    .vote-result-swal .swal2-title,
+                    .vote-result-swal .swal2-content {
+                        color: white !important;
+                    }
+                    .vote-result-swal .swal2-html-container {
+                        margin: 1em 0;
+                    }
+                    .vote-result-swal pre {
+                        background: rgba(255, 255, 255, 0.1);
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin-top: 15px;
+                        font-family: 'Arial', sans-serif;
+                        white-space: pre-wrap;
+                    }
+                    @keyframes zoomIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.9);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                </style>
+            `;
+            if(data.Liar === nickname){
+                Swal.fire({
+                    title: '투표 결과',
+                    html: `
+                        ${voteResultStyles}
+                        <div style="text-align: left; margin: 20px;">
+                            <h3>라이어 승리!</h3>
+                             <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">정답을 맞췄습니다. </pre>
+                        </div>
+                    `,
+                    icon: 'info',
+                    confirmButtonText: '확인',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'vote-result-swal'
+                    }
+                }).then((result) => {
+
+
+                })
+        }
+        else{
+            Swal.fire({
+                title: '투표 결과',
+                html: `
+                    ${voteResultStyles}
+                    <div style="text-align: left; margin: 20px;">
+                        <h3>라이어 승리 ㅠㅠ</h3>
+                         <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어가 ${data.answer}를 맞췄습니다.</pre>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: '확인',
+                showCancelButton: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: 'vote-result-swal'
+                }
+            }).then((result) => {
+
+
+            })
+        }
+                
+        }
+        else{
+
+            if(data.Liar === nickname){
+                const voteResultStyles = `
+                <style>
+                    .vote-result-swal .swal2-popup {
+                        background: rgba(0, 0, 0, 0.9);
+                        border-radius: 15px;
+                        padding: 20px;
+                        animation: zoomIn 0.3s ease-out;
+                    }
+                    .vote-result-swal .swal2-title,
+                    .vote-result-swal .swal2-content {
+                        color: white !important;
+                    }
+                    .vote-result-swal .swal2-html-container {
+                        margin: 1em 0;
+                    }
+                    .vote-result-swal pre {
+                        background: rgba(255, 255, 255, 0.1);
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin-top: 15px;
+                        font-family: 'Arial', sans-serif;
+                        white-space: pre-wrap;
+                    }
+                    @keyframes zoomIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.9);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                </style>
+            `;
+                Swal.fire({
+                    title: '투표 결과',
+                    html: `
+                        ${voteResultStyles}
+                        <div style="text-align: left; margin: 20px;">
+                            <h3>플레이어 승리! ㅠㅠ</h3>
+                             <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">정답이 틀렸습니다. </pre>
+                        </div>
+                    `,
+                    icon: 'info',
+                    confirmButtonText: '확인',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'vote-result-swal'
+                    }
+                }).then((result) => {
+
+
+                })
+        }
+        else{
+            const voteResultStyles = `
+                <style>
+                    .vote-result-swal .swal2-popup {
+                        background: rgba(0, 0, 0, 0.9);
+                        border-radius: 15px;
+                        padding: 20px;
+                        animation: zoomIn 0.3s ease-out;
+                    }
+                    .vote-result-swal .swal2-title,
+                    .vote-result-swal .swal2-content {
+                        color: white !important;
+                    }
+                    .vote-result-swal .swal2-html-container {
+                        margin: 1em 0;
+                    }
+                    .vote-result-swal pre {
+                        background: rgba(255, 255, 255, 0.1);
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin-top: 15px;
+                        font-family: 'Arial', sans-serif;
+                        white-space: pre-wrap;
+                    }
+                    @keyframes zoomIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.9);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                </style>
+            `;
+            Swal.fire({
+                title: '투표 결과',
+                html: `
+                    ${voteResultStyles}
+                    <div style="text-align: left; margin: 20px;">
+                        <h3>플레이어 승리!</h3>
+                         <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어가 정답을 틀렸습니다.</pre>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: '확인',
+                showCancelButton: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: 'vote-result-swal'
+                }
+            }).then((result) => {
+
+
+            })
+        }
+        }
+    }
 
     return (
         <div className="liar-game">
