@@ -30,6 +30,7 @@ function LiarGame() {
     const [messages, setMessages] = useState([]);
     const [chatInput, setChatInput] = useState('');
     const [game, setGame] = useState(null);
+    const gameUseRef = useRef(null);
     const [countdown, setCountdown] = useState(null);
     const [currentRound, setCurrentRound] = useState(1);
     const [playerOrder, setPlayerOrder] = useState([]);
@@ -84,6 +85,7 @@ function LiarGame() {
                         case 'GET_GAME':
                             console.log("게임 정보 수신:", response.data);
                             setGame(response.data);
+                            gameUseRef.current=response.data;
                             setCountdown(3);
                             break;
                         case 'NEW_TURN':
@@ -93,7 +95,7 @@ function LiarGame() {
                             break;
                         case 'GAME_START':
                             console.log("게임 스타트");
-                            handleGameStart(response.data);
+       
                             break;
                         case 'PLAYER_READY':
                             handleRedyStatus(response.data);
@@ -109,27 +111,14 @@ function LiarGame() {
                         case 'ANSWER':
                             voteAnswerResult(response.data);
                             break;
-                        case 'TURN_CHANGE':
-                            handleTurnChange(response.data);
-                            break;
-                        case 'WORD_REVEAL':
-                            handleWordReveal(response.data);
-                            break;
-                        case 'VOTE_UPDATE':
-                            handleVoteUpdate(response.data);
-                            break;
-                        case 'GAME_RESULT':
-                            handleGameResult(response.data);
-                            break;
+                        
                   
                         
                         case 'CHAT':
                             console.log("채팅 메시지 수신:", response);
                             setMessages(prev => [...prev, response.data]);
                             break;
-                        case 'ERROR':
-                            handleError(response.data);
-                            break;
+                    
                         case 'REMOVE':
                             console.log("resut : ", response.data.result);
                             if (response.data.result === true) {
@@ -284,7 +273,8 @@ function LiarGame() {
         
             if (data.currentPlayer === currentNickname) {
                 Swal.fire({
-                    title: '제시어 설명',
+                    title: `제시어 설명
+                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
                     text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
                     input: 'text',
                     inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
@@ -331,7 +321,8 @@ function LiarGame() {
         
             if (data.currentPlayer === currentNickname) {
                 Swal.fire({
-                    title: '제시어 설명',
+                    title: `제시어 설명
+                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '라이어' : `${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
                     text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
                     input: 'text',
                     inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
@@ -379,6 +370,14 @@ function LiarGame() {
             //     handleTurnUpdate(response.data);
             //     break;
             case 'START_GAME':
+              
+            case 'ROUND_UPDATE':
+                console.log("QQQQQQQ");
+                setGame(response.data.game);
+                gameUseRef.current=response.data.game;
+                turnUpdateStaus(response.data);
+                break;
+        
             case 'TURN_UPDATE':
                 console.log("QQQQQQQ");
                 turnUpdateStaus(response.data);
@@ -473,88 +472,13 @@ function LiarGame() {
         return () => clearTimeout(timer);
     }, [countdown, game, hostName, nickname, isHost]);
 
-    const startTurn = () => {
-        if (currentTurn > game.turnTime) {
-            // 모든 턴이 끝났을 때의 처리
-            endRound();
-            return;
-        }
+   
 
-        // 현재 턴의 플레이어 표시
-        const currentPlayer = playerOrder[0];
-        
-        // 턴 타이머 시작 (30초)
-        let timeLeft = 30;
-        const turnTimer = setInterval(() => {
-            timeLeft--;
-            setTimer(timeLeft);
-            
-            if (timeLeft <= 0) {
-                clearInterval(turnTimer);
-                nextPlayer();
-            }
-        }, 1000);
-    };
+ 
 
-    const nextPlayer = () => {
-        if (turnCount === playerOrder.length - 1) {
-            // 모든 플레이어가 턴을 마쳤으면 다음 턴으로
-            console.log("!!!@#!#!@#!@#");
-            setCurrentPlayerIndex(0);
-            startTurn();
-        } else {
-            // 다음 플레이어로
-            setCurrentPlayerIndex(prev => prev + 1);
-            startTurn();
-        }
-    };
+  
 
-    const endRound = () => {
-        // 라운드 종료 처리
-        if (currentRound < game.rounds) {
-            setCurrentRound(prev => prev + 1);
-            setCountdown(3); // 다음 라운드 시작
-        } else {
-            // 게임 종료
-            setGameState('finished');
-        }
-    };
-
-    const handleGameStart = (data) => {
-        console.log('Game start data:', data);
-        setGameState('playing');
-        setPlayerOrder(data.playerOrder || []);
-        setPlayerNum(data.playerOrder.length);
-        setCurrentPlayerIndex(0);
-        setTurnTime(data.turnTime || 1); // turnTime 설정
-        setCurrentRound(game.currentRound) // 첫 턴 라운드 설정
-        startTurn();
-    };
-
-    const handleTurnChange = (data) => {
-        setTimer(data.timeLeft);
-    };
-
-    const handleWordReveal = (data) => {
-        setWord(data.word);
-    };
-
-    const handleVoteUpdate = (data) => {
-        setVotes(data.votes);
-    };
-
-    const handleGameResult = (data) => {
-        setGameState('result');
-     
-    };
-
-    const handleChat = (data) => {
-        setMessages(prev => [...prev, data]);
-    };
-
-    const handleError = (data) => {
-        alert(data.message);
-    };
+    
 
     const startGame = () => {
         console.log("스타트 게임 옴");
@@ -857,7 +781,42 @@ function LiarGame() {
                                     }
                                 }).then((result) => {
                 
-                
+                                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                                        Swal.fire({
+                                            title: '게임 종료',
+                                            
+                                            icon: 'info',
+                                            confirmButtonText: '게임 시작',
+                                            showCancelButton: false,
+                                            allowOutsideClick: false,
+                                            customClass: {
+                                                container: 'vote-result-swal'
+                                            }
+                                        }).then((result) => {
+                        
+                                            sendMessage('/app/game.0', {
+                                                gameId: gameId,
+                                    
+                                            });
+                                        })
+                                    }
+                                    Swal.fire({
+                                        title: '다음 라운드',
+                                        
+                                        icon: 'info',
+                                        confirmButtonText: '게임 시작',
+                                        showCancelButton: false,
+                                        allowOutsideClick: false,
+                                        customClass: {
+                                            container: 'vote-result-swal'
+                                        }
+                                    }).then((result) => {
+                    
+                                        sendMessage('/app/game.nextRound', {
+                                            gameId: gameId,
+                                       
+                                        });
+                                    })
                                 })
                         }
                         else{
@@ -878,7 +837,43 @@ function LiarGame() {
                                     container: 'vote-result-swal'
                                 }
                             }).then((result) => {
+                                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                                    Swal.fire({
+                                        title: '게임 종료',
+                                        
+                                        icon: 'info',
+                                        confirmButtonText: '게임 시작',
+                                        showCancelButton: false,
+                                        allowOutsideClick: false,
+                                        customClass: {
+                                            container: 'vote-result-swal'
+                                        }
+                                    }).then((result) => {
+                    
+                                        sendMessage('/app/game.0', {
+                                            gameId: gameId,
+                                            
+                                        });
+                                    })
+                                }
+                                Swal.fire({
+                                    
+                                    title: '다음 라운드',
+                                    
+                                    icon: 'info',
+                                    confirmButtonText: '게임 시작',
+                                    showCancelButton: false,
+                                    allowOutsideClick: false,
+                                    customClass: {
+                                        container: 'vote-result-swal'
+                                    }
+                                }).then((result) => {
+                                    sendMessage('/app/game.nextRound', {
+                                        gameId: gameId,
+                                   
+                                    });
                 
+                                })
                 
                             })
                         }
@@ -952,8 +947,43 @@ function LiarGame() {
                         container: 'vote-result-swal'
                     }
                 }).then((result) => {
+                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                        Swal.fire({
+                            title: '게임 종료',
+                            
+                            icon: 'info',
+                            confirmButtonText: '게임 시작',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                            customClass: {
+                                container: 'vote-result-swal'
+                            }
+                        }).then((result) => {
+        
+                            sendMessage('/app/game.0', {
+                                gameId: gameId,
+                              
+                            });
+                        })
+                    }
 
-
+                    Swal.fire({
+                        title: '다음 라운드',
+                        
+                        icon: 'info',
+                        confirmButtonText: '게임 시작',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+    
+                        sendMessage('/app/game.nextRound', {
+                            gameId: gameId,
+                       
+                        });
+                    })
                 })
         }
         else{
@@ -974,7 +1004,42 @@ function LiarGame() {
                     container: 'vote-result-swal'
                 }
             }).then((result) => {
+                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                    Swal.fire({
+                        title: '게임 종료',
+                        
+                        icon: 'info',
+                        confirmButtonText: '게임 시작',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+    
+                        sendMessage('/app/game.0', {
+                            gameId: gameId,
+                            
+                        });
+                    })
+                }
+                Swal.fire({
+                    title: '다음 라운드',
+                    
+                    icon: 'info',
+                    confirmButtonText: '게임 시작',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'vote-result-swal'
+                    }
+                }).then((result) => {
 
+                    sendMessage('/app/game.nextRound', {
+                        gameId: gameId,
+                   
+                    });
+                })
 
             })
         }
@@ -1035,7 +1100,42 @@ function LiarGame() {
                         container: 'vote-result-swal'
                     }
                 }).then((result) => {
-
+                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                        Swal.fire({
+                            title: '게임 종료',
+                            
+                            icon: 'info',
+                            confirmButtonText: '게임 시작',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                            customClass: {
+                                container: 'vote-result-swal'
+                            }
+                        }).then((result) => {
+        
+                            sendMessage('/app/game.0', {
+                                gameId: gameId,
+                                
+                            });
+                        })
+                    }
+                    Swal.fire({
+                        title: '다음 라운드',
+                        
+                        icon: 'info',
+                        confirmButtonText: '게임 시작',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+                        sendMessage('/app/game.nextRound', {
+                            gameId: gameId,
+                       
+                        });
+    
+                    })
 
                 })
         }
@@ -1092,8 +1192,43 @@ function LiarGame() {
                     container: 'vote-result-swal'
                 }
             }).then((result) => {
+                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                    Swal.fire({
+                        title: '게임 종료',
+                        
+                        icon: 'info',
+                        confirmButtonText: '게임 시작',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            container: 'vote-result-swal'
+                        }
+                    }).then((result) => {
+    
+                        sendMessage('/app/game.0', {
+                            gameId: gameId,
+                           
+                        });
+                    })
+                }
 
+                Swal.fire({
+                    title: '다음 라운드',
+                    
+                    icon: 'info',
+                    confirmButtonText: '게임 시작',
+                    showCancelButton: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: 'vote-result-swal'
+                    }
+                }).then((result) => {
+                    sendMessage('/app/game.nextRound', {
+                        gameId: gameId,
+                   
+                    });
 
+                })
             })
         }
         }
