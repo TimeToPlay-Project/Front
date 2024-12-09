@@ -74,6 +74,7 @@
     flex-direction: column;
     align-items: center;
     transition: all 0.3s ease;
+    margin: 20px 0;
 }
 
 .player-card:hover {
@@ -543,28 +544,52 @@
 
 .description-bubble {
     position: absolute;
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 10px 15px;
-    margin-left: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-width: 200px;
-    word-wrap: break-word;
-    left: 100%;
+    right: -120px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+    z-index: 100;
+    max-width: 200px;
+    word-wrap: break-word;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .description-bubble::before {
     content: '';
     position: absolute;
-    left: -10px;
+    left: -15px;
     top: 50%;
     transform: translateY(-50%);
-    border-width: 10px;
+    border-width: 8px;
     border-style: solid;
-    border-color: transparent #ffffff transparent transparent;
+    border-color: transparent #4CAF50 transparent transparent;
+}
+
+.description-bubble.left {
+    right: auto;
+    left: -120px;
+}
+
+.description-bubble.left::before {
+    left: auto;
+    right: -15px;
+    border-color: transparent transparent transparent #4CAF50;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
 }
 
 .voting-instruction {
@@ -657,12 +682,104 @@
     }
 }
 
-/* 투표 결과 관련 스타일 제거 - 이제 컴포넌트 내에서 직접 처리 */
-
-.swal2-title {
-    color: white !important;
+.top-notification {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
 }
 
-.swal2-html-container {
-    margin: 1em 0 !important;
+.typing-indicator {
+    position: absolute;
+    right: -120px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #2196F3, #21CBF3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.typing-indicator::before {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent #2196F3 transparent transparent;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.typing-dot:nth-child(1) {
+    animation: typingDot 1.4s infinite;
+    animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+    animation: typingDot 1.4s infinite;
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation: typingDot 1.4s infinite;
+    animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+}
+
+.player-card.typing {
+    animation: glowPulse 2s infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(33, 150, 243, 0.6);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate(-50%, -100%);
+    }
+    to {
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
 }

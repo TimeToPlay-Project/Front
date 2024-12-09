@@ -52,6 +52,10 @@ function LiarGame() {
     const voteStatus = useRef(false);
     const voteResult = useRef(null);
     const [selectedVote, setSelectedVote] = useState(null);
+    const gameResult = useRef(null);
+    const currentTypingPlayerRef = useRef(null);
+    const [currentTypingPlayer,setCurrentTypingPlayer] = useState(null);
+    const [showTopNotification, setShowTopNotification] = useState(false);
 
     useEffect(() => {
         // 투표 UI가 표시되면 자동으로 스크롤
@@ -112,7 +116,10 @@ function LiarGame() {
                             voteAnswerResult(response.data);
                             break;
                         
-                  
+                        case 'END_GAME':
+                            gameResult.current = response.data;
+                            endGame();
+                            break;
                         
                         case 'CHAT':
                             console.log("채팅 메시지 수신:", response);
@@ -163,16 +170,14 @@ function LiarGame() {
         };
     }, [gameId, navigate]);
 
-    useEffect(() => {
-        console.log("유즈 이벡트 커런트 턴 : ", currentTurn);
-    },[currentTurn]);
-
 
 
     const turnUpdateStaus = (data) => {
         console.log("321");
 
         if(data.isTurnEnd){
+            currentTypingPlayerRef.current = null;
+            setCurrentTypingPlayer(null);
             Swal.fire({
                 title: `종료!`,
                 text: '라이어를 찾아주세요!',
@@ -274,7 +279,7 @@ function LiarGame() {
             if (data.currentPlayer === currentNickname) {
                 Swal.fire({
                     title: `제시어 설명
-                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
+                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '라이어' : `${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
                     text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
                     input: 'text',
                     inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
@@ -290,21 +295,18 @@ function LiarGame() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         setTurnCount(pre=>pre+1);
+                        currentTypingPlayerRef.current = currentNickname;
                         sendMessage('/app/game.submitWord', {gameId : LiarGameId, player : currentNickname, description : result.value});
 
                         
                     }
                 });
             } else {
-                Swal.fire({
-                    title: '다른 플레이어 차례',
-                    text: `${data.currentPlayer}님이 설명중입니다...`,
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'turn-notification-popup'
-                    }
-                });
+                setShowTopNotification(true);
+                currentTypingPlayerRef.current = data.currentPlayer;
+                setCurrentTypingPlayer(currentTypingPlayerRef.current);
+                
+             
             }
         
     
@@ -338,21 +340,17 @@ function LiarGame() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         setTurnCount(pre=>pre+1);
+                        currentTypingPlayerRef.current = currentNickname;
                         sendMessage('/app/game.submitWord', {gameId : LiarGameId, player : currentNickname, description : result.value});
 
                         
                     }
                 });
             } else {
-                Swal.fire({
-                    title: '다른 플레이어 차례',
-                    text: `${data.currentPlayer}님이 설명중입니다...`,
-                    showConfirmButton: false,
-                    timer: 2000,
-                    customClass: {
-                        popup: 'turn-notification-popup'
-                    }
-                });
+                setShowTopNotification(true);
+                currentTypingPlayerRef.current = data.currentPlayer;
+                setCurrentTypingPlayer(currentTypingPlayerRef.current);
+               
             }
         
     
@@ -375,7 +373,9 @@ function LiarGame() {
                 console.log("QQQQQQQ");
                 setGame(response.data.game);
                 gameUseRef.current=response.data.game;
-                turnUpdateStaus(response.data);
+                // turnUpdateStaus(response.data);
+                turnRef.current = response.data.game.currentTurn;
+                setCountdown(3);
                 break;
         
             case 'TURN_UPDATE':
@@ -437,12 +437,12 @@ function LiarGame() {
             // 카운트다운이 끝나면 제시어 팝업 표시
             Swal.fire({
                 title: `제시어 공개
-                <div class="round">round ${currentRound}</div>`,
+                <div class="round">round ${gameUseRef.current.round}</div>`,
                 html: `
                 
                     <div class="word-reveal">
                         <div class="word-category">${game.category}</div>
-                        <div class="word-text">${game.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${game.keywords?.[currentRound-1]}`}</div>
+                        <div class="word-text">${game.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>
                     </div>
                 `,
                 showConfirmButton: true,
@@ -494,6 +494,8 @@ function LiarGame() {
 
     const endCurrentTurnRound = () => {
         console.log("커런트 턴 : ", currentTurn);
+        currentTypingPlayerRef.current = null;
+        setCurrentTypingPlayer(null);
         setGameState('turnEnd');
         Swal.fire({
             title: `${turnRef.current}번째 턴 종료!`,
@@ -502,7 +504,8 @@ function LiarGame() {
             confirmButtonText: '확인'
         }).then((result) => {
             if (result.isConfirmed) {
-        
+                
+                
                 setRedyStatus(true);
             }
         });
@@ -560,10 +563,16 @@ function LiarGame() {
     };
 
     const handleWordSubmission = (data) => {
+        // 먼저 설명을 업데이트
         setPlayerDescriptions(prev => ({
             ...prev,
             [data.player]: data.description
         }));
+        
+        // 타이핑 상태는 즉시 제거하지 않고 약간의 지연 후 제거
+        setTimeout(() => {
+            currentTypingPlayerRef.current = null;
+        }, 100); // 짧은 지연 시간 설정
     };
 
     const handleSendChat = () => {
@@ -764,7 +773,7 @@ function LiarGame() {
                         else{
                             if(data.Liar === nickname){
                                 Swal.fire({
-                                    title: '투표 결과',
+                                    title: '게임 결과',
                                     html: `
                                         ${voteResultStyles}
                                         <div style="text-align: left; margin: 20px;">
@@ -780,7 +789,7 @@ function LiarGame() {
                                         container: 'vote-result-swal'
                                     }
                                 }).then((result) => {
-                
+                                   
                                     if(gameUseRef.current.currentRound === gameUseRef.current.round){
                                         Swal.fire({
                                             title: '게임 종료',
@@ -793,14 +802,15 @@ function LiarGame() {
                                                 container: 'vote-result-swal'
                                             }
                                         }).then((result) => {
-                        
-                                            sendMessage('/app/game.0', {
+        
+                                            sendMessage('/app/game.end', {
                                                 gameId: gameId,
+                                                winner : "Liar"
                                     
                                             });
                                         })
                                     }
-                                    Swal.fire({
+                                    else { Swal.fire({
                                         title: '다음 라운드',
                                         
                                         icon: 'info',
@@ -814,14 +824,15 @@ function LiarGame() {
                     
                                         sendMessage('/app/game.nextRound', {
                                             gameId: gameId,
-                                       
+                                            winner : "Liar"
                                         });
                                     })
-                                })
+                                }
+                            })
                         }
                         else{
                             Swal.fire({
-                                title: '투표 결과',
+                                title: '게임 결과',
                                 html: `
                                     ${voteResultStyles}
                                     <div style="text-align: left; margin: 20px;">
@@ -850,14 +861,13 @@ function LiarGame() {
                                         }
                                     }).then((result) => {
                     
-                                        sendMessage('/app/game.0', {
+                                        sendMessage('/app/game.end', {
                                             gameId: gameId,
-                                            
+                                            winner : "Liar"
                                         });
                                     })
                                 }
-                                Swal.fire({
-                                    
+                                else { Swal.fire({
                                     title: '다음 라운드',
                                     
                                     icon: 'info',
@@ -868,15 +878,15 @@ function LiarGame() {
                                         container: 'vote-result-swal'
                                     }
                                 }).then((result) => {
+                
                                     sendMessage('/app/game.nextRound', {
                                         gameId: gameId,
-                                   
+                                        winner : "Liar"
                                     });
-                
                                 })
-                
-                            })
-                        }
+                            }
+                        })
+                    }
                         }
                     });
                 }
@@ -931,7 +941,7 @@ function LiarGame() {
             `;
             if(data.Liar === nickname){
                 Swal.fire({
-                    title: '투표 결과',
+                    title: '게임 결과',
                     html: `
                         ${voteResultStyles}
                         <div style="text-align: left; margin: 20px;">
@@ -960,14 +970,13 @@ function LiarGame() {
                             }
                         }).then((result) => {
         
-                            sendMessage('/app/game.0', {
+                            sendMessage('/app/game.end', {
                                 gameId: gameId,
-                              
+                                winner : "Liar"
                             });
                         })
                     }
-
-                    Swal.fire({
+                    else { Swal.fire({
                         title: '다음 라운드',
                         
                         icon: 'info',
@@ -981,14 +990,15 @@ function LiarGame() {
     
                         sendMessage('/app/game.nextRound', {
                             gameId: gameId,
-                       
+                            winner : "Liar"
                         });
                     })
-                })
+                }
+            })
         }
         else{
             Swal.fire({
-                title: '투표 결과',
+                title: '게임 결과',
                 html: `
                     ${voteResultStyles}
                     <div style="text-align: left; margin: 20px;">
@@ -1017,9 +1027,9 @@ function LiarGame() {
                         }
                     }).then((result) => {
     
-                        sendMessage('/app/game.0', {
+                        sendMessage('/app/game.end', {
                             gameId: gameId,
-                            
+                            winner : "Liar"
                         });
                     })
                 }
@@ -1037,7 +1047,7 @@ function LiarGame() {
 
                     sendMessage('/app/game.nextRound', {
                         gameId: gameId,
-                   
+                        winner : "Liar"
                     });
                 })
 
@@ -1084,7 +1094,7 @@ function LiarGame() {
                 </style>
             `;
                 Swal.fire({
-                    title: '투표 결과',
+                    title: '게임 결과',
                     html: `
                         ${voteResultStyles}
                         <div style="text-align: left; margin: 20px;">
@@ -1113,13 +1123,13 @@ function LiarGame() {
                             }
                         }).then((result) => {
         
-                            sendMessage('/app/game.0', {
+                            sendMessage('/app/game.end', {
                                 gameId: gameId,
-                                
+                                winner : "Player"
                             });
                         })
                     }
-                    Swal.fire({
+                    else { Swal.fire({
                         title: '다음 라운드',
                         
                         icon: 'info',
@@ -1130,14 +1140,14 @@ function LiarGame() {
                             container: 'vote-result-swal'
                         }
                     }).then((result) => {
+    
                         sendMessage('/app/game.nextRound', {
                             gameId: gameId,
-                       
+                            winner : "Player"
                         });
-    
                     })
-
-                })
+                }
+            })
         }
         else{
             const voteResultStyles = `
@@ -1176,7 +1186,7 @@ function LiarGame() {
                 </style>
             `;
             Swal.fire({
-                title: '투표 결과',
+                title: '게임 결과',
                 html: `
                     ${voteResultStyles}
                     <div style="text-align: left; margin: 20px;">
@@ -1197,7 +1207,7 @@ function LiarGame() {
                         title: '게임 종료',
                         
                         icon: 'info',
-                        confirmButtonText: '게임 시작',
+                        confirmButtonText: '결과 확인',
                         showCancelButton: false,
                         allowOutsideClick: false,
                         customClass: {
@@ -1205,14 +1215,13 @@ function LiarGame() {
                         }
                     }).then((result) => {
     
-                        sendMessage('/app/game.0', {
+                        sendMessage('/app/game.end', {
                             gameId: gameId,
-                           
+                            winner : "Player"
                         });
                     })
                 }
-
-                Swal.fire({
+                else { Swal.fire({
                     title: '다음 라운드',
                     
                     icon: 'info',
@@ -1223,19 +1232,92 @@ function LiarGame() {
                         container: 'vote-result-swal'
                     }
                 }).then((result) => {
+
                     sendMessage('/app/game.nextRound', {
                         gameId: gameId,
-                   
+                        winner : "Player"
                     });
-
                 })
-            })
-        }
+            }
+        })
+    }
         }
     }
 
+    const endGame = () =>{
+        const formattedResults = Object.entries(gameResult.current.gameResult)
+        
+        console.log("1232412123 : " ,formattedResults)
+        const voteResultStyles = `
+                <style>
+                    .vote-result-swal .swal2-popup {
+                        background: rgba(0, 0, 0, 0.9);
+                        border-radius: 15px;
+                        padding: 20px;
+                        animation: zoomIn 0.3s ease-out;
+                    }
+                    .vote-result-swal .swal2-title,
+                    .vote-result-swal .swal2-content {
+                        color: white !important;
+                    }
+                    .vote-result-swal .swal2-html-container {
+                        margin: 1em 0;
+                    }
+                    .vote-result-swal pre {
+                        background: rgba(255, 255, 255, 0.1);
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin-top: 15px;
+                        font-family: 'Arial', sans-serif;
+                        white-space: pre-wrap;
+                    }
+                    @keyframes zoomIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.9);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                </style>
+            `;
+            Swal.fire({
+                title: `${gameResult.current.winner} 우승 !!`,
+                html: `
+                        ${voteResultStyles}
+                        <div style="text-align: left; margin: 20px;">
+                            <h3> 점수 </h3>
+                            ${formattedResults.map((result, index) => {
+                                return `
+                                    <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">${result[0]} : ${result[1]} 점</pre>
+                                `;
+                            }).join('')}
+                        </div>
+                    `,
+                icon: 'info',
+                confirmButtonText: '확인',
+                showCancelButton: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: 'vote-result-swal'
+                }
+            }).then((result) => {
+            
+            })
+        }
+ 
+    
+
+    
     return (
         <div className="liar-game">
+            {showTopNotification && currentTypingPlayerRef.current && (
+                <div className="top-notification">
+                    {currentTypingPlayerRef.current}님이 설명중입니다...
+                </div>
+            )}
             <div className="game-header">
                 {showVotingUI && (
                     <div className="voting-instruction">
@@ -1271,7 +1353,7 @@ function LiarGame() {
                         const isVoted = selectedVote === player?.nickname;
                         
                         return player ? (
-                            <div key={index} className="player-card">
+                            <div key={index} className={`player-card ${currentTypingPlayerRef.current === player.nickname ? 'typing' : ''}`}>
                                 <div 
                                     className={`player-avatar ${isCurrentPlayer ? 'current-turn' : ''} 
                                               ${showVotingUI ? 'votable' : ''} 
@@ -1294,10 +1376,25 @@ function LiarGame() {
                                             현재 차례
                                         </div>
                                     )}
+                                    {currentTypingPlayerRef.current === player.nickname && (
+                                        <div className="typing-indicator">
+                                            입력중
+                                            <div className="typing-dot"></div>
+                                            <div className="typing-dot"></div>
+                                            <div className="typing-dot"></div>
+                                        </div>
+                                    )}
                                 </div>
-                                {description && (
-                                    <div className={`word-bubble ${index < 3 ? 'right' : 'left'}`}>
-                                        {description}
+                                {currentTypingPlayerRef.current === player.nickname && currentTypingPlayerRef ? (
+                                    <div className="typing-indicator">
+                                        입력중
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
+                                        <div className="typing-dot"></div>
+                                    </div>
+                                ) : playerDescriptions[player.nickname] && (
+                                    <div className={`description-bubble ${index % 2 === 0 ? 'right' : 'left'}`}>
+                                        {playerDescriptions[player.nickname]}
                                     </div>
                                 )}
                             </div>
