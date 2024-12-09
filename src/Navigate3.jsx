@@ -84,6 +84,13 @@ function Navigate3() {
                     >
                         노래맞추기
                     </div>
+
+                    <div 
+                        className={`menus ${selectedMenu === 'speed' ? 'active' : ''}`} 
+                        onClick={() => handleMenuClick('speed', '/speedQuiz')}
+                    >
+                        스피드 퀴즈
+                    </div>
                     
                     
                 </div>

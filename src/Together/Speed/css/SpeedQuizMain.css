@@ -1,0 +1,230 @@
+.liar-main {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #2a2a2a 0%, #6d6d6d 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+.liar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.button-container {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.create-room-button,
+.join-room-button {
+    padding: 1.5rem 3rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    min-width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.create-room-button {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.4), rgba(231, 76, 60, 0.5));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.join-room-button {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.4), rgba(142, 68, 173, 0.5));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.create-room-button:hover,
+.join-room-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.create-room-button:hover {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.6), rgba(231, 76, 60, 0.7));
+}
+
+.join-room-button:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.6), rgba(142, 68, 173, 0.7));
+}
+
+/* 방 목록 스타일 */
+.room-list {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1rem 0;
+}
+
+.search-container {
+    margin-bottom: 1rem;
+}
+
+.search-box {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.room-item {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.room-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.room-item.selected {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Dialog 컴포넌트 스타일 */
+.MuiDialog-paper {
+    background: rgba(60, 60, 60, 1) !important;
+    color: white !important;
+    min-width: 400px !important;
+    border-radius: 15px !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiDialogTitle-root {
+    text-align: center !important;
+    color: white !important;
+    padding: 24px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiDialogContent-root {
+    padding: 24px !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+}
+
+.MuiDialogContent-root .MuiTextField-root,
+.MuiDialogContent-root .MuiFormControl-root {
+    margin: 12px 0 !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+.MuiDialogContent-root .MuiInputBase-root {
+    padding: 8px 12px !important;
+}
+
+.MuiDialogActions-root {
+    padding: 16px 24px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    justify-content: center !important;
+    gap: 12px !important;
+}
+
+/* 버튼 스타일 */
+.MuiButton-root {
+    padding: 8px 24px !important;
+    font-size: 1rem !important;
+    text-transform: none !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.MuiButton-outlined {
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.MuiButton-outlined:hover {
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.MuiButton-contained {
+    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%) !important;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, .3) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.MuiButton-contained:hover {
+    background: linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* 입력 필드 스타일 개선 */
+.MuiInputLabel-root {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1rem !important;
+    padding: 0 4px !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+    color: white !important;
+}
+
+.MuiOutlinedInput-root {
+    color: white !important;
+    transition: all 0.3s ease !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    border-width: 2px !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: white !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Material-UI 스타일 오버라이드 */
+.MuiTextField-root {
+    margin: 12px 0 !important;
+}
+
+.MuiSelect-icon {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.MuiSelect-select {
+    color: white !important;
+}
+
+.MuiMenuItem-root {
+    color: rgb(118, 117, 117) !important;
+}

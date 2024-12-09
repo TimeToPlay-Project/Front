@@ -1,0 +1,113 @@
+.chat-container {
+    width: 100%;
+    max-width: 800px;
+    height: 300px;
+    margin: 20px auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.chat-message {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-message.my-message {
+    align-self: flex-end;
+    background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%);
+}
+
+.sender {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.content {
+    color: white;
+    word-break: break-word;
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 15px;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    outline: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.chat-input:focus {
+    border-color: rgba(33, 150, 243, 0.5);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.chat-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.send-button {
+    padding: 8px 20px;
+    background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(33, 203, 243, 0.3);
+}
+
+.send-button:active {
+    transform: translateY(0);
+}
