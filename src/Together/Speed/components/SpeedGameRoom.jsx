@@ -28,10 +28,9 @@ function SpeedGameRoom() {
     const [nickname, setNickname] = useState('');
     const [playerInfo, setPlayerInfo] = useState(null);
     const [update, setUpdate] = useState(false);
-    const [turnTime, setTurnTime] = useState(2);
-    const [rounds, setRounds] = useState(1);
-    const [category, setCategory] = useState('나라');
-    const categories = ['랜덤','나라', '동물', '무기', '탈것', '음식', '장소', '직업', '가수'];
+    const [gameMode, setGameMode] = useState('score'); // 'score' or 'count'
+    const [targetScore, setTargetScore] = useState(50);  // 목표 점수 (50, 100, 150)
+    const [questionCount, setQuestionCount] = useState(10);  // 문제 수 (10, 20, 30)
     const MAX_RECONNECT_ATTEMPTS = 5;
     const { hostName, isHost } = location.state || {};
     const pathname = window.location.pathname;
@@ -42,7 +41,9 @@ function SpeedGameRoom() {
     const [chatInput, setChatInput] = useState('');
     const chatContainerRef = useRef(null);
 
+
     const [showSettings, setShowSettings] = useState(false);
+
 
     // 채팅 자동 스크롤
     useEffect(() => {
@@ -50,6 +51,7 @@ function SpeedGameRoom() {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [messages]);
+
 
     
 
@@ -62,6 +64,7 @@ function SpeedGameRoom() {
             console.log(`플레이어222: ${currentPlayer} `);
         }
     }, [isHost, hostName, nickname]);
+
 
     const handlePasswordSubmit = async () => {
         try {
@@ -277,7 +280,6 @@ function SpeedGameRoom() {
                 // 방 정보 요청
             
              
-              
 
                 // 메시지 핸들러 설정
                 setMessageHandler((response) => {
@@ -368,10 +370,12 @@ function SpeedGameRoom() {
         };
     }, [UserRoomId, reconnectCount, isHost, hostName, nickname]);
 
+
     useEffect(() => {
         console.log("room1 : ",room);
         console.log(`플레이어: ${playerInfo} `);
     }, [room]);
+
 
     const Exit = (leavingPlayer, room) =>{
 
@@ -423,13 +427,15 @@ function SpeedGameRoom() {
     }
 
     const handleStart = () => {
-        sendMessage('/app/speed_game.createSpeedQuizGame', {
-            roomId: UserRoomId, 
+        const gameData = {
+            roomId: UserRoomId,
             players: room.players,
-            category: category,
-            maxScore: MaxScore.current,
-            quizNum : quizNum.current
-        });
+            gameMode: gameMode,
+            ...(gameMode === 'score' 
+                ? { maxScore:targetScore, quizNum : 0 } 
+                : { quizNum : questionCount, maxScore:0 })
+        };
+        sendMessage('/app/speed_game.createSpeedQuizGame', gameData);
     };
 
     // 게임 설정을 Material-UI Dialog를 사용한 팝업으로 변경하고, 설정 버튼을 추가합니다.
@@ -636,8 +642,85 @@ function SpeedGameRoom() {
                     },
                 }}
             >
-               
-                
+                <DialogTitle>게임 설정</DialogTitle>
+                <DialogContent>
+                    <div style={{ marginBottom: '20px' }}>
+                        <h3>게임 모드</h3>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <Button
+                                key="score"
+                                variant={gameMode === 'score' ? "contained" : "outlined"}
+                                onClick={() => setGameMode('score')}
+                                style={{
+                                    backgroundColor: gameMode === 'score' ? '#4CAF50' : 'transparent',
+                                    color: gameMode === 'score' ? 'white' : '#4CAF50',
+                                    border: `1px solid ${gameMode === 'score' ? '#4CAF50' : '#4CAF50'}`
+                                }}
+                            >
+                                점수 모드
+                            </Button>
+                            <Button
+                                key="count"
+                                variant={gameMode === 'count' ? "contained" : "outlined"}
+                                onClick={() => setGameMode('count')}
+                                style={{
+                                    backgroundColor: gameMode === 'count' ? '#2196F3' : 'transparent',
+                                    color: gameMode === 'count' ? 'white' : '#2196F3',
+                                    border: `1px solid ${gameMode === 'count' ? '#2196F3' : '#2196F3'}`
+                                }}
+                            >
+                                문제 수 모드
+                            </Button>
+                        </div>
+                    </div>
+                    {gameMode === 'score' && (
+                        <div style={{ marginBottom: '20px' }}>
+                            <h3>목표 점수</h3>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                {[50, 100, 150].map((score) => (
+                                    <Button
+                                        key={score}
+                                        variant={targetScore === score ? "contained" : "outlined"}
+                                        onClick={() => setTargetScore(score)}
+                                        style={{
+                                            backgroundColor: targetScore === score ? '#4CAF50' : 'transparent',
+                                            color: targetScore === score ? 'white' : '#4CAF50',
+                                            border: `1px solid ${targetScore === score ? '#4CAF50' : '#4CAF50'}`
+                                        }}
+                                    >
+                                        {score}점
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    {gameMode === 'count' && (
+                        <div>
+                            <h3>문제 수</h3>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                {[10, 20, 30].map((count) => (
+                                    <Button
+                                        key={count}
+                                        variant={questionCount === count ? "contained" : "outlined"}
+                                        onClick={() => setQuestionCount(count)}
+                                        style={{
+                                            backgroundColor: questionCount === count ? '#2196F3' : 'transparent',
+                                            color: questionCount === count ? 'white' : '#2196F3',
+                                            border: `1px solid ${questionCount === count ? '#2196F3' : '#2196F3'}`
+                                        }}
+                                    >
+                                        {count}문제
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowSettings(false)} style={{ color: 'white' }}>
+                        확인
+                    </Button>
+                </DialogActions>
             </Dialog>
         </div>
     );

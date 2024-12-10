@@ -44,6 +44,9 @@ function SpeedGame() {
     const [currentTypingPlayer,setCurrentTypingPlayer] = useState(null);
     const [showTopNotification, setShowTopNotification] = useState(false);
 
+    const [currentQuestion, setCurrentQuestion] = useState('');
+    const [playerScores, setPlayerScores] = useState({});
+
     useEffect(() => {
         // 투표 UI가 표시되면 자동으로 스크롤
         if (showVotingUI) {
@@ -78,6 +81,7 @@ function SpeedGame() {
                             break;
                         case 'NEW_TURN':
                            
+
                             break;
                         case 'GAME_START':
                             console.log("게임 스타트");
@@ -85,9 +89,11 @@ function SpeedGame() {
                             break;
                         case 'PLAYER_READY':
                    
+
                             break;
                         case 'VOTE':
                        
+
                             break;
                         case 'END_VOTE':
          
@@ -103,6 +109,7 @@ function SpeedGame() {
                         
                         case 'CHAT':
                  
+
                             break;
                     
                         case 'REMOVE':
@@ -120,6 +127,7 @@ function SpeedGame() {
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                 
+
                                         navigate('/liar');
                                     }
                                 });
@@ -127,6 +135,9 @@ function SpeedGame() {
                             break;
                         case 'WORD_SUBMISSION':
                             handleWordSubmission(response.data);
+                            break;
+                        case 'QUESTION':
+                            setCurrentQuestion(response.data.question);
                             break;
                         default:
                             console.log("알 수 없는 메시지 타입:", response.type);
@@ -148,7 +159,6 @@ function SpeedGame() {
             disconnectWebSocket();
         };
     }, [gameId, navigate]);
-
 
 
   
@@ -176,15 +186,8 @@ function SpeedGame() {
             setCountdown(null);
             // 카운트다운이 끝나면 제시어 팝업 표시
             Swal.fire({
-                title: `제시어 공개
-                <div class="round">round ${gameUseRef.current.round}</div>`,
-                html: `
+                title: `게임 준비`,
                 
-                    <div class="word-reveal">
-                        <div class="word-category">${game.category}</div>
-                        <div class="word-text">${game.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>
-                    </div>
-                `,
                 showConfirmButton: true,
                 confirmButtonText: '게임 시작',
                 allowOutsideClick: false,
@@ -216,6 +219,8 @@ function SpeedGame() {
 
  
 
+
+
   
 
     
@@ -230,7 +235,7 @@ function SpeedGame() {
             
 
     };
-
+ 
 
 
 
@@ -238,9 +243,11 @@ function SpeedGame() {
 
    
 
+
     const handleWordSubmission = (data) => {
         // 먼저 설명을 업데이트
         setPlayerDescriptions(prev => ({
+
             ...prev,
             [data.player]: data.description
         }));
@@ -276,7 +283,8 @@ function SpeedGame() {
 
     
     return (
-        <div className="liar-game">
+        <div className="speed-quiz-game">
+            <h1>Speed Quiz Game</h1>
             {showTopNotification && currentTypingPlayerRef.current && (
                 <div className="top-notification">
                     {currentTypingPlayerRef.current}님이 설명중입니다...
@@ -289,7 +297,7 @@ function SpeedGame() {
                     </div>
                 )}
             
-                <button className="leave-button" onClick={handleLeaveGame}>
+                <button className="exit-button" onClick={handleLeaveGame}>
                     나가기
                 </button>
             </div>
@@ -300,8 +308,22 @@ function SpeedGame() {
                 </div>
             )}
 
-            <div className="game-content">
-                <div className="players-section">
+            <div className="game-main-content">
+                <div className="question-area">
+                    <h2>질문: {currentQuestion}</h2>
+                </div>
+                <input
+                    type="text"
+                    className="answer-input"
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    placeholder="정답을 입력하세요"
+                />
+                <button className="submit-button">제출</button>
+                <div className="score-display">
+                    <h3>점수: {playerScores[currentPlayerIndex] || 0}</h3>
+                </div>
+                <div className="players-area">
                     {[...Array(6)].map((_, index) => {
                         const player = game?.players[index];
                         const playerIndex = playerOrder?.findIndex(p => p === player?.nickname) ?? -1;
@@ -312,43 +334,19 @@ function SpeedGame() {
                         return player ? (
                             <div key={index} className={`player-card ${currentTypingPlayerRef.current === player.nickname ? 'typing' : ''}`}>
                                
-                                <div className="player-info">
+                                <div className="player-details">
                                     <div className="player-status">
                                         {player.nickname}
                                         {isVoted && <span className="vote-indicator">✓</span>}
                                     </div>
-                                    {isCurrentPlayer && (
-                                        <div className="current-turn-indicator">
-                                            <div className="indicator-dot"></div>
-                                            현재 차례
-                                        </div>
-                                    )}
-                                    {currentTypingPlayerRef.current === player.nickname && (
-                                        <div className="typing-indicator">
-                                            입력중
-                                            <div className="typing-dot"></div>
-                                            <div className="typing-dot"></div>
-                                            <div className="typing-dot"></div>
-                                        </div>
-                                    )}
+                                
                                 </div>
-                                {currentTypingPlayerRef.current === player.nickname && currentTypingPlayerRef ? (
-                                    <div className="typing-indicator">
-                                        입력중
-                                        <div className="typing-dot"></div>
-                                        <div className="typing-dot"></div>
-                                        <div className="typing-dot"></div>
-                                    </div>
-                                ) : playerDescriptions[player.nickname] && (
-                                    <div className={`description-bubble ${index % 2 === 0 ? 'right' : 'left'}`}>
-                                        {playerDescriptions[player.nickname]}
-                                    </div>
-                                )}
+                               
                             </div>
                         ) : (
                             <div key={index} className="player-card empty">
                                 <div className="player-avatar empty">?</div>
-                                <div className="player-info">
+                                <div className="player-details">
                                     <div className="player-name">빈 자리</div>
                                 </div>
                             </div>
@@ -356,7 +354,7 @@ function SpeedGame() {
                     })}
                 </div>
 
-                <div className="chat-section">
+                <div className="chat-area">
                     <div className="chat-messages" ref={chatContainerRef}>
                         {messages.map((msg, index) => (
                             <div
@@ -368,7 +366,7 @@ function SpeedGame() {
                         </div>
                         ))}
                     </div>
-                    <div className="chat-input2">
+                    <div className="chat-input">
                         <input
                             type="text"
                             value={chatInput}
