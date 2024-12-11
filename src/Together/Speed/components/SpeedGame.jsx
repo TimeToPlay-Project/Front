@@ -21,7 +21,9 @@ function SpeedQuizGame() {
     const [gameState, setGameState] = useState('waiting');
 
     const [messages, setMessages] = useState([]);
-    const [chatInput, setChatInput] = useState('');
+    const [passUser, setPassUser] = useState(0);
+    const [hasPassedCurrentQuestion, setHasPassedCurrentQuestion] = useState(false);
+    const [passedPlayers, setPassedPlayers] = useState(new Set());
     const [game, setGame] = useState(null);
     const gameUseRef = useRef(null);
     const [countdown, setCountdown] = useState(null);
@@ -96,7 +98,14 @@ function SpeedQuizGame() {
                             answerdQuizzed(response.data);
                             
                             break;
-                        case 'PLAYER_READY':
+                        case 'PASS':
+                            if(response.data === "READY"){
+                                passIng();
+                            }
+                            else{
+                                passEnd();
+
+                            }
                    
 
                             break;
@@ -245,6 +254,11 @@ function SpeedQuizGame() {
         }
     }, [quizUseRef.current]);
 
+    useEffect(() => {
+        setHasPassedCurrentQuestion(false);
+        setPassedPlayers(new Set());
+    }, [currentQuestionIndex]);
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
@@ -300,33 +314,135 @@ function SpeedQuizGame() {
 
    
     const handleSendChat = (event) => {
-        // 이벤트가 있는 경우 (버튼 클릭)
         if (event?.preventDefault) {
             event.preventDefault();
         }
-
+        
         // 입력값이 비어있으면 리턴
-        const answerText = chatInput.trim();
+        const answerText = currentAnswer.trim();
+        console.log("제출할 답변:", answerText);
         if (!answerText) return;
         
-        const senderNickname = isHost ? hostName : nickname;
+        const players = gameUseRef.current?.players || {};
+        const currentPlayer = Object.entries(players).find(([_, player]) => 
+            player.nickname === (isHost ? hostName : nickname)
+        );
+        
+        if (!currentPlayer) {
+            console.error("현재 플레이어를 찾을 수 없습니다.");
+            return;
+        }
+
+        const playerId = currentPlayer[0];
+        console.log("보내는 사람 ID:", playerId);
         
         // 답변을 화면에 표시
-        setAnswers(prev => ({
-            ...prev,
-            [senderNickname]: answerText
-        }));
+        setAnswers(prev => {
+            const newAnswers = {
+                ...prev,
+                [playerId]: answerText
+            };
+            console.log("업데이트된 답변 상태:", newAnswers);
+            return newAnswers;
+        });
+
+        // 애니메이션 효과 적용
+        const playerDesk = document.querySelector(`[data-player-id="${playerId}"]`);
+        if (playerDesk) {
+            playerDesk.style.transform = 'scale(1.05)';
+            playerDesk.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+            setTimeout(() => {
+                playerDesk.style.transform = '';
+                playerDesk.style.boxShadow = '';
+            }, 300);
+        }
 
         // 서버로 답변 전송
         sendMessage('/app/speed_game.submit', {
             speedGameId: SpeedGameId,
-            sender: senderNickname,
+            sender: playerId,
             answer: answerText,
             questionIndex: currentQuestionIndex
         });
 
         // 입력 필드 초기화
-        setChatInput('');
+        setCurrentAnswer('');
+    };
+
+    const passIng = () => {
+        setPassUser(prev => prev + 1);
+        const currentPlayer = gameUseRef.current?.players?.find(
+            player => player && player.nickname === (isHost ? hostName : nickname)
+        );
+        if (currentPlayer) {
+            setPassedPlayers(prev => new Set([...prev, currentPlayer.nickname]));
+        }
+    }
+
+    const passEnd = () => {
+        Swal.fire({
+            title: '다음문제로 넘어 갑니다.',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            background: '#fff',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            willClose: () => {
+                setCurrentQuestionIndex(prev => 
+                    prev < quizUseRef.current.length - 1 ? prev + 1 : prev
+                );
+                setAnswers({});
+                setPassUser(0);
+                setPassedPlayers(new Set());
+            }
+        });
+    }
+
+    const handlePass = () => {
+        if (hasPassedCurrentQuestion || !gameUseRef.current?.players) return;
+        
+        console.log("Players 정보:", {
+            players: gameUseRef.current.players,
+            currentNickname: isHost ? hostName : nickname,
+            isHost: isHost,
+            hostName: hostName,
+            nickname: nickname
+        });
+
+        const currentPlayer = gameUseRef.current.players.find(
+            player => player && player.nickname === nickname
+        );
+        
+        // console.log("패스버튼 누름 : ", {
+        //     currentPlayer,
+        //     canPass: currentPlayer ? true : false,
+        //     reuslt : !passedPlayers.has(currentPlayer.nickname),
+        //     nickname: isHost ? hostName : nickname,
+        //     passedPlayers: Array.from(passedPlayers)
+        // });
+
+        console.log("패스 버튼 누른 플레이어 : ", nickname + "  " + passedPlayers.toString()) ;
+        
+        if (currentPlayer && !passedPlayers.has(currentPlayer.nickname)) {
+            console.log("패스버튼 누름 22");
+            setHasPassedCurrentQuestion(true);
+            sendMessage('/app/speed_game.pass', {speedGameId : SpeedGameId});
+        }
+
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSendChat(e);
+        }
+    };
+
+    const handleSubmitAnswer = (e) => {
+        handleSendChat(e);
     };
 
     const handleAnswerSubmission = (data) => {
@@ -373,27 +489,8 @@ function SpeedQuizGame() {
         
     };
 
-  
-
-
-
-    
-    
-
-    
     const handleAnswerChange = (e) => {
         setCurrentAnswer(e.target.value);
-        handleSendChat(e.target.value);
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSubmitAnswer();
-        }
-    };
-
-    const handleSubmitAnswer = () => {
-        handleSendChat();
     };
 
     return (
@@ -402,6 +499,19 @@ function SpeedQuizGame() {
                 <button className="speed-exit-game-btn" onClick={handleLeaveGame}>
                     나가기
                 </button>
+                <div className="pass-status">
+                    <div className="pass-count">
+                        Pass : {passUser}/{gameUseRef.current?.players?.length || 0}
+                    </div>
+                    <div className="pass-progress">
+                        <div 
+                            className="pass-progress-bar" 
+                            style={{
+                                width: `${(passUser / (gameUseRef.current?.players?.length || 1)) * 100}%`
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
             
             <div className="speed-game-content">
@@ -422,17 +532,21 @@ function SpeedQuizGame() {
                 </div>
 
                 <div className="speed-students-container">
-                    {[...Array(6)].map((_, index) => {
+                    {[...Array(Object.keys(gameUseRef.current?.players || {}).length)].map((_, index) => {
                         const players = gameUseRef.current?.players || {};
                         const playerEntries = Object.entries(players);
                         const player = playerEntries[index];
+                        console.log("플레이어 정보:", player);
+                        console.log("현재 답변들:", answers);
 
                         return (
                             <div 
-                                key={index}
+                                key={player ? player[0] : index}
+                                data-player-id={player ? player[0] : ''}
                                 className={`speed-student-desk ${!player ? 'empty' : ''} ${
                                     player && currentTypingPlayer === player[0] ? 'typing' : ''
                                 } ${player && answers?.winner === player[0] ? 'winner' : ''}`}
+                                style={{ transition: 'all 0.3s ease' }}
                             >
                                 {player ? (
                                     <div className="speed-student-content">
@@ -447,19 +561,13 @@ function SpeedQuizGame() {
                                         <div className="speed-student-score">
                                             점수: {player[1].score || 0}
                                         </div>
-                                        {answers?.[player[0]] && (
+                                        {answers && answers[player[0]] && (
                                             <div className="speed-answer-bubble">
                                                 {answers[player[0]]}
                                             </div>
                                         )}
                                     </div>
-                                ) : (
-                                    <div className="speed-student-content">
-                                        <div className="speed-empty-desk">
-                                            <span>빈자리</span>
-                                        </div>
-                                    </div>
-                                )}
+                                ) : null}
                             </div>
                         );
                     })}
@@ -475,10 +583,17 @@ function SpeedQuizGame() {
                         placeholder="답을 입력하세요..."
                     />
                     <button 
-                        className="speed-answer-submit"
+                        className={`speed-answer-submit ${hasPassedCurrentQuestion ? 'passed' : ''}`}
                         onClick={handleSubmitAnswer}
                     >
-                        제출
+                        O
+                    </button>
+                    <button 
+                        className={`speed-answer-submit ${hasPassedCurrentQuestion ? 'passed' : ''}`}
+                        onClick={handlePass}
+                        disabled={hasPassedCurrentQuestion}
+                    >
+                        {hasPassedCurrentQuestion ? 'Passed' : 'Pass'}
                     </button>
                 </div>
             </div>
