@@ -167,7 +167,7 @@ function TournamentEditPage({ id }) {
     }
 
     const deleteExistImage = async (imageId) => {
-        const url = `${process.env.REACT_APP_API_URL}/api/editor/tournament/delete/${imageId}`;
+        const url = `${process.env.REACT_APP_API_URL}/api/editor/tournament/delete/image/${imageId}`;
         try {
             const response = await axios.get(url);
             console.log("deleteExistImage: ",response);

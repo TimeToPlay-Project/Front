@@ -104,12 +104,14 @@ function TournamentMain() {
                                 className="tournament-image-box"
                                 onClick={() => handleImageClick(currentImages[0])}
                             >
+                                <span>{currentImages[0]['image_name']}</span>
                                 <img src={`http://localhost:4000/${currentImages[0]['image_url']}`} alt="" />
                             </div>
                             <div 
                                 className="tournament-image-box"
                                 onClick={() => handleImageClick(currentImages[1])}
                             >
+                                <span>{currentImages[1]['image_name']}</span>
                                 <img src={`http://localhost:4000/${currentImages[1]['image_url']}`} alt="" />
                             </div>
                         </div>
