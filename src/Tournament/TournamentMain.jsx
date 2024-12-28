@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 function TournamentMain() {
     const { id, selectedCount } = useParams();
+    const [currentCount, setCurrentCount] = useState();
     const [currentRound, setCurrentRound] = useState(1);
     const [currentImages, setCurrentImages] = useState([]);
     const [nextRoundImages, setNextRoundImages] = useState([]);
@@ -35,6 +36,7 @@ function TournamentMain() {
         .then(data => {
             setNextRoundImages([]);
             setCurrentImages(data);
+            setCurrentCount(count);
             setIsLoading(false);
         })
         .catch(error => console.error('Error fetching tournament images', error));
@@ -70,10 +72,12 @@ function TournamentMain() {
             const remainingImages = currentImages.slice(2);
     
             if (remainingImages.length === 0) {
-                setCurrentRound(currentRound + 1);
+                setCurrentRound(1);
+                setCurrentCount(updatedNextRoundImages.length);
                 setCurrentImages(shuffleImages(updatedNextRoundImages));
                 setNextRoundImages([]);
             } else {
+                setCurrentRound(currentRound + 1);
                 setCurrentImages(remainingImages);
             }
     
@@ -98,7 +102,15 @@ function TournamentMain() {
             <div className="tournament-main">
                 {currentImages.length > 1 ? (
                     <div>
-                        <h2>Round {currentRound}</h2>
+                        <h2 className="tournament-title">
+                            {currentCount === 2 
+                                ? '결승' 
+                                : currentCount === 4 
+                                ? '준결승' 
+                                : `${currentCount}강`
+                            } 
+                            (Round {currentRound} / {currentCount / 2})
+                        </h2>
                         <div className="tournament-image-pair">
                             <div 
                                 className="tournament-image-box"
@@ -107,6 +119,11 @@ function TournamentMain() {
                                 <span>{currentImages[0]['image_name']}</span>
                                 <img src={`http://localhost:4000/${currentImages[0]['image_url']}`} alt="" />
                             </div>
+
+                            <div className="tournament-vs">
+                                <span>VS</span>
+                            </div>
+                            
                             <div 
                                 className="tournament-image-box"
                                 onClick={() => handleImageClick(currentImages[1])}
