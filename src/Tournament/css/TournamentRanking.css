@@ -1,3 +1,19 @@
+.tournament-ranking-box {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+}
+
+.tournament-ranking-table-box {
+    flex: 4;
+}
+
+.tournament-ranking-button-box {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .tournament-ranking-table {
     border-collapse: collapse;
     border: 1px solid #ccc;
@@ -12,9 +28,47 @@
     border: 1px solid #ccc;
     padding: 8px;
     text-align: center;
-    height: 100px;
 }
 
 .tournament-ranking-table td img {
-    height: 100%;
+    height: 100px;
+}
+
+.tournament-ranking-rate-box {
+    display: flex;
+    align-items: center;
+}
+
+.rate-bar {
+    position: relative;
+    width: 80%; 
+    height: 12px; 
+    background-color: #e0e0e0; 
+    border-radius: 5px; 
+    overflow: hidden; 
+}
+
+.rate-bar-fill {
+    height: 100%; 
+    background-color: #4caf50; 
+    transition: width 0.3s ease-in-out; 
+}
+
+.rate-bar + span {
+    display: inline-block; 
+    margin-left: 10px; 
+}
+
+
+.tournament-ranking-button-box button {
+    font-size: 1.2vw;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px 0;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.tournament-ranking-button-box button:hover {
+    filter: brightness(0.8);
 }

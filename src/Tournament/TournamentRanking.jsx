@@ -16,7 +16,7 @@ function TournamentRanking() {
     }
 
     const handleClickToTournamentRestart = () => {
-        navigate(`/tournament/${id}`);
+        navigate(`/tournament/start/${id}`);
     }
 
     const getTournamentRanking = (id) => {
@@ -62,33 +62,43 @@ function TournamentRanking() {
                 <Navigate/>
             </div>
             <div className="tournament-main">
-                <table className="tournament-ranking-table">
-                    <thead>
-                        <tr>
-                            <th>순위</th>
-                            <th>이미지</th>
-                            <th>이름</th>
-                            <th>우승비율</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tournamentRanking.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{index+1}</td>
-                                <td>
-                                    <img src={`http://localhost:4000/${item.url}`} alt="" />
-                                </td>
-                                <td>{item.name}</td>
-                                <td>
-                                    {item.rate}%
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <div>
-                    <button type="button" onClick={() => handleClickToTournamentRestart()}>다시시작</button>
-                    <button type="button" onClick={() => handleClickToTournament()}>다른 월드컵보기</button>
+                <div className="tournament-ranking-box">
+                    <div className="tournament-ranking-table-box">
+                        <table className="tournament-ranking-table">
+                            <thead>
+                                <tr>
+                                    <th style={{width: '10%'}}>순위</th>
+                                    <th style={{width: '30%'}}>이미지</th>
+                                    <th style={{width: '30%'}}>이름</th>
+                                    <th style={{width: '30%'}}>우승비율</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {tournamentRanking.map((item, index) => (
+                                    <tr key={item.id}>
+                                        <td>{index+1}</td>
+                                        <td>
+                                            <img src={`http://localhost:4000/${item.url}`} alt="" />
+                                        </td>
+                                        <td>{item.name}</td>
+                                        <td>
+                                            <div className="tournament-ranking-rate-box">
+                                                <div className="rate-bar">
+                                                    <div className="rate-bar-fill" style={{width: `${item.rate}%`}}></div>
+                                                </div>
+                                                <span>{item.rate}%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="tournament-ranking-button-box">
+                        <button type="button" onClick={() => handleClickToTournamentRestart()}>다시시작</button>
+                        <button type="button" onClick={() => handleClickToTournament()}>다른 월드컵보기</button>
+                    </div>
                 </div>
             </div>
         </div>
