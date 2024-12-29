@@ -59,11 +59,40 @@
     justify-content: center;
     text-align: center;
     z-index: 30;
-  }
-  
-  .tournament-vs span {
+}
+
+.tournament-vs span {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 1vw 2vw;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  }
+}
+
+.tournament-result-box {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+}
+
+.tournament-winner {
+    flex: 3;
+}
+
+.tournament-menu-box {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.tournament-menu-box button {
+    font-size: 1.2vw;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px 0;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.tournament-menu-box button:hover {
+    filter: brightness(0.8);
+}

@@ -136,16 +136,13 @@ function TournamentMain() {
                 ) : (
                     <div className="tournament-result-box">
                         <div className="tournament-winner">
-                            <h2>우승</h2>
+                            <h2>우승: {currentImages[0]['image_name']}</h2>
                             <img src={`http://localhost:4000/${currentImages[0]['image_url']}`} alt="" />
                         </div>
-                        <div>
-                            <div className="tournament-menu-box">
-                                <button type="button" onClick={() => handleClickToRestart()}>다시시작</button>
-                                <button type="button" onClick={() => handleClickToTournamentRanking()}>랭킹보기</button>
-                                <button type="button" onClick={() => handleClickToTournament()}>다른 월드컵보기</button>
-                            </div>
-                            <div></div>
+                        <div className="tournament-menu-box">
+                            <button type="button" onClick={() => handleClickToRestart()}>다시시작</button>
+                            <button type="button" onClick={() => handleClickToTournamentRanking()}>랭킹보기</button>
+                            <button type="button" onClick={() => handleClickToTournament()}>다른 월드컵보기</button>
                         </div>
                     </div>
                 )}
