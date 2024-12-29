@@ -51,6 +51,10 @@
     padding: 50px;
 }
 
+.Tournament-content-Box img {
+    border-radius: 12px;
+}
+
 .Tournament-select-box {
     margin-top: 20px;
 }

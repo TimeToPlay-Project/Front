@@ -75,13 +75,15 @@
 }
 
 .tournament-winner {
-    flex: 3;
+    flex: 4;
+    text-align: center;
 }
 
 .tournament-menu-box {
     display: flex;
     flex: 1;
     flex-direction: column;
+    
 }
 
 .tournament-menu-box button {
