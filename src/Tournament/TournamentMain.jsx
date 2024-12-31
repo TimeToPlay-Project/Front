@@ -31,7 +31,7 @@ function TournamentMain() {
 
 
     const getTournamentImages = (id, count) => {
-        fetch(`http://localhost:4000/api/tournament/images/${id}/${count}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/tournament/images/${id}/${count}`)
         .then(response => response.json())
         .then(data => {
             setNextRoundImages([]);
@@ -43,7 +43,7 @@ function TournamentMain() {
     }
 
     const updateTournamentWinner = (winnerId) => {
-        fetch(`http://localhost:4000/api/tournament/winner/${winnerId}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/tournament/winner/${winnerId}`)
         .then(response => response.json())
         .then(data => {
             console.log('update tournament winner', data);
@@ -117,7 +117,7 @@ function TournamentMain() {
                                 onClick={() => handleImageClick(currentImages[0])}
                             >
                                 <span>{currentImages[0]['image_name']}</span>
-                                <img src={`http://localhost:4000/${currentImages[0]['image_url']}`} alt="" />
+                                <img src={`${process.env.REACT_APP_API_URL}/${currentImages[0]['image_url']}`} alt="" />
                             </div>
 
                             <div className="tournament-vs">
@@ -129,7 +129,7 @@ function TournamentMain() {
                                 onClick={() => handleImageClick(currentImages[1])}
                             >
                                 <span>{currentImages[1]['image_name']}</span>
-                                <img src={`http://localhost:4000/${currentImages[1]['image_url']}`} alt="" />
+                                <img src={`${process.env.REACT_APP_API_URL}/${currentImages[1]['image_url']}`} alt="" />
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ function TournamentMain() {
                     <div className="tournament-result-box">
                         <div className="tournament-winner">
                             <h2>우승: {currentImages[0]['image_name']}</h2>
-                            <img src={`http://localhost:4000/${currentImages[0]['image_url']}`} alt="" />
+                            <img src={`${process.env.REACT_APP_API_URL}/${currentImages[0]['image_url']}`} alt="" />
                         </div>
                         <div className="tournament-menu-box">
                             <button type="button" onClick={() => handleClickToRestart()}>다시시작</button>

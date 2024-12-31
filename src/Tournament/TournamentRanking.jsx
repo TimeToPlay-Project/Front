@@ -20,7 +20,7 @@ function TournamentRanking() {
     }
 
     const getTournamentRanking = (id) => {
-        fetch(`http://localhost:4000/api/tournament/ranking/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/tournament/ranking/${id}`)
         .then(response => response.json())
         .then(data => {
             setTournamentRanking(data);
@@ -78,7 +78,7 @@ function TournamentRanking() {
                                     <tr key={item.id}>
                                         <td>{index+1}</td>
                                         <td>
-                                            <img src={`http://localhost:4000/${item.url}`} alt="" />
+                                            <img src={`${process.env.REACT_APP_API_URL}/${item.url}`} alt="" />
                                         </td>
                                         <td>{item.name}</td>
                                         <td>

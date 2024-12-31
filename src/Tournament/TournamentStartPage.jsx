@@ -16,7 +16,7 @@ function TournamentStartPage() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:4000/api/tournament/start/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/tournament/start/${id}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('tournament count response not ok');

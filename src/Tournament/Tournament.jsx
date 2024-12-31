@@ -21,7 +21,7 @@ function Tournament() {
  
   useEffect(() => {
 
-    fetch('http://localhost:4000/api/tournament/all')
+    fetch(`${process.env.REACT_APP_API_URL}/api/tournament/all`)
       .then(response => response.json())
       .then(data => setTournamentData(data))  
       .catch(error => console.error('데이터 가져오기 실패:', error));
@@ -42,7 +42,7 @@ function Tournament() {
               <ContentBox
                 title={item.title} 
                 description={item.description}  
-                imageUrl={`http://localhost:4000/${item.thumbnail}`}  
+                imageUrl={`${process.env.REACT_APP_API_URL}/${item.thumbnail}`}  
               />
             </div>
           ))}
