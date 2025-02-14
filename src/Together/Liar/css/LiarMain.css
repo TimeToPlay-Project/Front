@@ -1,3 +1,35 @@
+/* 라이어 게임 CSS 변수 */
+:root {
+    /* 색상 */
+    --liar-primary: #4a9eff;
+    --liar-primary-dark: #2d7dd2;
+    --liar-primary-light: #6db4ff;
+    --liar-bg-dark: #0a0a0a;
+    --liar-bg-darker: #000000;
+    --liar-text: #ffffff;
+    --liar-text-secondary: rgba(255, 255, 255, 0.7);
+    
+    /* 폰트 */
+    --liar-font-title: 'Black Han Sans', 'Noto Sans KR', sans-serif;
+    --liar-font-body: 'Noto Sans KR', sans-serif;
+    --liar-font-accent: 'Jua', 'Noto Sans KR', sans-serif;
+    
+    /* 크기 */
+    --liar-spacing-xs: 4px;
+    --liar-spacing-sm: 8px;
+    --liar-spacing-md: 16px;
+    --liar-spacing-lg: 24px;
+    --liar-spacing-xl: 32px;
+    
+    /* 효과 */
+    --liar-shadow-sm: 0 0 10px rgba(74, 158, 255, 0.2);
+    --liar-shadow-md: 0 0 20px rgba(74, 158, 255, 0.3);
+    --liar-shadow-lg: 0 0 30px rgba(74, 158, 255, 0.4);
+    --liar-border-radius-sm: 8px;
+    --liar-border-radius-md: 12px;
+    --liar-border-radius-lg: 20px;
+}
+
 .liar-main {
     min-height: 100vh;
     width: 100%;
@@ -7,12 +39,229 @@
 }
 
 .liar-container {
-    flex: 1;
+    margin-top: 50px;
+    min-height: 100vh;
+    background: #1a1a1a;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.liar-Navigate-Box {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.liar-main-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: calc(100vh - 60px);
+}
+
+.liar-content-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.liar-header-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.liar-main-title {
+    font-size: 3.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+}
+
+.liar-subtitle {
+    display: block;
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+.liar-action-buttons {
+    display: flex;
     justify-content: center;
-    padding: 2rem;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.liar-action-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.liar-action-button.create {
+    background: #4a9eff;
+    color: white;
+}
+
+.liar-action-button.join {
+    background: #ff4444;
+    color: white;
+}
+
+.liar-action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.liar-button-icon {
+    font-size: 1.5rem;
+}
+
+.liar-game-info {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.liar-info-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    width: 300px;
+    backdrop-filter: blur(10px);
+}
+
+.liar-info-card h3 {
+    color: #4a9eff;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.liar-info-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.liar-info-card li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.liar-info-card li:before {
+    content: "•";
+    color: #4a9eff;
+    position: absolute;
+    left: 0;
+}
+
+/* 모달 스타일 */
+.liar-modal {
+    backdrop-filter: blur(5px);
+}
+
+.liar-room-list {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.liar-room-item {
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.liar-room-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.liar-room-item.selected {
+    background: rgba(74, 158, 255, 0.2);
+    border: 1px solid #4a9eff;
+}
+
+.liar-room-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.liar-room-host {
+    font-weight: bold;
+}
+
+.liar-room-players {
+    color: #888;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .liar-main-title {
+        font-size: 2.5rem;
+    }
+
+    .liar-action-buttons {
+        flex-direction: column;
+    }
+
+    .liar-info-card {
+        width: 100%;
+    }
+}
+
+/* 배경 패턴 */
+.liar-background-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.liar-pattern-circle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 2px solid rgba(74, 158, 255, 0.1);
+    border-radius: 50%;
+    top: -150px;
+    right: -150px;
+}
+
+.liar-pattern-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.1), transparent);
+    top: 50%;
+    transform: rotate(-45deg);
+}
+
+.liar-pattern-dots {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(74, 158, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.5;
 }
 
 .button-container {
@@ -108,47 +357,314 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Dialog 컴포넌트 스타일 */
-.MuiDialog-paper {
-    background: rgba(60, 60, 60, 1) !important;
-    color: white !important;
-    min-width: 400px !important;
-    border-radius: 15px !important;
+/* 라이어 게임 다이얼로그 스타일 */
+.liar-dialog.MuiDialog-paper {
+    background: linear-gradient(135deg, var(--liar-bg-dark) 0%, var(--liar-bg-darker) 100%) !important;
+    color: var(--liar-text) !important;
+    border: 2px solid rgba(74, 158, 255, 0.2) !important;
+    box-shadow: var(--liar-shadow-lg),
+                inset 0 0 40px rgba(74, 158, 255, 0.1) !important;
+    border-radius: var(--liar-border-radius-lg) !important;
+    overflow: hidden !important;
     backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    position: relative !important;
+    max-width: 600px !important;
+    margin: var(--liar-spacing-md) !important;
 }
 
-.MuiDialogTitle-root {
+.liar-dialog.MuiDialog-paper::before,
+.liar-dialog.MuiDialog-paper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.liar-dialog.MuiDialog-paper::before {
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--liar-primary) 50%, 
+        transparent 100%);
+    animation: scanline 2s linear infinite;
+    z-index: 1;
+}
+
+.liar-dialog.MuiDialog-paper::after {
+    background: radial-gradient(circle at 50% 50%, 
+        rgba(74, 158, 255, 0.1) 0%, 
+        transparent 60%);
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(1000%);
+        opacity: 0;
+    }
+}
+
+.liar-dialog .MuiDialogTitle-root {
+    background: rgba(26, 26, 46, 0.95) !important;
+    color: var(--liar-text) !important;
+    font-family: var(--liar-font-title) !important;
+    font-size: 2.2rem !important;
+    padding: var(--liar-spacing-lg) !important;
     text-align: center !important;
-    color: white !important;
-    padding: 24px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom: 2px solid rgba(74, 158, 255, 0.2) !important;
+    position: relative !important;
+    text-shadow: 0 0 10px rgba(74, 158, 255, 0.5) !important;
 }
 
-.MuiDialogContent-root {
-    padding: 24px !important;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+.liar-dialog .dialog-subtitle {
+    font-family: var(--liar-font-accent) !important;
+    font-size: 1.3rem !important;
+    color: var(--liar-primary) !important;
+    margin-top: var(--liar-spacing-sm) !important;
+    letter-spacing: 1px !important;
 }
 
-.MuiDialogContent-root .MuiTextField-root,
-.MuiDialogContent-root .MuiFormControl-root {
-    margin: 12px 0 !important;
+.liar-dialog .MuiDialogContent-root {
+    padding: var(--liar-spacing-xl) !important;
+    background: rgba(22, 33, 62, 0.95) !important;
+    position: relative !important;
+}
+
+.liar-dialog .input-group {
+    margin-bottom: var(--liar-spacing-xl) !important;
+    position: relative !important;
+    padding: var(--liar-spacing-lg) !important;
     background: rgba(0, 0, 0, 0.2) !important;
-    border-radius: 8px !important;
-    backdrop-filter: blur(5px) !important;
+    border-radius: var(--liar-border-radius-md) !important;
+    border: 1px solid rgba(74, 158, 255, 0.2) !important;
 }
 
-.MuiDialogContent-root .MuiInputBase-root {
-    padding: 8px 12px !important;
+.liar-dialog .input-group:last-child {
+    margin-bottom: 0 !important;
 }
 
-.MuiDialogActions-root {
-    padding: 16px 24px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+.liar-dialog .input-label {
+    color: var(--liar-primary) !important;
+    font-family: var(--liar-font-accent) !important;
+    font-size: 1.4rem !important;
+    margin-bottom: var(--liar-spacing-md) !important;
+    text-shadow: 0 0 5px rgba(74, 158, 255, 0.5) !important;
+}
+
+/* 라이어 게임 입력 필드 스타일 */
+.liar-dialog .MuiTextField-root {
+    margin-bottom: var(--liar-spacing-md) !important;
+    width: 100% !important;
+}
+
+.liar-dialog .MuiInputBase-root {
+    background: rgba(26, 26, 46, 0.8) !important;
+    border-radius: var(--liar-border-radius-md) !important;
+    color: var(--liar-text) !important;
+    border: 2px solid rgba(74, 158, 255, 0.2) !important;
+    transition: all 0.3s ease !important;
+    padding: var(--liar-spacing-sm) var(--liar-spacing-md) !important;
+}
+
+.liar-dialog .MuiInputBase-root:hover {
+    border-color: rgba(74, 158, 255, 0.4) !important;
+    box-shadow: var(--liar-shadow-sm) !important;
+}
+
+.liar-dialog .MuiInputBase-root.Mui-focused {
+    border-color: var(--liar-primary) !important;
+    box-shadow: var(--liar-shadow-md) !important;
+}
+
+.liar-dialog .MuiInputLabel-root {
+    color: var(--liar-text-secondary) !important;
+    font-family: var(--liar-font-body) !important;
+    font-size: 1.1rem !important;
+    padding-left: var(--liar-spacing-xs) !important;
+}
+
+.liar-dialog .MuiInputLabel-root.Mui-focused {
+    color: var(--liar-primary) !important;
+}
+
+.liar-dialog .MuiFormHelperText-root {
+    color: var(--liar-text-secondary) !important;
+    font-family: var(--liar-font-body) !important;
+    font-size: 0.9rem !important;
+    margin-top: var(--liar-spacing-sm) !important;
+    opacity: 0.8;
+}
+
+/* 라이어 게임 Select 스타일 */
+.liar-dialog .MuiSelect-root {
+    background: rgba(26, 26, 46, 0.8) !important;
+    color: var(--liar-text) !important;
+    padding: var(--liar-spacing-sm) var(--liar-spacing-md) !important;
+    font-family: var(--liar-font-body) !important;
+}
+
+.liar-dialog .MuiSelect-icon {
+    color: var(--liar-primary) !important;
+}
+
+/* Select 필드 포커스 시 테두리 색상 */
+.liar-dialog .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--liar-primary) !important;
+}
+
+/* Select 필드 기본 테두리 */
+.liar-dialog .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(74, 158, 255, 0.2) !important;
+}
+
+/* Select 호버 시 테두리 */
+.liar-dialog .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(74, 158, 255, 0.4) !important;
+}
+
+/* Select 메뉴 아이템 스타일 */
+.liar-dialog .MuiMenuItem-root {
+    background: var(--liar-bg-dark) !important;
+    color: var(--liar-text) !important;
+    font-family: var(--liar-font-body) !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+    padding: var(--liar-spacing-sm) var(--liar-spacing-lg) !important;
+}
+
+.liar-dialog .MuiMenuItem-root:hover {
+    background: rgba(74, 158, 255, 0.1) !important;
+    color: var(--liar-primary) !important;
+}
+
+/* Select 메뉴 아이템 선택 시 */
+.liar-dialog .MuiMenuItem-root.Mui-selected {
+    background: rgba(74, 158, 255, 0.15) !important;
+    color: var(--liar-primary) !important;
+}
+
+.liar-dialog .MuiMenuItem-root.Mui-selected:hover {
+    background: rgba(74, 158, 255, 0.2) !important;
+}
+
+/* Select 메뉴 팝업 스타일 */
+.MuiPopover-root .MuiPaper-root {
+    background: var(--liar-bg-dark) !important;
+    border: 2px solid rgba(74, 158, 255, 0.2) !important;
+    box-shadow: var(--liar-shadow-md) !important;
+}
+
+/* Select 레이블 스타일 */
+.liar-dialog .MuiInputLabel-root.Mui-focused {
+    color: var(--liar-primary) !important;
+}
+
+/* 라이어 게임 다이얼로그 버튼 스타일 */
+.liar-dialog .MuiDialogActions-root {
+    padding: var(--liar-spacing-lg) var(--liar-spacing-xl) !important;
+    background: rgba(26, 26, 46, 0.95) !important;
+    border-top: 2px solid rgba(74, 158, 255, 0.2) !important;
+    gap: var(--liar-spacing-lg) !important;
     justify-content: center !important;
-    gap: 12px !important;
+}
+
+.liar-dialog .dialog-button {
+    min-width: 160px !important;
+    padding: var(--liar-spacing-sm) var(--liar-spacing-xl) !important;
+    border-radius: var(--liar-border-radius-md) !important;
+    font-family: var(--liar-font-accent) !important;
+    font-size: 1.3rem !important;
+    letter-spacing: 1px !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.liar-dialog .dialog-button::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, var(--liar-primary), var(--liar-primary-dark));
+    z-index: -1;
+    border-radius: var(--liar-border-radius-md);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.liar-dialog .dialog-button.cancel {
+    background: rgba(26, 26, 46, 0.9) !important;
+    color: var(--liar-text-secondary) !important;
+    border: 2px solid rgba(74, 158, 255, 0.3) !important;
+}
+
+.liar-dialog .dialog-button.create {
+    background: linear-gradient(135deg, var(--liar-primary) 0%, var(--liar-primary-dark) 100%) !important;
+    color: var(--liar-text) !important;
+    border: none !important;
+    box-shadow: var(--liar-shadow-md) !important;
+}
+
+.liar-dialog .dialog-button:hover {
+    transform: translateY(-2px) !important;
+}
+
+.liar-dialog .dialog-button.cancel:hover {
+    background: rgba(74, 158, 255, 0.1) !important;
+    border-color: rgba(74, 158, 255, 0.5) !important;
+    color: var(--liar-primary) !important;
+}
+
+.liar-dialog .dialog-button.create:hover {
+    box-shadow: var(--liar-shadow-lg) !important;
+    background: linear-gradient(135deg, var(--liar-primary-light) 0%, var(--liar-primary) 100%) !important;
+}
+
+.liar-dialog .dialog-button:hover::before {
+    opacity: 1;
+}
+
+/* 애니메이션 효과 */
+@keyframes glowPulse {
+    0% {
+        box-shadow: var(--liar-shadow-md);
+    }
+    50% {
+        box-shadow: var(--liar-shadow-lg);
+    }
+    100% {
+        box-shadow: var(--liar-shadow-md);
+    }
+}
+
+.liar-dialog.MuiDialog-paper {
+    animation: glowPulse 3s infinite;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    .liar-dialog .MuiDialogTitle-root {
+        font-size: 1.8rem !important;
+        padding: var(--liar-spacing-md) !important;
+    }
+
+    .liar-dialog .dialog-subtitle {
+        font-size: 1.1rem !important;
+    }
+
+    .liar-dialog .input-label {
+        font-size: 1.2rem !important;
+    }
+
+    .liar-dialog .dialog-button {
+        min-width: 130px !important;
+        font-size: 1.1rem !important;
+    }
 }
 
 /* 버튼 스타일 */
@@ -227,4 +743,32 @@
 
 .MuiMenuItem-root {
     color: rgb(118, 117, 117) !important;
+}
+
+.liar-image-wrapper {
+    margin: 20px 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.main-liar-image {
+    width: 150px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(74, 158, 255, 0.3));
+    transition: transform 0.3s ease;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.main-liar-image:hover {
+    transform: scale(1.1);
 }

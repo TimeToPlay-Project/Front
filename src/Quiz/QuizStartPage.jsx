@@ -255,15 +255,18 @@ function QuizStartPage() {
     useEffect(() => {
         const fetchQuizClass = async () => {
             try {
-              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/quizClass/${id}`);
+              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/quizClass/get/${id}`);
               if (!response.ok) {
                 throw new Error('퀴즈 데이터를 불러오는데 실패했습니다.');
               }
               const data = await response.json();
-              if(!data.descriptionDetail){
-                setNon(true);
-              }
-              setQuizData(data);
+              console.log(data[0].open);
+        
+                if(data[0].open==1){
+                  setNon(true);
+                }
+              
+              setQuizData(data[0]);
             } catch (error) {
                 console.log(error);
             }
@@ -289,7 +292,7 @@ function QuizStartPage() {
                         <div>
                             <QuizTitle>{quizData.title}</QuizTitle>
                             <Description>
-                                {quizData.descriptionDetail}
+                                {quizData.description}
                             </Description>
                         </div>
                         <ButtonContainer>

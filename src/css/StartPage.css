@@ -1,122 +1,366 @@
-.game-mode-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
+.TTP-main-Container {
     min-height: 100vh;
-    width: 100%;
-    margin-top: 500px;
-}
-
-.mode-title {
-    color: #fff;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    font-weight: 600;
-}
-
-.buttons-wrapper {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    width: 100%;
-    max-width: 800px;
-}
-
-.mode-button {
+    background: linear-gradient(135deg, #ffffff 0%, #f3e7ff 100%);
+    padding: 2rem;
+    overflow: hidden;
     position: relative;
-    padding: 1.5rem 3rem;
+  }
+  
+  .background-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .background-text {
+    position: absolute;
+    font-size: 20vw;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.03);
+    white-space: nowrap;
+    transform: rotate(-10deg);
+    top: 36%;
+    right: -10%;
+    z-index: 0;
+  }
+  
+  .circle-decoration {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(136, 18, 247, 0.3) 0%, rgba(79, 70, 229, 0.8) 100%);
+  }
+  
+  .circle-decoration.left {
+    width: 600px;
+    height: 600px;
+    left: -200px;
+    bottom: -200px;
+    background: linear-gradient(135deg, rgba(136, 18, 247, 0.3) 0%, rgba(79, 70, 229, 0.2) 100%);
+  }
+  
+  .circle-decoration.right {
+    width: 850px;
+    height: 850px;
+    right: -100px;
+    top: -200px;
+    border-radius: 90%;
+  }
+  
+  .main-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 2rem;
+    gap: 2rem;
+  }
+  
+  .text-section {
+    flex: 1;
+    max-width: 600px;
+    margin-bottom: 330px;
+  }
+  
+  .main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .sub-text {
     font-size: 1.2rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 3rem;
+  }
+  
+  .buttons-wrapper {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .mode-button {
+    padding: 1rem 2rem;
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    width: 200px;
-    height: 200px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.button-content {
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .mode-button.solo {
+    background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+    color: white;
+  }
+  
+  .mode-button.multi {
+    background: linear-gradient(135deg, #319795 0%, #38b2ac 100%);
+    color: white;
+  }
+  
+  .button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .icon {
+    font-size: 1.4rem;
+  }
+  
+  .image-section {
+    flex: 1;
+    max-width: 500px;
+    perspective: 1000px;
+    position: relative;
+  }
+  
+  .preview-stack {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+    transform-style: preserve-3d;
+    margin-right: 30px;
+  }
+  
+  .preview-item {
+    position: relative;
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: -10px 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(20px);
+    cursor: pointer;
+  }
+  
+  .preview-item.featured {
+    height: 200px;
+  }
+  
+  .preview-item:hover {
+    transform: translateX(0) scale(1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  
+  .preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    display: flex;
     align-items: center;
-    gap: 1rem;
-}
+    padding-left: 2rem;
+  }
+  
+  .preview-item:hover .preview-overlay {
+    opacity: 0;
+  }
+  
+  .preview-text {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transform: translateX(0);
+    opacity: 1;
+    transition: all 0.3s ease;
+  }
+  
+  .preview-item:hover .preview-text {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  
+  /* 모바일 반응형 스타일 */
+  @media screen and (max-width: 428px) {
+    .TTP-main-Container {
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(165deg, #ffffff 0%, #f0e6ff 100%);
+    }
 
-.icon {
-    font-size: 3rem;
-}
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      gap: 2rem;
+    }
 
-.text {
-    color: #fff;
-    font-weight: 500;
-    font-size: 1.3rem;
-}
+    .text-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
 
-.mode-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.2);
-}
+    .main-title {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+      color: #333;
+      word-break: keep-all;
+      width: 100%;
+    }
 
-.mode-button:active {
-    transform: translateY(0);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
+    .sub-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #666;
+      margin-bottom: 2rem;
+      word-break: keep-all;
+      width: 100%;
+    }
 
-.solo {
-    background: linear-gradient(135deg, rgba(66, 139, 202, 0.4), rgba(66, 139, 202, 0.5));
-}
-
-.multi {
-    background: linear-gradient(135deg, rgba(92, 184, 92, 0.4), rgba(92, 184, 92, 0.5));
-}
-
-.solo:hover {
-    background: linear-gradient(135deg, rgba(66, 139, 202, 0.6), rgba(66, 139, 202, 0.7));
-}
-
-.multi:hover {
-    background: linear-gradient(135deg, rgba(92, 184, 92, 0.6), rgba(92, 184, 92, 0.7));
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
     .buttons-wrapper {
-        flex-direction: column;
-        align-items: center;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+      padding: 0 1rem;
     }
 
     .mode-button {
-        width: 180px;
-        height: 180px;
+      flex: 1;
+      max-width: 160px;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .mode-title {
-        font-size: 2rem;
+    .mode-button.solo {
+      background: linear-gradient(135deg, #6b46c1 0%, #805ad5 100%);
+      color: white;
     }
-}
 
-@media (max-width: 480px) {
-    .mode-button {
-        width: 150px;
-        height: 150px;
-        padding: 1rem 2rem;
+    .mode-button.multi {
+      background: linear-gradient(135deg, #319795 0%, #38b2ac 100%);
+      color: white;
+    }
+
+    .mode-button:active {
+      transform: scale(0.95);
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .icon {
-        font-size: 2.5rem;
+      font-size: 1.2rem;
     }
 
-    .text {
-        font-size: 1.1rem;
+    .preview-stack {
+      display: none;
     }
 
-    .mode-title {
-        font-size: 1.8rem;
+    .circle-decoration {
+      opacity: 0.4;
     }
-}
+
+    .background-text {
+      display: none;
+    }
+  }
+
+  /* 아이폰 14 프로맥스 세로 모드 */
+  @media screen and (min-width: 429px) and (max-width: 926px) {
+    .TTP-main-Container {
+      min-height: 100vh;
+    }
+
+    .main-content {
+      padding: 2rem;
+    }
+
+    .text-section {
+      text-align: center;
+    }
+
+    .main-title {
+      font-size: 2.2rem;
+    }
+
+    .buttons-wrapper {
+      justify-content: center;
+    }
+  }
+
+  /* 아이폰 14 프로맥스 가로 모드 */
+  @media screen and (max-height: 428px) {
+    .main-content {
+      flex-direction: row;
+      padding: 1rem;
+    }
+
+    .text-section {
+      flex: 1;
+      padding-right: 2rem;
+      text-align: left;
+    }
+
+    .main-title {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .sub-text {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .buttons-wrapper {
+      justify-content: flex-start;
+    }
+
+    .preview-stack {
+      display: none;
+    }
+  }

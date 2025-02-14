@@ -10,6 +10,8 @@ import {
 } from '../websocket/chatService';
 import '../css/LiarGame.css';
 import Swal from 'sweetalert2';
+import liarIcon from '../assets/liar-icon.svg';
+import image from '../assets/image.png';
 
 function LiarGame() {
     const navigate = useNavigate();
@@ -19,7 +21,8 @@ function LiarGame() {
     const { nickname, isHost, hostName } = location.state || {};
 
     const [gameState, setGameState] = useState('waiting');
-    const [players, setPlayers] = useState([]);
+    const [readyPlayers, setReadyPlayers] = useState(0);
+    const readyStatusRef = useRef(0);
     const [currentTurn, setCurrentTurn] = useState(1);
     const [word, setWord] = useState('');
     const [category, setCategory] = useState('');
@@ -95,7 +98,16 @@ function LiarGame() {
                         case 'NEW_TURN':
                             console.log("NEW- turn");
                             console.log("뉴 턴 데이터 : ",response.data);
-                            turnUpdateStausNewTurn(response.data);
+
+                            if(response.data.readyStatus === "success"){
+                                console.log("앜앜앜앜앜ㅇ");
+                                setReadyPlayers(prev=>prev +1);
+                                readyStatusRef.current = readyStatusRef.current+1;
+                            }
+                            else{
+                                turnUpdateStausNewTurn(response.data);
+                            }
+                         
                             break;
                         case 'GAME_START':
                             console.log("게임 스타트");
@@ -103,6 +115,7 @@ function LiarGame() {
                             break;
                         case 'PLAYER_READY':
                             handleRedyStatus(response.data);
+                            setReadyPlayers(prev=>prev +1);
                             break;
                         case 'VOTE':
                             if(response.data.status === "OK"){
@@ -178,19 +191,36 @@ function LiarGame() {
         if(data.isTurnEnd){
             currentTypingPlayerRef.current = null;
             setCurrentTypingPlayer(null);
+            setGameState('turnEnd');
             Swal.fire({
-                title: `종료!`,
-                text: '라이어를 찾아주세요!',
-                icon: 'info',
+                title: `<div class="popup-title">
+                            <div class="turn-number">${turnRef.current}번째 턴</div>
+                            <div class="turn-status">종료!</div>
+                        </div>`,
+                html: `<div class="popup-content">
+                        <div class="popup-message">다음 턴을 시작하려면</div>
+                        <div class="popup-highlight">준비 완료</div>
+                        <div class="popup-message">버튼을 눌러주세요</div>
+                       </div>`,
+                showConfirmButton: true,
                 confirmButtonText: '확인',
-                showConfirmButton: true,    
                 allowOutsideClick: false,
-                didOpen: () => {
-                    // 알림창이 열릴 때 투표 UI 준비
-                    isTurnEnd.current = true;
+                background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                showClass: {
+                    popup: 'animate__animated animate__fadeIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOut'
+                },
+                customClass: {
+                    container: 'popup-container',
+                    popup: 'custom-popup',
+                    title: 'popup-title-class',
+                    confirmButton: 'popup-confirm-button',
+                    htmlContainer: 'popup-content-container'
                 }
             }).then((result) => {
-                if (result.isConfirmed) { 
+                if (result.isConfirmed) {
                       turnEnd();
                     }
                 }
@@ -239,17 +269,35 @@ function LiarGame() {
         
             try {
                 console.log("Attempting to show Swal for turn:", data.turn);
-      
+                setReadyPlayers(0);
                 
                 Swal.fire({
-                    title: `${turnRef.current}번째 턴 시작!`,
-                    text: '이번에도 설명을 잘 해주세요!',
-                    icon: 'info',
+                    title: `<div class="popup-title">
+                                <div class="turn-icon">🎲</div>
+                                <div class="turn-number">${turnRef.current}번째 턴 시작!</div>
+                           </div>`,
+                    html: `<div class="popup-content">
+                            <div class="popup-message">
+                                <div class="turn-main">새로운 턴이 시작됩니다</div>
+                                <div class="turn-sub">이번에도 설명을 잘 해주세요!</div>
+                            </div>
+                           </div>`,
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
                     confirmButtonText: '확인',
                     showConfirmButton: true,    
                     allowOutsideClick: false,
-                    didOpen: () => {
-                        console.log("SweetAlert opened");
+                    showClass: {
+                        popup: 'animate__animated animate__fadeIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    },
+                    customClass: {
+                        container: 'popup-container',
+                        popup: 'custom-popup turn-popup',
+                        title: 'popup-title-class',
+                        confirmButton: 'turn-confirm-button',
+                        htmlContainer: 'popup-content-container'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) { 
@@ -271,26 +319,57 @@ function LiarGame() {
 
     const handleTurnUpdateNewTurn = (data) => {
         
-            
+        setReadyPlayers(0);
         const currentNickname = isHost ? hostName : nickname;
         console.log('Current player:', data.currentPlayer, 'My nickname:', currentNickname);
         
         
             if (data.currentPlayer === currentNickname) {
                 Swal.fire({
-                    title: `제시어 설명
-                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '라이어' : `${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
-                    text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
+                    title: `<div class="popup-title">
+                                
+                            ${gameUseRef.current.liar?.nickname === currentNickname ? 
+                                
+                               `
+                               <img src="${image}" class="liar-icon" alt="Liar Icon"/>
+                                <div class="liar-text">당신은 라이어입니다!</div>`
+                               : 
+                               `<div class="answer-icon">🎯</div>
+                                <div class="answer-text">정답 입력</div>
+                                <div class="answer-text">제시어 : ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}</div>`
+                                }
+                                
+                           </div>`,
+
+                    html: `<div class="popup-content">
+                            <div class="answer-message">
+                                <div class="answer-main">제시어를 맞춰보세요!</div>
+                                ${gameUseRef.current.liar?.nickname === currentNickname ? 
+                                `<div class="word-category2">${gameUseRef.current.category}</div>`:
+                                ``}
+                                <div class="answer-sub">라이어는 제시어를 추측하여 입력해주세요</div>
+                            </div>
+                           </div>`,
                     input: 'text',
-                    inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
-                    showCancelButton: false,
-                    allowOutsideClick: false,
+                    inputPlaceholder: '정답을 입력하세요...',
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                    showCancelButton: true,
                     confirmButtonText: '제출',
+                    cancelButtonText: '취소',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    },
                     customClass: {
-                        popup: 'word-popup',
-                        title: 'word-title',
-                        input: 'word-input',
-                        confirmButton: 'word-confirm-btn'
+                        container: 'popup-container',
+                        popup: 'custom-popup answer-popup',
+                        input: 'answer-input',
+                        confirmButton: 'answer-confirm-button',
+                        cancelButton: 'answer-cancel-button',
+                        title: 'popup-title-class',
+                        htmlContainer: 'popup-content-container'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -315,27 +394,59 @@ function LiarGame() {
 
 
     const handleTurnUpdate = (data) => {
-        
+        setReadyPlayers(0);
             
         const currentNickname = isHost ? hostName : nickname;
         console.log('Current player:', data.currentPlayer, 'My nickname:', currentNickname);
         
         
             if (data.currentPlayer === currentNickname) {
+
                 Swal.fire({
-                    title: `제시어 설명
-                             <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? '라이어' : `${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>`,
-                    text: '당신의 차례입니다. 제시어에 대한 설명을 입력하세요.',
+                    title: `<div class="popup-title">
+                                
+                            ${gameUseRef.current.liar?.nickname === currentNickname ? 
+                                
+                               `
+                               <img src="${image}" class="liar-icon" alt="Liar Icon"/>
+                                <div class="liar-text">당신은 라이어입니다!</div>`
+                               : 
+                               `<div class="answer-icon">🎯</div>
+                                <div class="answer-text">정답 입력</div>
+                                <div class="answer-text">제시어 : ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}</div>`
+                                }
+                                
+                           </div>`,
+
+                    html: `<div class="popup-content">
+                            <div class="answer-message">
+                                <div class="answer-main">제시어를 맞춰보세요!</div>
+                                ${gameUseRef.current.liar?.nickname === currentNickname ? 
+                                `<div class="word-category2">${gameUseRef.current.category}</div>`:
+                                ``}
+                                <div class="answer-sub">라이어는 제시어를 추측하여 입력해주세요</div>
+                            </div>
+                           </div>`,
                     input: 'text',
-                    inputPlaceholder: '제시어에 대한 설명을 입력하세요...',
-                    showCancelButton: false,
-                    allowOutsideClick: false,
+                    inputPlaceholder: '정답을 입력하세요...',
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                    showCancelButton: true,
                     confirmButtonText: '제출',
+                    cancelButtonText: '취소',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    },
                     customClass: {
-                        popup: 'word-popup',
-                        title: 'word-title',
-                        input: 'word-input',
-                        confirmButton: 'word-confirm-btn'
+                        container: 'popup-container',
+                        popup: 'custom-popup answer-popup',
+                        input: 'answer-input',
+                        confirmButton: 'answer-confirm-button',
+                        cancelButton: 'answer-cancel-button',
+                        title: 'popup-title-class',
+                        htmlContainer: 'popup-content-container'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -368,6 +479,20 @@ function LiarGame() {
             //     handleTurnUpdate(response.data);
             //     break;
             case 'START_GAME':
+            case 'NEW_TURN':
+                        console.log("NEW- turn");
+                        console.log("뉴 턴 데이터 : ",response.data);
+
+                        if(response.data.readyStatus === "success"){
+                            console.log("앜앜앜앜앜ㅇ2");
+                            setReadyPlayers(prev=>prev +1);
+                            readyStatusRef.current = readyStatusRef.current+1;
+                        }
+                        else{
+                            turnUpdateStausNewTurn(response.data);
+                        }
+                        
+                        break;
               
             case 'ROUND_UPDATE':
                 console.log("QQQQQQQ");
@@ -441,8 +566,8 @@ function LiarGame() {
                 html: `
                 
                     <div class="word-reveal">
-                        <div class="word-category">${game.category}</div>
-                        <div class="word-text">${game.liar?.nickname === currentNickname ? '당신은 라이어입니다!' : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>
+                        <div class="word-category">${gameUseRef.current.category}</div>
+                        <div class="word-text">${gameUseRef.current.liar?.nickname === currentNickname ? `당신은 <br> 라이어입니다!` : `제시어: ${gameUseRef.current.keywords?.[gameUseRef.current.currentRound-1]}`}</div>
                     </div>
                 `,
                 showConfirmButton: true,
@@ -455,10 +580,7 @@ function LiarGame() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // 플레이어 순서를 랜덤하게 섞기
-                    console.log("제시어 공개 해버림");
-                    // setPlayerOrder(shuffledPlayers);
-                    // setCurrentPlayerIndex(0);
+                    setReadyPlayers(prev=>prev+1);
                     startGame();
                 }
             });
@@ -498,10 +620,32 @@ function LiarGame() {
         setCurrentTypingPlayer(null);
         setGameState('turnEnd');
         Swal.fire({
-            title: `${turnRef.current}번째 턴 종료!`,
-            text: '다음 턴을 시작하려면 준비 완료 버튼을 눌러주세요.',
-            icon: 'success',
-            confirmButtonText: '확인'
+            title: `<div class="popup-title">
+                        <div class="turn-number">${turnRef.current}번째 턴</div>
+                        <div class="turn-status">종료!</div>
+                    </div>`,
+            html: `<div class="popup-content">
+                    <div class="popup-message">다음 턴을 시작하려면</div>
+                    <div class="popup-highlight">준비 완료</div>
+                    <div class="popup-message">버튼을 눌러주세요</div>
+                   </div>`,
+            showConfirmButton: true,
+            confirmButtonText: '확인',
+            allowOutsideClick: false,
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            customClass: {
+                container: 'popup-container',
+                popup: 'custom-popup',
+                title: 'popup-title-class',
+                confirmButton: 'popup-confirm-button',
+                htmlContainer: 'popup-content-container'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 
@@ -521,14 +665,36 @@ function LiarGame() {
     }
 
     const handleRedy = () =>{
-        setRedyStatus(false);
         Swal.fire({
-            title: `준비 완료`,
-            icon: 'success',
-            timer: 500,
-            showConfirmButton: false
+            title: `<div class="popup-title">
+                        <div class="ready-icon">🎮</div>
+                        <div class="ready-text">준비 완료!</div>
+                    </div>`,
+            html: `<div class="popup-content">
+                    <div class="ready-status">
+                        <div class="ready-count">${readyPlayers+1}/${gameUseRef.current.players.length}</div>
+                        <div class="ready-message">명의 플레이어가 준비되었습니다</div>
+                    </div>
+                    <div class="ready-waiting">다른 플레이어를 기다리는 중...</div>
+                   </div>`,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            customClass: {
+                container: 'popup-container',
+                popup: 'custom-popup ready-popup',
+                title: 'popup-title-class',
+                htmlContainer: 'popup-content-container'
+            }
         });
-
+        
+        setRedyStatus(false);
         sendMessage('/app/game.ready', {
             gameId: LiarGameId, 
             nickname : nickname
@@ -587,7 +753,39 @@ function LiarGame() {
 
     const handleLeaveGame = () => {
         
-        sendMessage('/app/game.leave', {gameId : LiarGameId, nickname : nickname})
+        Swal.fire({
+            title: `<div class="popup-title">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-text">정말 나가시겠습니까?</div>
+                    </div>`,
+            html: `<div class="popup-content">
+                    <div class="warning-message">이 작업은 되돌릴 수 없습니다!</div>
+                   </div>`,
+            showCancelButton: true,
+            showConfirmButton: true,
+            confirmButtonText: '나가기',
+            cancelButtonText: '취소',
+            allowOutsideClick: false,
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            customClass: {
+                container: 'popup-container',
+                popup: 'custom-popup warning-popup',
+                title: 'popup-title-class',
+                confirmButton: 'warning-confirm-button',
+                cancelButton: 'warning-cancel-button',
+                htmlContainer: 'popup-content-container'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendMessage('/app/game.leave', {gameId : LiarGameId, nickname : nickname})
+            }
+        })
         
     };
 
@@ -595,32 +793,78 @@ function LiarGame() {
         if (!isTurnEnd.current) return;
         
         // 이미 같은 플레이어를 선택했다면 선택 취소
-        if (selectedVote === playerNickname) {
-            setSelectedVote(null);
+        if (selectedVote) {
+            Swal.fire({
+                title: `<div class="popup-title">
+                            <div class="warning-icon">⚠️</div>
+                            <div class="warning-text">투표 불가</div>
+                        </div>`,
+                html: `<div class="popup-content">
+                        <div class="warning-message">이미 투표를 완료하셨습니다!</div>
+                       </div>`,
+                showConfirmButton: true,
+                confirmButtonText: '확인',
+                background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                customClass: {
+                    popup: 'custom-popup warning-popup',
+                    confirmButton: 'warning-confirm-button'
+                }
+            });
             return;
         }
 
         Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
+            title: `<div class="popup-title">
+                        <div class="vote-icon">
+                        <img src="${image}" class="liar-icon" alt="Liar Icon"/></div>
+                        <div class="vote-text">라이어 투표</div>
+                    </div>`,
+            html: `<div class="popup-content">
+                    <div class="vote-target">${playerNickname}<br><br></div>
+                    <div class="vote-message">님을 라이어로 지목하시겠습니까?</div>
+                   </div>`,
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
+            showConfirmButton: true,
+            confirmButtonText: '투표하기',
+            cancelButtonText: '취소',
+            allowOutsideClick: false,
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            customClass: {
+                container: 'popup-container',
+                popup: 'custom-popup vote-popup',
+                title: 'popup-title-class',
+                confirmButton: 'vote-confirm-button',
+                cancelButton: 'vote-cancel-button',
+                htmlContainer: 'popup-content-container'
+            }
+        }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire({
-                title: "투표 완료",
-                icon: "success"
-              });
-              setSelectedVote(playerNickname);
-        
-            // 투표 처리 로직
-            sendMessage('/app/game.vote', {
-                gameId: gameId,
-                playerNickname : playerNickname
-            });
+                Swal.fire({
+                    title: `<div class="popup-title">
+                                <div class="vote-complete-icon">✓</div>
+                                <div class="vote-complete-text">투표 완료</div>
+                            </div>`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                    customClass: {
+                        popup: 'custom-popup vote-complete-popup',
+                        title: 'popup-title-class'
+                    }
+                });
+                setSelectedVote(playerNickname);
+                
+                // 투표 처리 로직
+                sendMessage('/app/game.vote', {
+                    gameId: gameId,
+                    playerNickname : playerNickname
+                });
             }
           });
         
@@ -631,132 +875,185 @@ function LiarGame() {
         console.log("투표 완료");
         console.log("라이어 : " , data.Liar);
 
-        const formattedResults = Object.entries(data.result)
-
-            .map(([key, value]) => `${key}: ${value}표`)
+        const voteResults = data.result;
+        const formattedResults = Object.entries(voteResults)
+            .map(([player, votes]) => `${player}: ${votes}표`)
             .join('\n');
 
-        // 투표 결과 Swal에만 적용될 스타일
-        const voteResultStyles = `
-            <style>
-                .vote-result-swal .swal2-popup {
-                    background: rgba(0, 0, 0, 0.9);
-                    border-radius: 15px;
-                    padding: 20px;
-                    animation: zoomIn 0.3s ease-out;
-                }
-                .vote-result-swal .swal2-title,
-                .vote-result-swal .swal2-content {
-                    color: white !important;
-                }
-                .vote-result-swal .swal2-html-container {
-                    margin: 1em 0;
-                }
-                .vote-result-swal pre {
-                    background: rgba(255, 255, 255, 0.1);
-                    padding: 15px;
-                    border-radius: 10px;
-                    margin-top: 15px;
-                    font-family: 'Arial', sans-serif;
-                    white-space: pre-wrap;
-                }
-                @keyframes zoomIn {
-                    from {
-                        opacity: 0;
-                        transform: scale(0.9);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-                }
-            </style>
-        `;
-
         Swal.fire({
-            title: '투표 결과',
-            html: `
-                ${voteResultStyles}
-                <div style="text-align: left; margin: 20px;">
-                    <h3>투표 집계 결과:</h3>
-                    <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">${formattedResults}</pre>
-                </div>
-            `,
-            icon: 'info',
+            title: `<div class="popup-title">
+                        <div class="vote-count-icon">📊</div>
+                        <div class="vote-count-text">투표 집계 결과</div>
+                    </div>`,
+            html: `<div class="popup-content">
+                    <div class="vote-count-results">
+                        ${Object.entries(voteResults).map(([player, votes]) => `
+                            <div class="vote-count-item">
+                                <div class="vote-player-info">
+                                    <span class="vote-player-name">${player}</span>
+                                    <div class="vote-bar-container">
+                                        <div class="vote-bar" style="width: ${(votes / Object.keys(voteResults).length) * 100}%"></div>
+                                    </div>
+                                </div>
+                                <span class="vote-count-number">${votes}표</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                   </div>`,
+            showConfirmButton: true,
             confirmButtonText: '확인',
             showCancelButton: false,
             allowOutsideClick: false,
+            background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
             customClass: {
-                container: 'vote-result-swal'
+                container: 'popup-container',
+                popup: 'custom-popup vote-count-popup',
+                confirmButton: 'vote-count-button',
+                title: 'popup-title-class',
+                htmlContainer: 'popup-content-container'
             }
         }).then((result) => {
             if (result.isConfirmed) {
 
                 if(data.status === "Draw"){
                     Swal.fire({
-                        title: '결과',
-                        html: `
-                            ${voteResultStyles}
-                            <div style="text-align: left; margin: 20px;">
-                                <h3>결과</h3>
-                                <h3> 동점 상황으로 한 턴을 더 진행 합니다 </h3>
-                            </div>
-                        `,
-                        icon: 'info',
-                        confirmButtonText: '확인',
-                        showCancelButton: false,
+                        title: `<div class="popup-title">
+                                    <div class="result-icon">🔄</div>
+                                    <div class="result-text">동점 발생!</div>
+                               </div>`,
+                        html: `<div class="popup-content">
+                                <div class="result-message">
+                                    <div class="result-main">동점 상황이 발생했습니다</div>
+                                    <div class="result-sub">추가 라운드를 진행합니다</div>
+                                </div>
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <span class="detail-icon">🎲</span>
+                                        <span class="detail-text">새로운 라운드가 시작됩니다</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">⏱️</span>
+                                        <span class="detail-text">모든 플레이어가 다시 참여합니다</span>
+                                    </div>
+                                </div>
+                               </div>`,
+                        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                        showConfirmButton: true,
+                        confirmButtonText: '다음 라운드',
                         allowOutsideClick: false,
+                        showClass: {
+                            popup: 'animate__animated animate__fadeIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOut'
+                        },
                         customClass: {
-                            container: 'vote-result-swal'
+                            container: 'popup-container',
+                            popup: 'custom-popup result-popup',
+                            confirmButton: 'result-button',
+                            title: 'popup-title-class',
+                            htmlContainer: 'popup-content-container'
                         }
                     }).then((result) => {
-                        startNextTurnRound();
-
-                    })
+                        if (result.isConfirmed) {
+                            startNextTurnRound();
+                        }
+                    });
                 }
                 else{
                     Swal.fire({
-                        title: '결과',
-                        html: `
-                            ${voteResultStyles}
-                            <div style="text-align: left; margin: 20px;">
-                                <h3>결과</h3>
-                                <h3>${data.winner === 'Player' ? '라이어를 찾았습니다.' : '라이어를 찾아내지 못했습니다.'} </h3>
-                                <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어는 ${data.Liar}</pre>
-                            </div>
-                        `,
-                        icon: 'info',
+                        title: `<div class="popup-title">
+                                    <div class="result-icon">${data.winner === 'Player' ? '🎯' : '❌'}</div>
+                                    <div class="result-text">${data.winner === 'Player' ? '라이어 발견!' : '라이어 실패!'}</div>
+                               </div>`,
+                        html: `<div class="popup-content">
+                                <div class="result-message">
+                                    <div class="result-main">${data.winner === 'Player' ? '라이어를 찾았습니다!' : '라이어를 찾지 못했습니다'}</div>
+                                    <div class="result-sub">${data.winner === 'Player' ? '시민들의 승리입니다!' : '라이어의 승리입니다!'}</div>
+                                </div>
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <span class="detail-icon">🎭</span>
+                                        <span class="detail-text">라이어: ${data.Liar}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">🎯</span>
+                                        <span class="detail-text">제시어: ${gameUseRef.current.keywords[gameUseRef.current.currentRound-1]}</span>
+                                    </div>
+                                </div>
+                               </div>`,
+                        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                        showConfirmButton: true,
                         confirmButtonText: '확인',
                         showCancelButton: false,
                         allowOutsideClick: false,
+                        showClass: {
+                            popup: 'animate__animated animate__fadeIn'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOut'
+                        },
                         customClass: {
-                            container: 'vote-result-swal'
+                            container: 'popup-container',
+                            popup: 'custom-popup result-popup',
+                            confirmButton: 'result-button',
+                            title: 'popup-title-class',
+                            htmlContainer: 'popup-content-container'
                         }
                     }).then((result) => {
-                        if(data.winner === "Player"){
-                            if(data.Liar === nickname) {
-                                // 라이어인 경우 정답 입력 창 표시
-                                Swal.fire({
-                                    title: '정답 입력',
-                                    input: 'text',
-                                    inputLabel: '제시어를 맞춰보세요',
-                                    inputPlaceholder: '정답을 입력하세요...',
-                                    showCancelButton: false,
-                                    confirmButtonText: '제출',
-                                    allowOutsideClick: false,
-                                    customClass: {
-                                        container: 'vote-result-swal'
-                                    }
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        
-                                        // 투표 처리 로직
-                                        sendMessage('/app/game.answer', {
-                                            gameId: gameId,
-                                            answer: result.value
-                                        });
-                                    }
-                                });
+                        if (result.isConfirmed) {
+
+                            if(data.winner === "Player"){
+                                if(data.Liar === nickname) {
+                                    // 라이어인 경우 정답 입력 창 표시
+                                    Swal.fire({
+                                        title: `<div class="popup-title">
+                                                    <div class="answer-icon">🎯</div>
+                                                    <div class="answer-text">정답 입력</div>
+                                               </div>`,
+                                        html: `<div class="popup-content">
+                                                <div class="answer-message">
+                                                    <div class="answer-main">제시어를 맞춰보세요!</div>
+                                                    <div class="answer-sub">라이어는 제시어를 추측하여 입력해주세요</div>
+                                                </div>
+                                               </div>`,
+                                        input: 'text',
+                                        inputPlaceholder: '정답을 입력하세요...',
+                                        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+                                        showCancelButton: true,
+                                        confirmButtonText: '제출',
+                                        cancelButtonText: '취소',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeIn'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOut'
+                                        },
+                                        customClass: {
+                                            container: 'popup-container',
+                                            popup: 'custom-popup answer-popup',
+                                            input: 'answer-input',
+                                            confirmButton: 'answer-confirm-button',
+                                            cancelButton: 'answer-cancel-button',
+                                            title: 'popup-title-class',
+                                            htmlContainer: 'popup-content-container'
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            
+                                            // 투표 처리 로직
+                                            sendMessage('/app/game.answer', {
+                                                gameId: gameId,
+                                                answer: result.value
+                                            });
+                                        }
+                                    });
                                 } else {
                                     // 라이어가 아닌 경우 대기 메시지 표시
                                     Swal.fire({
@@ -775,10 +1072,9 @@ function LiarGame() {
                                 Swal.fire({
                                     title: '게임 결과',
                                     html: `
-                                        ${voteResultStyles}
                                         <div style="text-align: left; margin: 20px;">
                                             <h3>라이어 승리!</h3>
-                                            <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어가 모두를 속였습니다. </pre>
+                                             <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어가 모두를 속였습니다. </pre>
                                         </div>
                                     `,
                                     icon: 'info',
@@ -790,12 +1086,12 @@ function LiarGame() {
                                     }
                                 }).then((result) => {
                                    
-                                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                                    if(data.currentRound === data.round){
                                         Swal.fire({
                                             title: '게임 종료',
                                             
                                             icon: 'info',
-                                            confirmButtonText: '게임 시작',
+                                            confirmButtonText: '확인',
                                             showCancelButton: false,
                                             allowOutsideClick: false,
                                             customClass: {
@@ -806,7 +1102,6 @@ function LiarGame() {
                                             sendMessage('/app/game.end', {
                                                 gameId: gameId,
                                                 winner : "Liar"
-                                    
                                             });
                                         })
                                     }
@@ -821,7 +1116,7 @@ function LiarGame() {
                                             container: 'vote-result-swal'
                                         }
                                     }).then((result) => {
-                    
+    
                                         sendMessage('/app/game.nextRound', {
                                             gameId: gameId,
                                             winner : "Liar"
@@ -834,10 +1129,9 @@ function LiarGame() {
                             Swal.fire({
                                 title: '게임 결과',
                                 html: `
-                                    ${voteResultStyles}
                                     <div style="text-align: left; margin: 20px;">
                                         <h3>라이어 승리! ㅜㅜ</h3>
-                                        <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어에게 속았습니다 ㅜㅜ </pre>
+                                         <pre style="margin-top: 10px; font-size: 1.1em; line-height: 1.5;">라이어에게 속았습니다 ㅜㅜ </pre>
                                     </div>
                                 `,
                                 icon: 'info',
@@ -848,12 +1142,12 @@ function LiarGame() {
                                     container: 'vote-result-swal'
                                 }
                             }).then((result) => {
-                                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                                if(data.currentRound === data.round){
                                     Swal.fire({
                                         title: '게임 종료',
                                         
                                         icon: 'info',
-                                        confirmButtonText: '게임 시작',
+                                        confirmButtonText: '확인',
                                         showCancelButton: false,
                                         allowOutsideClick: false,
                                         customClass: {
@@ -878,7 +1172,7 @@ function LiarGame() {
                                         container: 'vote-result-swal'
                                     }
                                 }).then((result) => {
-                
+    
                                     sendMessage('/app/game.nextRound', {
                                         gameId: gameId,
                                         winner : "Liar"
@@ -886,8 +1180,11 @@ function LiarGame() {
                                 })
                             }
                         })
-                    }
                         }
+                }
+            }
+            
+
                     });
                 }
                
@@ -957,12 +1254,12 @@ function LiarGame() {
                         container: 'vote-result-swal'
                     }
                 }).then((result) => {
-                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                    if(data.currentRound === data.round){
                         Swal.fire({
                             title: '게임 종료',
                             
                             icon: 'info',
-                            confirmButtonText: '게임 시작',
+                            confirmButtonText: '확인',
                             showCancelButton: false,
                             allowOutsideClick: false,
                             customClass: {
@@ -1014,12 +1311,12 @@ function LiarGame() {
                     container: 'vote-result-swal'
                 }
             }).then((result) => {
-                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                if(data.currentRound === data.round){
                     Swal.fire({
                         title: '게임 종료',
                         
                         icon: 'info',
-                        confirmButtonText: '게임 시작',
+                        confirmButtonText: '확인',
                         showCancelButton: false,
                         allowOutsideClick: false,
                         customClass: {
@@ -1110,12 +1407,12 @@ function LiarGame() {
                         container: 'vote-result-swal'
                     }
                 }).then((result) => {
-                    if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                    if(data.currentRound === data.round){
                         Swal.fire({
                             title: '게임 종료',
                             
                             icon: 'info',
-                            confirmButtonText: '게임 시작',
+                            confirmButtonText: '확인',
                             showCancelButton: false,
                             allowOutsideClick: false,
                             customClass: {
@@ -1202,10 +1499,9 @@ function LiarGame() {
                     container: 'vote-result-swal'
                 }
             }).then((result) => {
-                if(gameUseRef.current.currentRound === gameUseRef.current.round){
+                if(data.currentRound === data.round){
                     Swal.fire({
                         title: '게임 종료',
-                        
                         icon: 'info',
                         confirmButtonText: '결과 확인',
                         showCancelButton: false,
@@ -1304,7 +1600,7 @@ function LiarGame() {
                     container: 'vote-result-swal'
                 }
             }).then((result) => {
-            
+                navigate("/liar");
             })
         }
  
@@ -1313,6 +1609,9 @@ function LiarGame() {
     
     return (
         <div className="liar-game">
+
+          
+         
             {showTopNotification && currentTypingPlayerRef.current && (
                 <div className="top-notification">
                     {currentTypingPlayerRef.current}님이 설명중입니다...

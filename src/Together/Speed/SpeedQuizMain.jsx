@@ -6,6 +6,7 @@ import GameRoom from './components/SpeedGameRoom';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { FaPlus, FaUsers } from 'react-icons/fa';
 
 function SpeedQuizMain() {
     const navigate = useNavigate();
@@ -25,9 +26,18 @@ function SpeedQuizMain() {
     const [isCreatingRoom, setIsCreatingRoom] = useState(false);
     const [data, setData] = useState(null);
 
-   
-
-   
+    const generateBrowserId = () => {
+        // localStorage에서 기존 ID 확인
+        let browserId = localStorage.getItem('speedGame_browserId');
+        
+        // 없으면 새로 생성
+        if (!browserId) {
+            browserId = 'browser_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('speedGame_browserId', browserId);
+        }
+        
+        return browserId;
+    };
 
     const onCreateRoom = () => {
         setShowModal(true);
@@ -53,6 +63,10 @@ function SpeedQuizMain() {
     }
 
     const handleCreateRoom = async () => {
+
+        const browserId = generateBrowserId(); 
+        console.log("브라우저 아이디 : ",  browserId);
+        
         if (!nickname.trim()) {
             alert('닉네임을 입력해주세요.');
             return;
@@ -67,7 +81,8 @@ function SpeedQuizMain() {
             const response = await axios.post("http://localhost:8080/api/speed/create/room", {
                 nickname: nickname,
                 password: roomPassword,
-                maxPlayer: maxPlayers
+                maxPlayer: maxPlayers,
+                browserId: browserId
             }, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -93,8 +108,8 @@ function SpeedQuizMain() {
         setShowJoinModal(true);
     };
 
-    const handleJoinRoom = () => {
-        if (!selectedRoom) {
+    const handleJoinRoom = (room) => {
+        if (!room) {
             alert('방을 선택해주세요.');
             return;
         }
@@ -106,7 +121,7 @@ function SpeedQuizMain() {
         const joinData = {
             type: 'JOIN_ROOM',
             data: {
-                roomId: selectedRoom.roomId,
+                roomId: room.roomId,
                 nickname: joinNickname
             }
         };
@@ -119,220 +134,126 @@ function SpeedQuizMain() {
 
 
     return (
-        <div className="liar-main">
+        <div className="speed-quiz-main">
             <Navigate3 />
-            <div className="liar-container">
-                <div className="button-container">
-                    <button className="create-room-button" onClick={onCreateRoom}>방 만들기</button>
-                    <button className="join-room-button" onClick={handleJoinClick}>방 참가하기</button>
+            <div className="speed-container">
+                <div className="speed-title-board">
+                    <h1 className="speed-title">스피드 퀴즈</h1>
+                    <p className="speed-subtitle">친구들과 함께 즐기는 빠른 퀴즈 게임!</p>
+                </div>
+                
+                <div className="speed-button-container">
+                    <button className="speed-button create" onClick={onCreateRoom}>
+                        <FaPlus className="speed-button-icon" />
+                        <span>방 만들기</span>
+                    </button>
+                    <button className="speed-button join" onClick={() => setShowJoinModal(true)}>
+                        <FaUsers className="speed-button-icon" />
+                        <span>참여하기</span>
+                    </button>
                 </div>
 
-                {/* 방 만들기 모달 */}
-                <Dialog 
-                    open={showModal} 
-                    onClose={handleCreateRoomCancle}
-                    maxWidth="sm"
-                    fullWidth
-                >
-                    <DialogTitle>
-                        방 만들기
-                    </DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="닉네임"
+                <div className="speed-room-list">
+                    <div className="speed-room-header">
+                        <h2 className="speed-room-title">현재 진행중인 게임</h2>
+                    </div>
+                    
+                    <div className="speed-search-container">
+                        <input
                             type="text"
-                            fullWidth
-                            value={nickname}
-                            onChange={(e) => setNickname(e.target.value)}
+                            className="speed-search-input"
+                            placeholder="방장 닉네임으로 검색..."
+                            value={searchHostName}
+                            onChange={(e) => setSearchHostName(e.target.value)}
                         />
-                        <TextField
-                            margin="dense"
-                            label="비밀번호"
-                            type="password"
-                            fullWidth
-                            value={roomPassword}
-                            onChange={(e) => setRoomPassword(e.target.value)}
-                        />
-                        <FormControl fullWidth sx={{ marginTop: 2 }}>
-                            <InputLabel>최대 인원</InputLabel>
-                            <Select
-                                value={maxPlayers}
-                                onChange={(e) => setMaxPlayers(e.target.value)}
-                            >
-                                {[4, 5, 6, 7, 8].map((num) => (
-                                    <MenuItem key={num} value={num}>{num}명</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button 
-                            onClick={handleCreateRoomCancle}
-                            variant="outlined"
-                        >
-                            취소
-                        </Button>
-                        <Button 
-                            onClick={handleCreateRoom}
-                            variant="contained"
-                        >
-                            방 만들기
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    </div>
 
-                {/* 방 참가하기 모달 */}
-                <Dialog 
-                    open={showJoinModal} 
-                    onClose={handleJoinCancle}
-                    PaperProps={{
-                        style: {
-                            background: 'rgba(0, 0, 0, 0.9)',
-                            color: 'white',
-                            padding: '20px',
-                            borderRadius: '15px',
-                            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-                            backdropFilter: 'blur(4px)',
-                            border: '1px solid rgba(255, 255, 255, 0.18)',
-                            minWidth: '400px'
-                        }
-                    }}
-                >
-                    <DialogTitle style={{ color: 'white', textAlign: 'center' }}>
-                        방 참가하기
-                    </DialogTitle>
-                    <DialogContent>
-                        <div className="room-list">
-                            <div className="search-container">
-                                <div className="search-box">
-                                    <TextField
-                                        type="text"
-                                        placeholder="방장 닉네임을 입력하세요"
-                                        value={searchHostName}
-                                        onChange={(e) => setSearchHostName(e.target.value)}
-                                        InputProps={{
-                                            style: { color: 'white' }
-                                        }}
-                                        InputLabelProps={{
-                                            style: { color: 'rgba(255, 255, 255, 0.7)' }
-                                        }}
-                                        sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                '& fieldset': {
-                                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                },
-                                                '&:hover fieldset': {
-                                                    borderColor: 'rgba(255, 255, 255, 0.5)',
-                                                },
-                                                '&.Mui-focused fieldset': {
-                                                    borderColor: 'white',
-                                                },
-                                            },
-                                            marginBottom: 2
-                                        }}
-                                    />
-                                    <Button 
-                                        style={{
-                                            color: 'rgba(255, 255, 255, 0.7)',
-                                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                                            marginRight: '10px'
-                                        }}
-                                        variant="outlined"
-                                        onClick={() => {
-                                            if (searchHostName.trim()) {
-                                                sendMessage('/app/game.getRooms', { 
-                                                    type: 'GET_ROOMS',
-                                                    data: { hostName: searchHostName.trim() }
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        검색
-                                    </Button>
+                    {rooms.map((room) => (
+                        <div 
+                            key={room.roomId} 
+                            className="speed-room-item"
+                            onClick={() => handleJoinRoom(room)}
+                        >
+                            <div className="speed-room-info">
+                                <div className="speed-room-host">방장: {room.hostName}</div>
+                                <div className="speed-room-players">
+                                    참여자: {room.currentPlayers}/{room.maxPlayers}명
                                 </div>
-                                {rooms.length > 0 ? (
-                                    <div className="search-results">
-                                        {rooms.map(room => (
-                                            <div
-                                                key={room.roomId}
-                                                className={`room-item ${selectedRoom?.roomId === room.roomId ? 'selected' : ''}`}
-                                                onClick={() => setSelectedRoom(room)}
-                                            >
-                                                <div className="room-item-header">
-                                                    <span className="room-item-id">#{room.roomId.substring(0, 8)}</span>
-                                                </div>
-                                                <div className="room-item-info">
-                                                    <span>{room.players.length} / {room.maxPlayers} 명</span>
-                                                    <span>방장: {room.hostName}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="no-rooms">
-                                        검색된 방이 없습니다
-                                    </div>
-                                )}
+                            </div>
+                            <div className={`speed-room-status ${room.currentPlayers < room.maxPlayers ? 'open' : 'full'}`}>
+                                {room.currentPlayers < room.maxPlayers ? '참여가능' : '진행중'}
                             </div>
                         </div>
-                        {selectedRoom && (
-                            <TextField
-                                type="text"
-                                placeholder="닉네임을 입력하세요"
-                                value={joinNickname}
-                                onChange={(e) => setJoinNickname(e.target.value)}
-                                InputProps={{
-                                    style: { color: 'white' }
-                                }}
-                                InputLabelProps={{
-                                    style: { color: 'rgba(255, 255, 255, 0.7)' }
-                                }}
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        '& fieldset': {
-                                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                                        },
-                                        '&:hover fieldset': {
-                                            borderColor: 'rgba(255, 255, 255, 0.5)',
-                                        },
-                                        '&.Mui-focused fieldset': {
-                                            borderColor: 'white',
-                                        },
-                                    },
-                                    marginBottom: 2
-                                }}
-                            />
-                        )}
-                    </DialogContent>
-                    <DialogActions style={{ justifyContent: 'center', padding: '20px' }}>
-                        <Button 
-                            onClick={handleJoinCancle}
-                            style={{
-                                color: 'rgba(255, 255, 255, 0.7)',
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                marginRight: '10px'
-                            }}
-                            variant="outlined"
-                        >
-                            취소
-                        </Button>
-                        <Button 
-                            onClick={handleJoinRoom}
-                            disabled={!selectedRoom || !joinNickname.trim()}
-                            style={{
-                                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                                color: 'white',
-                                boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                            }}
-                            variant="contained"
-                        >
-                            입장하기
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    ))}
+                </div>
             </div>
+
+            {/* 방 만들기 다이얼로그 */}
+            <Dialog open={showModal} onClose={handleCreateRoomCancle} className="create-room-dialog">
+                <DialogTitle>새로운 방 만들기</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="닉네임"
+                        type="text"
+                        fullWidth
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="방 비밀번호"
+                        type="password"
+                        fullWidth
+                        value={roomPassword}
+                        onChange={(e) => setRoomPassword(e.target.value)}
+                    />
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>최대 인원</InputLabel>
+                        <Select
+                            value={maxPlayers}
+                            onChange={(e) => setMaxPlayers(e.target.value)}
+                        >
+                            <MenuItem value={2}>2명</MenuItem>
+                            <MenuItem value={3}>3명</MenuItem>
+                            <MenuItem value={4}>4명</MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <div className="bottom-buttons">
+                    <button className="bottom-button cancel" onClick={handleCreateRoomCancle}>
+                        취소
+                    </button>
+                    <button className="bottom-button create" onClick={handleCreateRoom}>
+                        만들기
+                    </button>
+                </div>
+            </Dialog>
+
+            {/* 참여하기 다이얼로그 */}
+            <Dialog open={showJoinModal} onClose={handleJoinCancle} className="join-room-dialog">
+                <DialogTitle>게임 참여하기</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="닉네임"
+                        type="text"
+                        fullWidth
+                        value={joinNickname}
+                        onChange={(e) => setJoinNickname(e.target.value)}
+                    />
+                </DialogContent>
+                <div className="bottom-buttons">
+                    <button className="bottom-button cancel" onClick={handleJoinCancle}>
+                        취소
+                    </button>
+                    <button className="bottom-button create" onClick={handleJoinRoom}>
+                        참여하기
+                    </button>
+                </div>
+            </Dialog>
         </div>
     );
 }

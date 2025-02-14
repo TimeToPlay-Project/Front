@@ -76,26 +76,26 @@ function Navigate() {
                         className={`menus ${selectedMenu === 'quiz' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('quiz', '/quiz')}
                     >
-                        AAAA
+                        퀴즈
                     </div>
                     <div 
                         className={`menus ${selectedMenu === 'To' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('tournament', '/tournament')}
                     >
-                        BBBB
+                        이상형 월드컵
                     </div>
                     <div 
                         className={`menus ${selectedMenu === 'test' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('test', '/test')}
                     >
-                        CCCC
+                        심리 테스트
                     </div>
-                    <div 
+                    {/* <div 
                         className={`menus ${selectedMenu === 'M' ? 'active' : ''}`} 
                         onClick={() => handleMenuClick('M', '/M')}
                     >
                         DDDD
-                    </div>
+                    </div> */}
                 </div>
                 {isLoggedIn ? (
                     <>

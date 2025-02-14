@@ -75,7 +75,7 @@ function Login() {
       <div className="Login-Box">
         <img 
           className="Login-Logo"
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/")}
           src={`${process.env.PUBLIC_URL}/Login-Logo.PNG`} 
           alt="Logo" 
         />

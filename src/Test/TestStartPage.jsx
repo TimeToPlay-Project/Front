@@ -215,16 +215,16 @@ function TestStartPage() {
     useEffect(() => {
         const fetchTestClass = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/testClass/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/testClass/get/${id}`);
                 if (!response.ok) {
                     throw new Error('테스트 데이터를 불러오는데 실패했습니다.');
                 }
                 const data = await response.json();
                 console.log(data);
-                if(!data.descriptionDetail) {
+                if(!data[0].open == 1 ) {
                     setNon(true);
                 }
-                setTestData(data);
+                setTestData(data[0]);
             } catch (error) {
                 console.log(error);
             }
@@ -249,7 +249,7 @@ function TestStartPage() {
                             <div>
                                 <TestTitle>{testData.title}</TestTitle>
                                 <Description>
-                                    {testData.descriptionDetail}
+                                    {testData.description}
                                 </Description>
                             </div>
                             <ButtonContainer>

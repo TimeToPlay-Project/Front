@@ -7,7 +7,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 const StyledQuizMain = styled.div`
   width: 95%;
   max-width: 1200px;
-  height: calc(100vh - 80px); 
+  height: calc(100vh - 80px);
   margin: 0.5rem auto;
   padding: 1rem;
   display: flex;
@@ -24,22 +24,22 @@ const StyledQuizContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   width: 100%;
   height: 100%;
 `;
 
 const StyledProgressContainer = styled.div`
-   width: 100%;
-  margin-bottom: 0.5rem;
+  width: 100%;
+  margin-bottom: 0.3rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 가운데 정렬 */
+  align-items: center;
 
   .quiz-progress {
     width: 100%;
-    max-width: 700px; /* 너비 제한 */
+    max-width: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,20 +47,20 @@ const StyledProgressContainer = styled.div`
   }
 
   .quiz-progress span {
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
   }
 
   .progress-bar {
-    height: 6px;
+    height: 4px;
   }
 `;
 
 const StyledImageBox = styled.div`
   width: 100%;
-  margin-bottom: 50px;
+  margin-bottom: 1rem;
   max-width: 500px;
-  height: 320px;
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +73,7 @@ const StyledImageBox = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: 250px;
+    height: 200px;
   }
 `;
 
@@ -105,45 +105,74 @@ const StyledInput = styled.input`
 `;
 
 const StyledButton = styled.button`
-  padding: 0.7rem 1.2rem;
+  padding: 0.6rem 1.2rem;
   font-size: 1rem;
-  min-width: 100px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
 
   @media (max-width: 768px) {
-    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
 `;
 
 const StyledFeedbackContainer = styled.div`
   width: 100%;
   max-width: 500px;
-  text-align: center;
-  animation: fadeInScale 0.3s ease-out;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  
   .Feedback-Overlay {
-    margin: 1rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
   }
 
   .Feedback-Image {
     width: 80px;
     height: 80px;
     object-fit: contain;
+
+    @media (max-width: 768px) {
+      width: 60px;
+      height: 60px;
+    }
   }
 
   .Quiz-Answer-Box {
-    padding: 1.5rem;
-    background: rgba(45, 140, 255, 0.1);
-    border-radius: 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .Quiz-Feedback {
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
   }
 
   .Answer {
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
   }
 `;
 

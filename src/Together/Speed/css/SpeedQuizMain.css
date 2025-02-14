@@ -1,35 +1,98 @@
-.liar-main {
+.speed-quiz-main {
     min-height: 100vh;
     width: 100%;
-    background: linear-gradient(135deg, #2a2a2a 0%, #6d6d6d 100%);
-    display: flex;
-    flex-direction: column;
-}
-
-.liar-container {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+
+    background: 
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)), /* 반투명 흰색 오버레이 */
+        url('/Users/kkk/Desktop/TTP-Project/TTP-Front/public/school.jpeg');
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(10px); /* 블러 효과 */
+    -webkit-backdrop-filter: blur(10px); /* Safari 대응 */
 }
 
-.button-container {
+.speed-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+    position: relative;
+    margin-top: 100px;
+}
+
+.speed-title-board {
+    background: #2E7D32;
+    padding: 2rem 4rem;
+    border-radius: 20px;
+    border: 10px solid #8B4513;
+    margin-bottom: 4rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+}
+
+.speed-title {
+    font-size: 4rem;
+    color: white;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.speed-subtitle {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    position: relative;
+}
+
+/* 칠판 지우개 자국 효과 */
+.speed-title-board::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.1) 45%, 
+        transparent 50%);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.speed-button-container {
     display: flex;
     gap: 2rem;
     margin-bottom: 2rem;
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.create-room-button,
-.join-room-button {
-    padding: 1.5rem 3rem;
-    font-size: 1.2rem;
+.speed-button {
+    padding: 1.5rem 2.5rem;
+    font-size: 1.8rem;
     border: none;
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: white;
+    background: white;
+    color: #333;
     min-width: 200px;
     height: 200px;
     display: flex;
@@ -37,194 +100,457 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
-    overflow: hidden;
+    font-family: 'Nanum Pen Script', cursive;
 }
 
-.create-room-button {
-    background: linear-gradient(135deg, rgba(230, 126, 34, 0.4), rgba(231, 76, 60, 0.5));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.speed-button.create {
+    background: #4CAF50;
+    color: white;
 }
 
-.join-room-button {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.4), rgba(142, 68, 173, 0.5));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.speed-button.join {
+    background: #2196F3;
+    color: white;
 }
 
-.create-room-button:hover,
-.join-room-button:hover {
+.speed-button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.create-room-button:hover {
-    background: linear-gradient(135deg, rgba(230, 126, 34, 0.6), rgba(231, 76, 60, 0.7));
+.speed-button-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
 }
 
-.join-room-button:hover {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.6), rgba(142, 68, 173, 0.7));
-}
-
-/* 방 목록 스타일 */
-.room-list {
+.speed-room-list {
     width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
-    margin: 1rem 0;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
 }
 
-.search-container {
-    margin-bottom: 1rem;
+.speed-room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #eee;
 }
 
-.search-box {
+.speed-room-title {
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.speed-search-container {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.search-results {
+.speed-search-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    background: white;
+    color: #333;
+    font-family: 'Nanum Pen Script', cursive;
+}
+
+.speed-search-input::placeholder {
+    color: #999;
+}
+
+.speed-search-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.speed-room-item {
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.speed-room-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.speed-room-info {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.room-item {
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.speed-room-host {
+    font-size: 1.8rem;
+    color: #333;
 }
 
-.room-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+.speed-room-players {
+    font-size: 1.5rem;
+    color: #666;
 }
 
-.room-item.selected {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+.speed-room-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.5rem;
 }
 
-/* Dialog 컴포넌트 스타일 */
+.speed-room-status.open {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.speed-room-status.full {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Dialog Styles */
 .MuiDialog-paper {
-    background: rgba(60, 60, 60, 1) !important;
-    color: white !important;
-    min-width: 400px !important;
-    border-radius: 15px !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: white !important;
+    border-radius: 20px !important;
+    padding: 1rem !important;
 }
 
 .MuiDialogTitle-root {
-    text-align: center !important;
-    color: white !important;
-    padding: 24px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #333 !important;
+    font-size: 2rem !important;
+    font-weight: bold !important;
+    font-family: 'Nanum Pen Script', cursive !important;
 }
 
 .MuiDialogContent-root {
-    padding: 24px !important;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+    padding: 2rem !important;
 }
 
-.MuiDialogContent-root .MuiTextField-root,
-.MuiDialogContent-root .MuiFormControl-root {
-    margin: 12px 0 !important;
-    background: rgba(0, 0, 0, 0.2) !important;
-    border-radius: 8px !important;
-    backdrop-filter: blur(5px) !important;
+.MuiTextField-root {
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
 }
 
-.MuiDialogContent-root .MuiInputBase-root {
-    padding: 8px 12px !important;
-}
-
-.MuiDialogActions-root {
-    padding: 16px 24px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    justify-content: center !important;
-    gap: 12px !important;
-}
-
-/* 버튼 스타일 */
-.MuiButton-root {
-    padding: 8px 24px !important;
-    font-size: 1rem !important;
-    text-transform: none !important;
-    border-radius: 8px !important;
-    transition: all 0.3s ease !important;
-}
-
-.MuiButton-outlined {
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-}
-
-.MuiButton-outlined:hover {
-    border: 2px solid rgba(255, 255, 255, 0.5) !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.MuiButton-contained {
-    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%) !important;
-    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, .3) !important;
-    color: white !important;
-    border: none !important;
-}
-
-.MuiButton-contained:hover {
-    background: linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* 입력 필드 스타일 개선 */
 .MuiInputLabel-root {
-    color: rgba(255, 255, 255, 0.7) !important;
-    font-size: 1rem !important;
-    padding: 0 4px !important;
-}
-
-.MuiInputLabel-root.Mui-focused {
-    color: white !important;
+    color: #666 !important;
+    font-size: 1.5rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
 }
 
 .MuiOutlinedInput-root {
-    color: white !important;
-    transition: all 0.3s ease !important;
+    color: #333 !important;
+    font-size: 1.5rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
 }
 
 .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    border-width: 2px !important;
+    border-color: #ddd !important;
 }
 
 .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(255, 255, 255, 0.5) !important;
+    border-color: #4CAF50 !important;
 }
 
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: white !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important;
+    border-color: #4CAF50 !important;
 }
 
-/* Material-UI 스타일 오버라이드 */
-.MuiTextField-root {
-    margin: 12px 0 !important;
+.MuiButton-root {
+    font-size: 1.5rem !important;
+    padding: 0.8rem 2rem !important;
+    border-radius: 10px !important;
+    font-family: 'Nanum Pen Script', cursive !important;
 }
 
-.MuiSelect-icon {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
-
-.MuiSelect-select {
+.MuiButton-contained {
+    background: #4CAF50 !important;
     color: white !important;
 }
 
-.MuiMenuItem-root {
-    color: rgb(118, 117, 117) !important;
+.MuiButton-text {
+    color: #666 !important;
+}
+
+/* 방 만들기 다이얼로그 - 칠판 테마 */
+.create-room-dialog .MuiDialog-paper {
+    background: #2E7D32 !important;
+    border-radius: 20px !important;
+    padding: 1.5rem !important;
+    border: 10px solid #8B4513 !important;
+    color: white !important;
+    min-width: 400px !important;
+}
+
+.create-room-dialog .MuiDialogContent-root {
+    padding: 2rem !important;
+    background: #2E7D32 !important;
+}
+
+.create-room-dialog .MuiDialogTitle-root {
+    color: white !important;
+    font-size: 2.5rem !important;
+    font-weight: bold !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    text-align: center !important;
+    padding-bottom: 1rem !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.create-room-dialog .MuiInputLabel-root {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.create-room-dialog .MuiOutlinedInput-root {
+    color: white !important;
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+}
+
+.create-room-dialog .MuiOutlinedInput-notchedOutline {
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.create-room-dialog .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.create-room-dialog .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: 2px solid white !important;
+}
+
+.create-room-dialog .MuiSelect-select {
+    color: white !important;
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.create-room-dialog .MuiSelect-icon {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.create-room-dialog .MuiMenuItem-root {
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    color: #333 !important;
+}
+
+.MuiMenu-paper {
+    background: #2E7D32 !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.MuiMenu-paper .MuiMenuItem-root {
+    color: white !important;
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.MuiMenu-paper .MuiMenuItem-root:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.create-room-dialog .MuiButton-contained {
+    background: #FFD700 !important;
+    color: #333 !important;
+    font-size: 1.8rem !important;
+    padding: 0.8rem 2rem !important;
+    border-radius: 10px !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    margin-top: 1rem !important;
+}
+
+.create-room-dialog .MuiButton-text {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1.8rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+/* 참여하기 다이얼로그 - 모던 테마 */
+.join-room-dialog .MuiDialog-paper {
+    background: white !important;
+    border-radius: 20px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 10px 30px rgba(33, 150, 243, 0.1) !important;
+    min-width: 400px !important;
+}
+
+.join-room-dialog .MuiDialogTitle-root {
+    color: #2196F3 !important;
+    font-size: 2.2rem !important;
+    font-weight: bold !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    text-align: center !important;
+    padding-bottom: 1rem !important;
+    border-bottom: 2px solid #E3F2FD !important;
+}
+
+.join-room-dialog .MuiDialogContent-root {
+    padding: 2rem !important;
+}
+
+.join-room-dialog .MuiInputLabel-root {
+    color: #1976D2 !important;
+    font-size: 1.6rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.join-room-dialog .MuiOutlinedInput-root {
+    color: #0D47A1 !important;
+    font-size: 1.6rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    background: #E3F2FD !important;
+}
+
+.join-room-dialog .MuiOutlinedInput-notchedOutline {
+    border-color: #90CAF9 !important;
+}
+
+.join-room-dialog .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #2196F3 !important;
+}
+
+.join-room-dialog .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1976D2 !important;
+}
+
+.join-room-dialog .MuiButton-root {
+    font-size: 1.6rem !important;
+    padding: 0.8rem 2rem !important;
+    border-radius: 10px !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.join-room-dialog .MuiButton-contained {
+    background: #2196F3 !important;
+    color: white !important;
+}
+
+.join-room-dialog .MuiButton-text {
+    color: #1976D2 !important;
+}
+
+/* Select 메뉴 스타일 */
+.join-room-dialog .MuiSelect-select {
+    color: #0D47A1 !important;
+    font-size: 1.6rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+}
+
+.join-room-dialog .MuiMenuItem-root {
+    font-size: 1.6rem !important;
+    font-family: 'Nanum Pen Script', cursive !important;
+    color: #0D47A1 !important;
+    background: white !important;
+}
+
+.join-room-dialog .MuiMenuItem-root:hover {
+    background: #E3F2FD !important;
+}
+
+/* 나눔 펜 스크립트 폰트 import */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.create-room-dialog .dialog-button,
+.join-room-dialog .dialog-button {
+    font-family: 'Nanum Pen Script', cursive !important;
+    font-size: 1.8rem !important;
+    padding: 0.8rem 2.5rem !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.create-room-dialog .dialog-button.confirm {
+    background: #FFD700 !important;
+    color: #2E7D32 !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+}
+
+.create-room-dialog .dialog-button.cancel {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.create-room-dialog .dialog-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4) !important;
+}
+
+.create-room-dialog .dialog-button.cancel:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2) !important;
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin-top: 2rem;
+}
+
+
+.bottom-button {
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2rem;
+    padding: 1rem 2.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-left: 40px;
+    margin-right: 30px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.bottom-button.create {
+    background: #FFD700;
+    color: #2E7D32;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.bottom-button.create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
 }

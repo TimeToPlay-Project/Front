@@ -45,6 +45,23 @@ function SpeedGameRoom() {
     const [showSettings, setShowSettings] = useState(false);
 
 
+
+
+    const generateBrowserId = () => {
+        // localStorage에서 기존 ID 확인
+        let browserId = localStorage.getItem('speedGame_browserId');
+        
+        // 없으면 새로 생성
+        if (!browserId) {
+            browserId = 'browser_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('speedGame_browserId', browserId);
+        }
+        
+        return browserId;
+    };
+
+
+
     // 채팅 자동 스크롤
     useEffect(() => {
         if (chatContainerRef.current) {
@@ -114,6 +131,8 @@ function SpeedGameRoom() {
     
 
     const handleNicknameSubmit = async () => {
+        const browserId = generateBrowserId();
+
         if (!nickname.trim()) {
             alert('닉네임을 입력해주세요.');
             return;
@@ -124,6 +143,7 @@ function SpeedGameRoom() {
                 {
                     roomId: UserRoomId,
                     nickname: nickname,
+                    browserId: browserId
                 },
                 {
                     headers: {
@@ -378,11 +398,16 @@ function SpeedGameRoom() {
 
 
     const Exit = (leavingPlayer, room) =>{
+        const currentPlayer = isHost ? hostName : nickname;
 
-        console.log("!!!!! : " + leavingPlayer+ "    " + room);
-        console.log("!!!!! 222: " + playerInfo);
+        console.log("!!!!! : " + leavingPlayer);
+        console.log("!!!!! 222: " + currentPlayer);
 
-        if (leavingPlayer === playerInfo) {
+        if (leavingPlayer === currentPlayer) {
+            Swal.fire({
+                title: "나가기 성공",
+                icon: "success",
+            });
             navigate('/speedQuiz');
         } else {
             setRoom(room);
@@ -432,7 +457,7 @@ function SpeedGameRoom() {
             players: room.players,
             gameMode: gameMode,
             ...(gameMode === 'score' 
-                ? { maxScore:targetScore, quizNum : 0 } 
+                ? { maxScore:20, quizNum : 0 } 
                 : { quizNum : questionCount, maxScore:0 })
         };
         sendMessage('/app/speed_game.createSpeedQuizGame', gameData);
@@ -698,7 +723,7 @@ function SpeedGameRoom() {
                         <div>
                             <h3>문제 수</h3>
                             <div style={{ display: 'flex', gap: '10px' }}>
-                                {[10, 20, 30].map((count) => (
+                                {[2, 5, 10, 20, 30].map((count) => (
                                     <Button
                                         key={count}
                                         variant={questionCount === count ? "contained" : "outlined"}
