@@ -1,0 +1,281 @@
+.Navigate-Box {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.main-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f6f8ff 0%, #fff0f9 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.background-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.pattern-circle {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+  top: -200px;
+  right: -200px;
+  filter: blur(40px);
+}
+
+.pattern-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(236, 72, 153, 0.2) 50%, transparent 100%);
+  top: 50%;
+  transform: rotate(-45deg);
+}
+
+.pattern-dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(236, 72, 153, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.5;
+}
+
+.content-wrapper_T {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-section {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.game-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.game-card:active {
+  transform: scale(0.98);
+}
+
+.game-card.liar {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.game-card.liar:hover {
+  box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2);
+}
+
+.game-card.speed {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.game-card.speed:hover {
+  box-shadow: 0 15px 35px rgba(245, 158, 11, 0.2);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.card-decoration {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  bottom: -50px;
+  right: -50px;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover .card-decoration {
+  transform: scale(1.2) rotate(15deg);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+.feature-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+/* 모바일 반응형 스타일 */
+@media screen and (max-width: 428px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pattern-circle {
+    opacity: 0.3;
+  }
+
+  .pattern-line {
+    opacity: 0.2;
+  }
+}
+
+/* 아이폰 14 프로맥스 세로 모드 */
+@media screen and (min-width: 429px) and (max-width: 926px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .content-wrapper {
+    padding: 1.5rem;
+  }
+
+  .cards-container {
+    gap: 1.5rem;
+  }
+}
+
+/* 아이폰 14 프로맥스 가로 모드 */
+@media screen and (max-height: 428px) {
+  .hero-section {
+    margin: 2rem 0;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .features-grid {
+    display: none;
+  }
+}

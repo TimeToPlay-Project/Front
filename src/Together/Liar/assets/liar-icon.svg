@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 얼굴 -->
+  <circle cx="60" cy="60" r="50" fill="#FFD700"/>
+  
+  <!-- 눈썹 -->
+  <path d="M35 45 Q45 35 55 45" stroke="#000" stroke-width="3" fill="none"/>
+  <path d="M65 45 Q75 35 85 45" stroke="#000" stroke-width="3" fill="none"/>
+  
+  <!-- 눈 -->
+  <path d="M40 50 L50 50" stroke="#000" stroke-width="3"/>
+  <path d="M70 50 L80 50" stroke="#000" stroke-width="3"/>
+  
+  <!-- 코 -->
+  <circle cx="60" cy="65" r="5" fill="#FF6B6B"/>
+  
+  <!-- 입 -->
+  <path d="M40 80 Q60 90 80 80" stroke="#000" stroke-width="3" fill="none"/>
+  
+  <!-- 모자 -->
+  <path d="M30 30 L90 30 L60 5 Z" fill="#FF4444"/>
+  
+  <!-- 장식 -->
+  <text x="45" y="75" font-family="Arial" font-size="12" fill="#000">LIAR</text>
+</svg>
